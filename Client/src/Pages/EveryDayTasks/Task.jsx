@@ -27,6 +27,7 @@ export default function Task({ task, onClick }) {
 				marginLeft: (stringToMinutes(task.start) * 10) / 6,
 				width: tooltip?200:(timeDifferenceInMinutes(task.start, task.end) * 10) / 6,
                 minHeight:tooltip?"50%":"auto",
+				maxHeight:"80%",
                 zIndex:tooltip?554654355544:0
 			}}
 			className="alert alert-primary p-2 overflow-hidden position-absolute"

@@ -1,5 +1,4 @@
 import Arrow from "../../Components/Arrow";
-import TimeBar from "./TimeBar";
 import { useRef, useCallback, useState, useEffect, memo } from "react";
 import "./style.css";
 import { useTime } from "../../Utils/useTime";
@@ -7,57 +6,15 @@ import {
 	format,
 	timeToMinutes,
 	minutesToTime,
-	checkOverLap,
+	checkOverLapTime,
 } from "../../Utils/timeUtilities";
 import { useMouseDistance } from "../../Utils/useMouseDistance";
 import Task from "./Task";
 import Tasks from "../../fakeData/fakeTasks";
 import { DAYS } from "../../Utils/dateUtilities";
 import TimeInputClock from "./TimeInputClock.jsx";
-
-const TimeList = Array.from(
-	{ length: 24 },
-	(_, i) => `${String(i).padStart(2, "0")}:00`,
-);
-
-const checkOverlap = (newStart, newEnd, tasks, onOverlapChange) => {
-	if (!onOverlapChange) return;
-
-	let hasOverlap = false;
-	let overlapMessage = "";
-
-	for (const task of tasks) {
-		// Skip the task being edited
-		if (task.id === editedTaskId) continue;
-
-		// Check if days overlap (simplified - check if any day matches)
-		const dayOverlap = task.days.some((day) => day);
-
-		if (!dayOverlap) continue;
-
-		// Check time overlap
-		const overlap = checkOverLap(newStart, newEnd, task.start, task.end);
-		if (overlap) {
-			hasOverlap = true;
-			overlapMessage = `Overlaps with: ${task.title} (${task.start}-${task.end})`;
-			break;
-		}
-	}
-
-	onOverlapChange({ check: hasOverlap, mesg: overlapMessage });
-};
-
-const StaticTimeBars = memo(() => {
-	return (
-		<>
-			{TimeList.map((item, key) => {
-				return (
-					<TimeBar key={item} LeftMargin={key * 100} time={item} />
-				);
-			})}
-		</>
-	);
-});
+import StaticTimeBars from "../../Components/StaticTimeBars.jsx";
+import TimeBar from "../../Components/TimeBar.jsx";
 
 const nullTask = {
 	title: "",
@@ -237,6 +194,20 @@ function Schedule() {
 												initialTime={activeTask.start}
 												maxTime={activeTask.end}
 												className="py-1 alert alert-light bg-transparent"
+												onChange={(newTime) => {
+													setActiveTask((prevTask) => ({
+														...prevTask,
+														start: newTime,
+													}));
+													setOverlap((prev) => {
+														const isOverlap = checkOverLapTime(
+															newTime,
+															activeTask.end,
+															activeTask.days
+														);
+														return { check: isOverlap, mesg: isOverlap ? `Overlaps with: ${activeTask.title} (${activeTask.start}-${activeTask.end})` : "" };
+													});
+												}}
 											></TimeInputClock>
 										</div>
 										<span className="span"></span>
@@ -248,6 +219,20 @@ function Schedule() {
 												initialTime={activeTask.end}
 												minTime={activeTask.start}
 												className="py-1 alert alert-light bg-transparent"
+												onChange={(newTime) => {
+													setActiveTask((prevTask) => ({
+														...prevTask,
+														start: newTime,
+													}));
+													setOverlap((prev) => {
+														const isOverlap = checkOverLapTime(
+															newTime,
+															activeTask.end,
+															activeTask.days
+														);
+														return { check: isOverlap, mesg: isOverlap ? `Overlaps with: ${activeTask.title} (${activeTask.start}-${activeTask.end})` : "" };
+													});
+												}}
 											></TimeInputClock>
 										</div>
 									</div>
@@ -280,7 +265,7 @@ function Schedule() {
 										<button
 											type="button"
 											className="btn btn-primary"
-											disabled={overlap.is}
+											disabled={overlap.check}
 											onClick={save}
 										>
 											Save

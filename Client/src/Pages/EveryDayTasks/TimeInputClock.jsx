@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Arrow from "../../Components/Arrow";
 import { compareTime } from "../../Utils/timeUtilities";
 
