@@ -1,0 +1,66 @@
+[
+  {
+    "id": 2,
+    "title": "Physical Training (Calisthenics)",
+    "start": "05:40",
+    "end": "06:15",
+    "days": [true, true, false, true, false, true, false],
+    "details": "Strength training, mobility, stretching. Rest days included for recovery."
+  },
+  {
+    "id": 3,
+    "title": "Qur'an Reading / Islamic Knowledge",
+    "start": "06:15",
+    "end": "06:45",
+    "days": [true, true, true, true, true, true, true],
+    "details": "Qur'an reading with reflection (tafseer), hadith or fiqh study."
+  },
+  {
+    "id": 4,
+    "title": "Breakfast & Preparation",
+    "start": "06:45",
+    "end": "07:30",
+    "days": [true, true, true, true, true, false, false],
+    "details": "Healthy breakfast, shower, planning tasks for the day."
+  },
+  {
+    "id": 5,
+    "title": "Deep Coding Session",
+    "start": "08:00",
+    "end": "11:00",
+    "days": [true, true, true, true, true, false, false],
+    "details": "Focused coding: React, backend, algorithms, project work. No distractions."
+  },
+  {
+    "id": 8,
+    "title": "Reading Books / Learning",
+    "start": "13:30",
+    "end": "14:30",
+    "days": [true, true, true, true, false, true, true],
+    "details": "Read technical books, Islamic books, or development material."
+  },
+  {
+    "id": 9,
+    "title": "Light Coding / Practice",
+    "start": "14:30",
+    "end": "16:30",
+    "days": [true, true, true, true, false, false, false],
+    "details": "Practice problems, refactoring, learning new concepts calmly."
+  },
+  {
+    "id": 11,
+    "title": "Personal Projects / Creativity",
+    "start": "17:00",
+    "end": "18:30",
+    "days": [true, false, true, true, false, true, false],
+    "details": "Side projects, experimentation, design ideas, open-source work."
+  },
+  {
+    "id": 13,
+    "title": "Dinner & Relaxation",
+    "start": "19:30",
+    "end": "20:15",
+    "days": [true, true, true, true, true, true, true],
+    "details": "Light dinner, calm atmosphere, avoid overeating."
+  }
+]

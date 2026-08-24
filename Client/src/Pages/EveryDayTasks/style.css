@@ -1,0 +1,13 @@
+.scroller {
+	display: flex;
+	overflow-x: auto;
+
+	scroll-behavior: smooth;
+	overflow-y: hidden;
+	width: 100%;
+}
+
+/* hide scrollbar */
+.scroller::-webkit-scrollbar {
+	display: none;
+}
