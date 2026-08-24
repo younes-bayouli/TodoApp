@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Arrow from "../../Components/Arrow";
-import { compareTime, checkOverLap } from "../../Utils/timeUtilities";
+import { compareTime } from "../../Utils/timeUtilities";
 
 export default function TimeInputClock({
 	initialTime = "00:00",
@@ -65,25 +65,8 @@ export default function TimeInputClock({
 			) < 0;
 		setActiveButtons(copy);
 		onChange(newTime);
-
-		// Check overlap after time changes
-		// If this is start time, use minTime as end; if end time, use maxTime as start
-		if (isStartTime) {
-			checkOverlap(newTime, maxTime);
-		} else {
-			checkOverlap(minTime, newTime);
-		}
 	};
-
-	// Initialize overlap check on mount
-	useEffect(() => {
-		if (isStartTime) {
-			checkOverlap(initialTime, maxTime);
-		} else {
-			checkOverlap(minTime, initialTime);
-		}
-	}, []);
-
+	
 	return (
 		<div
 			style={{ fontSize: "1.8rem", fontWeight: "600" }}

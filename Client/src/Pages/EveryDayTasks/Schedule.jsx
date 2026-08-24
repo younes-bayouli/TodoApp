@@ -10,13 +10,15 @@ import {
 	checkOverLap,
 } from "../../Utils/timeUtilities";
 import { useMouseDistance } from "../../Utils/useMouseDistance";
-import Tasks from "./Tasks";
+import Task from "./Task";
+import Tasks from "../../fakeData/fakeTasks";
+import { DAYS } from "../../Utils/dateUtilities";
+import TimeInputClock from "./TimeInputClock.jsx";
 
 const TimeList = Array.from(
 	{ length: 24 },
 	(_, i) => `${String(i).padStart(2, "0")}:00`,
 );
-
 
 const checkOverlap = (newStart, newEnd, tasks, onOverlapChange) => {
 	if (!onOverlapChange) return;
@@ -57,11 +59,23 @@ const StaticTimeBars = memo(() => {
 	);
 });
 
-function Schedule({onTaskClick}) {
+const nullTask = {
+	title: "",
+	start: "00:00",
+	end: "00:00",
+	days: [false, false, false, false, false, false, false],
+	details: "",
+};
+
+function Schedule() {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [editMode, setEditMode] = useState(false);
+	const [activeTask, setActiveTask] = useState(nullTask);
+	const [Hovered, setHovered] = useState(false);
+	const [overlap, setOverlap] = useState({ check: false, mesg: "" });
 	const scrollRef = useRef(null);
 	const time = useTime();
 	const distanceMouseLeftedge = useMouseDistance(scrollRef);
-	const [Hovered, setHovered] = useState(false);
 
 	const scroll = (direction) => {
 		const amount = 500;
@@ -77,6 +91,38 @@ function Schedule({onTaskClick}) {
 	useEffect(() => {
 		scrollRef.current.scrollLeft = (timeToMinutes(time) * 10) / 6 - 300;
 	}, []);
+
+	const handleClickOnTask = (task) => {
+		setActiveTask(task);
+		setEditMode(true);
+		setIsModalOpen(true);
+	};
+
+	const save = () => {
+		if (editMode) {
+			setEditMode(false);
+		}
+		setIsModalOpen(false);
+		setActiveTask(nullTask);
+	};
+
+	const updateTask = (e) => {
+		const { name, value } = e.target;
+		name === "days"
+			? setActiveTask((oldVersion) => {
+					const newDays = [...oldVersion.days];
+					newDays[value] = !newDays[value];
+
+					return {
+						...oldVersion,
+						days: newDays,
+					};
+				})
+			: setActiveTask((prevTask) => ({
+					...prevTask,
+					[name]: value,
+				}));
+	};
 
 	return (
 		<div className="container w-100 py-4 px-0 flex-grow-1 d-flex align-items-center">
@@ -128,13 +174,124 @@ function Schedule({onTaskClick}) {
 						}
 					></TimeBar>
 				)}
-				<Tasks onClick={onTaskClick} TasksList={Tasks} ></Tasks>
+				<div className="h-100 w-100 position-absolute d-flex align-items-center">
+					{Tasks.map((task) => (
+						<Task task={task} onClick={handleClickOnTask}></Task>
+					))}
+				</div>
 			</div>
 			<Arrow
 				deg={-90}
 				style={{ width: "5%", height: "10%" }}
 				onClick={useCallback(() => scroll(1), [])}
 			></Arrow>
+
+			{isModalOpen && (
+				<div
+					className="modal show d-block  bg-light bg-opacity-50 position-fixed d-flex align-items-center justify-content-center"
+					style={{ zIndex: 947852634958 }}
+				>
+					<div className="modal-dialog w-50">
+						<div className="modal-content">
+							<button
+								type="button"
+								className="btn-close align-self-end m-3"
+								onClick={() => {
+									setIsModalOpen(false);
+									setEditMode(false);
+								}}
+							></button>
+							<div className="modal-body">
+								<form className="d-flex flex-column align-items-center">
+									<div className="mb-3 w-100">
+										<label className="form-label">
+											Title:
+										</label>
+										<input
+											type="text"
+											name="title"
+											className="form-control"
+											value={activeTask.title}
+											onChange={updateTask}
+										/>
+									</div>
+									<div className="mb-3 w-100">
+										<label className="form-label">
+											Details:
+										</label>
+										<textarea
+											className="form-control"
+											rows="3"
+											name="details"
+											value={activeTask.details}
+											onChange={updateTask}
+											style={{ resize: "none" }}
+										></textarea>
+									</div>
+									<div className="px-5 w-100 d-flex justify-content-center gap-4 ">
+										<div className=" flex-fill">
+											<label className="form-label">
+												Start at:
+											</label>
+											<TimeInputClock
+												initialTime={activeTask.start}
+												maxTime={activeTask.end}
+												className="py-1 alert alert-light bg-transparent"
+											></TimeInputClock>
+										</div>
+										<span className="span"></span>
+										<div className=" flex-fill">
+											<label className="form-label">
+												End at:
+											</label>
+											<TimeInputClock
+												initialTime={activeTask.end}
+												minTime={activeTask.start}
+												className="py-1 alert alert-light bg-transparent"
+											></TimeInputClock>
+										</div>
+									</div>
+									<div className="my-5 w-100 d-flex">
+										<label className="form-label me-3">
+											Repeat on:
+										</label>
+										<div className="w-75 d-flex justify-content-between">
+											{DAYS.map((day, index) => (
+												<label className="d-flex flex-column align-items-center justify-content-center">
+													<input
+														type="checkbox"
+														name="days"
+														value={index}
+														checked={
+															activeTask.days[index]
+														}
+														onChange={updateTask}
+														id=""
+													/>
+													{day}
+												</label>
+											))}
+										</div>
+									</div>
+									<div className="align-self-end d-flex align-items-center">
+										<p className="text-danger">
+											{overlap.mesg}
+										</p>
+										<button
+											type="button"
+											className="btn btn-primary"
+											disabled={overlap.is}
+											onClick={save}
+										>
+											Save
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }
