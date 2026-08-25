@@ -3,14 +3,10 @@ import { stringToMinutes,timeDifferenceInMinutes } from "../../Utils/timeUtiliti
 
 export default function Task({ task, onClick }) {
 	const [tooltip, setTooltip] = useState(false);
-    let t;
 	const openTooltip = () => {
-		t = setTimeout(() => {
 			setTooltip(true);
-		}, 500);
 	};
 	const closeTooltip = () => {
-		clearTimeout(t);
 		setTooltip(false);
 	};
 
@@ -28,7 +24,8 @@ export default function Task({ task, onClick }) {
 				width: tooltip?200:(timeDifferenceInMinutes(task.start, task.end) * 10) / 6,
                 minHeight:tooltip?"50%":"auto",
 				maxHeight:"80%",
-                zIndex:tooltip?554654355544:0
+                zIndex:tooltip?554654355544:0,
+				cursor: "default",
 			}}
 			className="alert alert-primary p-2 overflow-hidden position-absolute"
 			onClick={handleClick}

@@ -4,6 +4,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { Routes, Route, BrowserRouter, NavLink } from "react-router-dom";
 import Navlist from "./Navigation/Navlist";
 import EveryDayTasks from "./Pages/EveryDayTasks/EveryDayTasks.jsx";
+import TodoList from "./Pages/TodoList/TodoList.jsx";
 
 function First() {
 	return (
@@ -14,7 +15,13 @@ function First() {
 }
 
 function App() {
-	const pagesList = ["Home", "TODO list", "Projects", "MyEveryday", "Calender"];
+	const pagesList = [
+		"Home",
+		"TODO list",
+		"Projects",
+		"MyEveryday",
+		"Calender",
+	];
 	return (
 		<>
 			<BrowserRouter>
@@ -27,9 +34,12 @@ function App() {
 						<Routes>
 							<Route path="/" element={<First />} />
 							{/* <Route path="/home" element={<Home />}></Route> */}
-							{/* <Route path="/todolist" element={<TodoList />} /> */}
+							<Route path="/todolist" element={<TodoList />} />
 							{/* <Route path="/projects" element={<Projects />} /> */}
-							<Route path="/Myeveryday" element={<EveryDayTasks />} />
+							<Route
+								path="/Myeveryday"
+								element={<EveryDayTasks />}
+							/>
 						</Routes>
 					</div>
 				</div>

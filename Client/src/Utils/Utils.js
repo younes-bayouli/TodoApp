@@ -1,4 +1,6 @@
-const checkOverlap = (newStart, newEnd, tasks, onOverlapChange) => {
+import { checkOverLapTime } from "./timeUtilities";
+
+export const checkOverlap = (activeTask, newStart, newEnd, tasks, onOverlapChange) => {
 	if (!onOverlapChange) return;
 
 	let hasOverlap = false;
@@ -6,20 +8,14 @@ const checkOverlap = (newStart, newEnd, tasks, onOverlapChange) => {
 
 	for (const task of tasks) {
 		// Skip the task being edited
-		if (task.id === editedTaskId) continue;
+		if (activeTask && task.id === activeTask.id) continue;
 
 		// Check if days overlap (simplified - check if any day matches)
 		const dayOverlap = task.days.some((day) => day);
-
 		if (!dayOverlap) continue;
 
 		// Check time overlap
-		const overlap = checkOverLapTime(
-			newStart,
-			newEnd,
-			task.start,
-			task.end,
-		);
+		const overlap = checkOverLapTime(newStart, newEnd, task.start, task.end);
 		if (overlap) {
 			hasOverlap = true;
 			overlapMessage = `Overlaps with: ${task.title} (${task.start}-${task.end})`;

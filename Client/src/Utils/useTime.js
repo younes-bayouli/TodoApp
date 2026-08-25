@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
-export function useTime() {
-  const [time, setTime] = useState(() => new Date());
+export function useDate() {
+  const [date, setDate] = useState(() => new Date());
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(new Date()), 1000);
+    const interval = setInterval(() => setDate(new Date()), 1000);
     return () => clearInterval(interval);
   }, []);
 
-  return time;
+  return date;
 }
