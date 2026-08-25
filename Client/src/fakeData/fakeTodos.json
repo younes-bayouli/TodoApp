@@ -1,0 +1,114 @@
+[
+	{
+		"id": 1,
+		"title": "Plan the day",
+		"details": "Choose the three most important things to finish.",
+		"priority": "high",
+		"completed": false
+	},
+	{
+		"id": 2,
+		"title": "Finish the React task",
+		"details": "Complete the current feature and check the result.",
+		"priority": "high",
+		"completed": false
+	},
+	{
+		"id": 3,
+		"title": "Read a chapter",
+		"details": "Spend a little time learning something new.",
+		"priority": "medium",
+		"completed": false
+	},
+	{
+		"id": 4,
+		"title": "Clean up the workspace",
+		"details": "Remove old notes and organize project files.",
+		"priority": "low",
+		"completed": false
+	},
+	{
+		"id": 5,
+		"title": "Review open pull requests",
+		"details": "Check pending changes and leave useful feedback.",
+		"priority": "high",
+		"completed": false
+	},
+	{
+		"id": 6,
+		"title": "Fix the navigation links",
+		"details": "Make sure every sidebar item opens the right page.",
+		"priority": "high",
+		"completed": false
+	},
+	{
+		"id": 7,
+		"title": "Write a project README",
+		"details": "Document setup steps and the main project features.",
+		"priority": "medium",
+		"completed": false
+	},
+	{
+		"id": 8,
+		"title": "Test the task filters",
+		"details": "Verify that All, Open, and Completed show the right items.",
+		"priority": "medium",
+		"completed": false
+	},
+	{
+		"id": 9,
+		"title": "Prepare tomorrow's priorities",
+		"details": "Choose the next tasks before ending the workday.",
+		"priority": "medium",
+		"completed": false
+	},
+	{
+		"id": 10,
+		"title": "Update dependencies",
+		"details": "Check the package versions and remove unused dependencies.",
+		"priority": "low",
+		"completed": false
+	},
+	{
+		"id": 11,
+		"title": "Organize design references",
+		"details": "Collect useful interface ideas in one place.",
+		"priority": "low",
+		"completed": false
+	},
+	{
+		"id": 12,
+		"title": "Back up important notes",
+		"details": "Keep a current copy of project notes and decisions.",
+		"priority": "low",
+		"completed": false
+	},
+	{
+		"id": 13,
+		"title": "Add empty states",
+		"details": "Give empty lists a clear and helpful message.",
+		"priority": "medium",
+		"completed": false
+	},
+	{
+		"id": 14,
+		"title": "Check mobile spacing",
+		"details": "Review the pages at a narrow viewport.",
+		"priority": "high",
+		"completed": false
+	},
+	{
+		"id": 15,
+		"title": "Archive finished ideas",
+		"details": "Move old brainstorming notes out of the active list.",
+		"priority": "low",
+		"completed": false
+	},
+	{
+		"id": 16,
+		"title": "Refactor repeated styles",
+		"details": "Keep shared styling consistent across the application.",
+		"priority": "medium",
+		"completed": false
+	}
+]
