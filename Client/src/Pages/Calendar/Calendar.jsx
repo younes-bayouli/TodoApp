@@ -9,7 +9,9 @@ function toMonthValue(date) {
 
 function Calendar() {
 	const calendarRef = useRef(null);
-	const [selectedMonth, setSelectedMonth] = useState(toMonthValue(new Date()));
+	const [selectedMonth, setSelectedMonth] = useState(
+		toMonthValue(new Date()),
+	);
 
 	const changeMonth = (event) => {
 		const value = event.target.value;
