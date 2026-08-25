@@ -20,6 +20,7 @@ function Calendar() {
 	const [dayTooltip, setDayTooltip] = useState(null);
 	const [eventModal, setEventModal] = useState(null);
 	const [eventTitle, setEventTitle] = useState("");
+	const [eventColor, setEventColor] = useState("#0d6efd");
 	const [planModal, setPlanModal] = useState(false);
 	const [planTitle, setPlanTitle] = useState("");
 	const [planStart, setPlanStart] = useState(toDateKey(new Date()));
@@ -65,12 +66,14 @@ function Calendar() {
 	const openEventModal = (date) => {
 		setDayTooltip(null);
 		setEventTitle("");
+		setEventColor("#0d6efd");
 		setEventModal(date);
 	};
 
 	const closeEventModal = () => {
 		setEventModal(null);
 		setEventTitle("");
+		setEventColor("#0d6efd");
 	};
 
 	const openPlanModal = () => {
@@ -116,8 +119,8 @@ function Calendar() {
 			title: eventTitle.trim(),
 			start: eventModal,
 			allDay: true,
-			backgroundColor: "#0d6efd",
-			borderColor: "#0d6efd",
+			backgroundColor: eventColor,
+			borderColor: eventColor,
 		};
 		eventsRef.current = [...eventsRef.current, newEvent];
 		setEvents((currentEvents) => [...currentEvents, newEvent]);
@@ -281,6 +284,22 @@ function Calendar() {
 										}
 										autoFocus
 										required
+									/>
+									<label
+										htmlFor="calendar-event-color"
+										className="form-label mt-3"
+									>
+										Event color
+									</label>
+									<input
+										id="calendar-event-color"
+										type="color"
+										className="form-control form-control-color d-block"
+										value={eventColor}
+										onChange={(event) =>
+											setEventColor(event.target.value)
+										}
+										title="Choose event color"
 									/>
 								</div>
 								<div className="modal-footer">
