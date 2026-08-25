@@ -1,0 +1,128 @@
+.calendar-page {
+	max-width: 1180px;
+	margin: 0 auto;
+}
+
+.calendar-header {
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+	gap: 24px;
+	margin-bottom: 32px;
+}
+
+.calendar-eyebrow {
+	margin: 0 0 8px;
+	color: #1976d2;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.calendar-header h1 {
+	margin: 0;
+	color: #172033;
+	font-size: clamp(2rem, 4vw, 3rem);
+	font-weight: 700;
+}
+
+.calendar-description {
+	margin: 8px 0 0;
+	color: #697386;
+}
+
+.month-picker {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	color: #697386;
+	font-size: 0.78rem;
+	font-weight: 700;
+}
+
+.month-picker input {
+	min-height: 42px;
+	padding: 8px 12px;
+	border: 1px solid #d9e0ea;
+	border-radius: 6px;
+	background: #fff;
+	color: #172033;
+	font: inherit;
+}
+
+.calendar-shell {
+	padding: 24px;
+	border: 1px solid #e2e7ef;
+	border-radius: 8px;
+	background: #fff;
+	box-shadow: 0 10px 30px rgb(28 44 74 / 7%);
+}
+
+.fc {
+	--fc-border-color: #e7ebf1;
+	--fc-button-bg-color: #1976d2;
+	--fc-button-border-color: #1976d2;
+	--fc-button-hover-bg-color: #125ea8;
+	--fc-button-hover-border-color: #125ea8;
+	--fc-today-bg-color: #edf5fd;
+	--fc-page-bg-color: #fff;
+	color: #172033;
+}
+
+.fc .fc-toolbar-title {
+	font-size: 1.35rem;
+	font-weight: 700;
+}
+
+.fc .fc-button {
+	border-radius: 5px;
+	box-shadow: none;
+	font-size: 0.82rem;
+	font-weight: 600;
+}
+
+.fc .fc-daygrid-day-number {
+	padding: 10px;
+	color: #536176;
+	font-size: 0.85rem;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.fc .fc-col-header-cell-cushion {
+	padding: 10px 4px;
+	color: #7b8799;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+
+@media (max-width: 640px) {
+	.calendar-header {
+		align-items: stretch;
+		flex-direction: column;
+		margin-bottom: 22px;
+	}
+
+	.calendar-shell {
+		padding: 12px 8px;
+	}
+
+	.fc .fc-toolbar {
+		gap: 10px;
+		flex-wrap: wrap;
+	}
+
+	.fc .fc-toolbar-title {
+		font-size: 1.1rem;
+	}
+
+	.fc .fc-toolbar-chunk:nth-child(2) {
+		order: -1;
+		width: 100%;
+		text-align: center;
+	}
+}
