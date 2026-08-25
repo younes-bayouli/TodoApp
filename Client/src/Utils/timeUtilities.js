@@ -1,5 +1,5 @@
-export function format(date) {
-  const d = date;
+export function format(time) {
+  const d = time;
 
   const hour24 = d.toLocaleTimeString('en-US', {
     hour: '2-digit',
