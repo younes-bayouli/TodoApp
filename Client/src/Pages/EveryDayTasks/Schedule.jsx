@@ -96,25 +96,50 @@ function Schedule({ time, Tasks, controlsTargetRef }) {
 		<>
 			{controlsTarget &&
 				createPortal(
-					<div className="d-flex gap-2">
-						<button
-							type="button"
-							className="btn"
-							onClick={() =>
-								setChosenDay((day) => (day + 1) % DAYS.length)
-							}
+					<div className="d-flex align-items-center gap-2">
+						<div
+							className="d-flex gap-1"
+							role="group"
+							aria-label="Day navigation"
 						>
-							For {chosenDay === todayDayIndex && "Today ("}
-							{DAYS[chosenDay]}
-							{chosenDay === todayDayIndex && ")"}
-						</button>
-						<button
-							type="button"
-							className="btn alert alert-primary p-2 m-0 btn-outline-secondary"
+							<div
+								className="btn alert alert-light d-flex align-items-center justify-content-center p-1 m-0"
+								aria-label="Previous day"
+								onClick={() =>
+									setChosenDay(
+										(day) =>
+											(day - 1 + DAYS.length) %
+											DAYS.length,
+									)
+								}
+							>
+								<Arrow deg={90} />
+							</div>
+							<div
+								className="btn alert alert-light d-flex align-items-center justify-content-center p-1 m-0"
+								aria-label="Next day"
+								onClick={() =>
+									setChosenDay(
+										(day) => (day + 1) % DAYS.length,
+									)
+								}
+							>
+								<Arrow deg={-90} />
+							</div>
+							<div
+								className="btn alert alert-light d-flex align-items-center justify-content-center p-1 m-0"
+							>
+								For {chosenDay === todayDayIndex && "Today ("}
+								{DAYS[chosenDay]}
+								{chosenDay === todayDayIndex && ")"}
+							</div>
+						</div>
+						<div
+							className="btn alert alert-light p-1 m-0"
 							onClick={addTask}
 						>
 							Add Task
-						</button>
+						</div>
 					</div>,
 					controlsTarget,
 				)}
@@ -140,10 +165,17 @@ function Schedule({ time, Tasks, controlsTargetRef }) {
 									6) /
 									10,
 							);
-							let nextTask=getCurrentAndNextTask(format(minutesToTime(min)).hour24,Tasks,chosenDay).next
-							let end=min;
-							if(nextTask && stringToMinutes(nextTask.start)<min+30){
-								end=stringToMinutes(nextTask.start)-30
+							let nextTask = getCurrentAndNextTask(
+								format(minutesToTime(min)).hour24,
+								Tasks,
+								chosenDay,
+							).next;
+							let end = min;
+							if (
+								nextTask &&
+								stringToMinutes(nextTask.start) < min + 30
+							) {
+								end = stringToMinutes(nextTask.start) - 30;
 							}
 							const newTask = {
 								...nullTask,

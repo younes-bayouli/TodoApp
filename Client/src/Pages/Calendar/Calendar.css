@@ -1,0 +1,63 @@
+.fc {
+	--fc-border-color: #e7ebf1;
+	--fc-button-bg-color: #1976d2;
+	--fc-button-border-color: #1976d2;
+	--fc-button-hover-bg-color: #125ea8;
+	--fc-button-hover-border-color: #125ea8;
+	--fc-today-bg-color: #edf5fd;
+	--fc-page-bg-color: #fff;
+	color: #172033;
+}
+
+.fc .fc-toolbar-title {
+	font-size: 1.15rem;
+	font-weight: 700;
+}
+
+.fc .fc-button {
+	border-radius: 5px;
+	box-shadow: none;
+	font-size: 0.82rem;
+	font-weight: 600;
+}
+
+.fc .fc-daygrid-day-number {
+	padding: 4px 6px;
+	color: #536176;
+	font-size: 0.78rem;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.fc .fc-col-header-cell-cushion {
+	padding: 5px 4px;
+	color: #7b8799;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+
+.calendar-day-tooltip {
+	position: fixed;
+	z-index: 1060;
+	width: 250px;
+	max-height: 220px;
+	padding: 12px;
+	border: 1px solid #dee2e6;
+	border-radius: 6px;
+	background: #fff;
+	box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+	color: #212529;
+	font-size: 0.85rem;
+	overflow-y: auto;
+}
+
+.calendar-event-color {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	flex-shrink: 0;
+}

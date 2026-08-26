@@ -5,6 +5,7 @@ import { Routes, Route, BrowserRouter, NavLink } from "react-router-dom";
 import Navlist from "./Navigation/Navlist";
 import EveryDayTasks from "./Pages/EveryDayTasks/EveryDayTasks.jsx";
 import TodoList from "./Pages/TodoList/TodoList.jsx";
+import Calendar from "./Pages/Calendar/Calendar.jsx";
 
 function First() {
 	return (
@@ -40,6 +41,7 @@ function App() {
 								path="/Myeveryday"
 								element={<EveryDayTasks />}
 							/>
+							<Route path="/calender" element={<Calendar />} />
 						</Routes>
 					</div>
 				</div>
