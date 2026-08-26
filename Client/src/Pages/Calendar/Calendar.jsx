@@ -8,17 +8,20 @@ import {
 	toMonthValue,
 	formatDay,
 	toDateKey,
+	toDateKeyFromString,
 } from "../../Utils/dateUtilities.js";
 import fakeEvents from "../../fakeData/fakeEvents.json";
 import { useDate } from "../../Utils/useTime.js";
 
 function Calendar() {
 	const calendarRef = useRef(null);
-	const hideTooltipTimer = useRef(null);
+	const showTooltipTimer = useRef(null);
 	const [events, setEvents] = useState(fakeEvents);
 	const [eventsRef] = useState({ current: fakeEvents });
 	const [dayTooltip, setDayTooltip] = useState(null);
-	const [eventModal, setEventModal] = useState(null);
+	const [dayEvents, setDayEvents] = useState(null);
+	const [eventModal, setEventModal] = useState(false);
+	const [editingEvent, setEditingEvent] = useState(null);
 	const [eventTitle, setEventTitle] = useState("");
 	const [eventColor, setEventColor] = useState("#0d6efd");
 	const [planModal, setPlanModal] = useState(false);
@@ -29,25 +32,23 @@ function Calendar() {
 	const [selectedMonth, setSelectedMonth] = useState(toMonthValue(useDate()));
 
 	const getEventsForDay = (date) => {
-		const dateKey = toDateKey(date);
+		const dateKey = date instanceof Date ? toDateKey(date) : toDateKeyFromString(date);
 		return eventsRef.current.filter(
 			(event) => event.start.slice(0, 10) === dateKey,
 		);
 	};
 
 	const showDayTooltip = (date, pointerEvent) => {
-		clearTimeout(hideTooltipTimer.current);
 		const tooltipWidth = 250;
 		const tooltipHeight = 100;
-		const gap = 14;
 		const left =
-			pointerEvent.clientX + gap + tooltipWidth > window.innerWidth
-				? pointerEvent.clientX - tooltipWidth - gap
-				: pointerEvent.clientX + gap;
+			pointerEvent.clientX + tooltipWidth > window.innerWidth
+				? pointerEvent.clientX - tooltipWidth
+				: pointerEvent.clientX;
 		const top =
-			pointerEvent.clientY + gap + tooltipHeight > window.innerHeight
-				? pointerEvent.clientY - tooltipHeight - gap
-				: pointerEvent.clientY + gap;
+			pointerEvent.clientY + tooltipHeight > window.innerHeight
+				? pointerEvent.clientY - tooltipHeight
+				: pointerEvent.clientY;
 
 		setDayTooltip({
 			date,
@@ -60,18 +61,29 @@ function Calendar() {
 	};
 
 	const hideDayTooltip = () => {
-		hideTooltipTimer.current = setTimeout(() => setDayTooltip(null), 150);
+		clearTimeout(showTooltipTimer.current);
+		setDayTooltip(null);
 	};
 
-	const openEventModal = (date) => {
-		setDayTooltip(null);
-		setEventTitle("");
-		setEventColor("#0d6efd");
-		setEventModal(date);
+	const openDayEvents = (date) => {
+		hideDayTooltip();
+		setDayEvents(date);
+	};
+
+	const closeDayEvents = () => {
+		setDayEvents(null);
+	};
+
+	const openEventModal = (event = null) => {
+		setEditingEvent(event);
+		setEventTitle(event?.title ?? "");
+		setEventColor(event?.backgroundColor ?? "#0d6efd");
+		setEventModal(true);
 	};
 
 	const closeEventModal = () => {
-		setEventModal(null);
+		setEventModal(false);
+		setEditingEvent(null);
 		setEventTitle("");
 		setEventColor("#0d6efd");
 	};
@@ -112,22 +124,49 @@ function Calendar() {
 
 	const addEvent = (event) => {
 		event.preventDefault();
-		if (!eventTitle.trim() || !eventModal) return;
+		if (!eventTitle.trim() || !dayEvents) return;
 
-		const newEvent = {
-			id: `event-${Date.now()}`,
-			title: eventTitle.trim(),
-			start: eventModal,
-			allDay: true,
-			backgroundColor: eventColor,
-			borderColor: eventColor,
-		};
-		eventsRef.current = [...eventsRef.current, newEvent];
-		setEvents((currentEvents) => [...currentEvents, newEvent]);
+		if (editingEvent) {
+			const updatedEvent = {
+				...editingEvent,
+				title: eventTitle.trim(),
+				backgroundColor: eventColor,
+				borderColor: eventColor,
+			};
+			const updatedEvents = eventsRef.current.map((currentEvent) =>
+				currentEvent.id === editingEvent.id
+					? updatedEvent
+					: currentEvent,
+			);
+			eventsRef.current = updatedEvents;
+			setEvents(updatedEvents);
+		} else {
+			const newEvent = {
+				id: `event-${Date.now()}`,
+				title: eventTitle.trim(),
+				start: dayEvents,
+				allDay: true,
+				backgroundColor: eventColor,
+				borderColor: eventColor,
+			};
+			eventsRef.current = [...eventsRef.current, newEvent];
+			setEvents((currentEvents) => [...currentEvents, newEvent]);
+		}
 		closeEventModal();
 	};
 
-	const handleDateClick = ({ dateStr }) => openEventModal(dateStr);
+	const deleteEvent = (eventId) => {
+		const remainingEvents = eventsRef.current.filter(
+			(currentEvent) => currentEvent.id !== eventId,
+		);
+		eventsRef.current = remainingEvents;
+		setEvents(remainingEvents);
+	};
+
+	const handleDateClick = ({ dateStr }) => {
+		console.log("Date clicked:", dateStr);
+		openDayEvents(dateStr);
+	};
 
 	const changeMonth = (event) => {
 		const value = event.target.value;
@@ -190,34 +229,40 @@ function Calendar() {
 				</div>
 			</header>
 
-			<div className="flex-grow-1" style={{ minHeight: 0 }}>
-				<FullCalendar
-					ref={calendarRef}
-					plugins={[dayGridPlugin, interactionPlugin]}
-					initialView="dayGridMonth"
-					headerToolbar={{
-						left: "",
-						right: "",
-					}}
-					events={events}
-					height="100%"
-					navLinks={false}
-					dateClick={handleDateClick}
-					dayCellDidMount={({ date, el }) => {
-						const showTooltip = (event) =>
-							showDayTooltip(date, event);
-						el.addEventListener("mouseenter", showTooltip);
-						el.addEventListener("mouseleave", hideDayTooltip);
-					}}
-					datesSet={handleDatesSet}
-				/>
-			</div>
+			{!dayEvents && (
+				<div className="flex-grow-1" style={{ minHeight: 0 }}>
+					<FullCalendar
+						ref={calendarRef}
+						plugins={[dayGridPlugin, interactionPlugin]}
+						initialView="dayGridMonth"
+						headerToolbar={{
+							left: "",
+							right: "",
+						}}
+						events={events}
+						height="100%"
+						navLinks={false}
+						dateClick={handleDateClick}
+						dayCellDidMount={({ date, el }) => {
+							const showTooltip = (event) => {
+								hideDayTooltip();
+								showTooltipTimer.current = setTimeout(() => {
+									showDayTooltip(date, event);
+								}, 500);
+							};
+
+							el.addEventListener("mousemove", showTooltip);
+							el.addEventListener("mouseleave", hideDayTooltip);
+						}}
+						datesSet={handleDatesSet}
+					/>
+				</div>
+			)}
 
 			{dayTooltip && (
 				<div
 					className="calendar-day-tooltip"
 					style={dayTooltip.position}
-					onMouseEnter={() => clearTimeout(hideTooltipTimer.current)}
 					onMouseLeave={hideDayTooltip}
 				>
 					<div className="fw-semibold mb-2">
@@ -240,6 +285,78 @@ function Calendar() {
 				</div>
 			)}
 
+			{dayEvents && (
+				<div className="calendar-day-events flex-grow-1">
+					<div className="d-flex justify-content-between align-items-center mb-3">
+						<div>
+							<h4 className="mb-1">{dayEvents}</h4>
+							<p className="text-secondary mb-0">
+								Events for this day
+							</p>
+						</div>
+						<div className="d-flex gap-2">
+							<div
+								className="btn alert alert-light m-0 p-2"
+								onClick={() => openEventModal()}
+							>
+								Add event
+							</div>
+							<div
+								className="btn alert alert-light m-0 p-2"
+								onClick={closeDayEvents}
+							>
+								Back to calendar
+							</div>
+						</div>
+					</div>
+					<div className="list-group">
+						{getEventsForDay(dayEvents).length > 0 ? (
+							getEventsForDay(dayEvents).map((calendarEvent) => (
+								<div
+									key={calendarEvent.id}
+									className="list-group-item d-flex justify-content-between align-items-center gap-3"
+								>
+									<div className="d-flex align-items-center gap-2">
+										<span
+											className="calendar-event-color"
+											style={{
+												backgroundColor:
+													calendarEvent.backgroundColor,
+											}}
+										/>
+										<span>{calendarEvent.title}</span>
+									</div>
+									<div className="d-flex gap-2">
+										<button
+											type="button"
+											className="btn btn-sm btn-outline-primary"
+											onClick={() =>
+												openEventModal(calendarEvent)
+											}
+										>
+											Edit
+										</button>
+										<button
+											type="button"
+											className="btn btn-sm btn-outline-danger"
+											onClick={() =>
+												deleteEvent(calendarEvent.id)
+											}
+										>
+											Delete
+										</button>
+									</div>
+								</div>
+							))
+						) : (
+							<div className="list-group-item text-secondary">
+								No events scheduled for this day.
+							</div>
+						)}
+					</div>
+				</div>
+			)}
+
 			{eventModal && (
 				<div
 					className="modal show d-block bg-light bg-opacity-50"
@@ -254,7 +371,11 @@ function Calendar() {
 						<div className="modal-content">
 							<form onSubmit={addEvent}>
 								<div className="modal-header">
-									<h5 className="modal-title">Add event</h5>
+									<h5 className="modal-title">
+										{editingEvent
+											? "Edit event"
+											: "Add event"}
+									</h5>
 									<button
 										type="button"
 										className="btn-close"
@@ -263,51 +384,61 @@ function Calendar() {
 									/>
 								</div>
 								<div className="modal-body">
-									<p className="text-secondary">
-										{formatDay(
-											new Date(`${eventModal}T00:00:00`),
-										)}
-									</p>
+									<div className="mb-3">
+										<label
+											htmlFor="event-title"
+											className="form-label"
+										>
+											Event title
+										</label>
+										<input
+											id="event-title"
+											type="text"
+											className="form-control"
+											value={eventTitle}
+											onChange={(inputEvent) =>
+												setEventTitle(
+													inputEvent.target.value,
+												)
+											}
+											autoFocus
+											required
+										/>
+									</div>
 									<label
-										htmlFor="calendar-event-title"
+										htmlFor="event-color"
 										className="form-label"
-									>
-										Event title
-									</label>
-									<input
-										id="calendar-event-title"
-										type="text"
-										className="form-control"
-										value={eventTitle}
-										onChange={(event) =>
-											setEventTitle(event.target.value)
-										}
-										autoFocus
-										required
-									/>
-									<label
-										htmlFor="calendar-event-color"
-										className="form-label mt-3"
 									>
 										Event color
 									</label>
 									<input
-										id="calendar-event-color"
+										id="event-color"
 										type="color"
-										className="form-control form-control-color d-block"
+										className="form-control form-control-color"
 										value={eventColor}
-										onChange={(event) =>
-											setEventColor(event.target.value)
+										onChange={(inputEvent) =>
+											setEventColor(
+												inputEvent.target.value,
+											)
 										}
 										title="Choose event color"
 									/>
 								</div>
 								<div className="modal-footer">
 									<button
+										type="button"
+										className="btn btn-secondary"
+										onClick={closeEventModal}
+									>
+										Cancel
+									</button>
+									<button
 										type="submit"
 										className="btn btn-primary"
 									>
-										Save event
+										{editingEvent
+											? "Save changes"
+											: "Add event"}
 									</button>
 								</div>
 							</form>
