@@ -1,3 +1,4 @@
+import { useState } from "react";
 import TodayEventsCard from "../../Components/Cards/TodayEventsCard";
 import PhotoCard from "../../Components/Cards/PhotoCard";
 import TodoPreviewCard from "../../Components/Cards/TodoPreviewCard";
@@ -12,7 +13,21 @@ import { format } from "../../Utils/timeUtilities";
 import { getCurrentAndNextTask } from "../../Utils/Utils";
 import "./Home.css";
 
-function Home({ photo }) {
+const photos = Object.values(
+	import.meta.glob("../../Photos/*.{jpg,jpeg,png,webp}", {
+		eager: true,
+		query: "?url",
+		import: "default",
+	}),
+);
+let nextPhotoIndex = 0;
+
+function Home() {
+	const [photo] = useState(() => {
+		const selectedPhoto = photos[nextPhotoIndex % photos.length];
+		nextPhotoIndex += 1;
+		return selectedPhoto;
+	});
 	const date = useDate();
 	const todayKey = toDateKey(date);
 	const currentDayIndex = (date.getDay() + 6) % 7;
