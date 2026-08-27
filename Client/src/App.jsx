@@ -7,14 +7,7 @@ import EveryDayTasks from "./Pages/EveryDayTasks/EveryDayTasks.jsx";
 import TodoList from "./Pages/TodoList/TodoList.jsx";
 import Calendar from "./Pages/Calendar/Calendar.jsx";
 import Projects from "./Pages/Projects/Projects.jsx";
-
-function First() {
-	return (
-		<div className="d-flex align-items-center justify-content-center flex-column h-100">
-			<h3>Welcome, Younes. Happy engineering!</h3>
-		</div>
-	);
-}
+import Home from "./Pages/Home/Home.jsx";
 
 function App() {
 	const pagesList = [
@@ -34,8 +27,8 @@ function App() {
 					<div className="span"></div>
 					<div className="flex-grow-1 p-5 overflow-auto">
 						<Routes>
-							<Route path="/" element={<First />} />
-							{/* <Route path="/home" element={<Home />}></Route> */}
+							<Route path="/" element={<first />} />
+							<Route path="/home" element={<Home />} />
 							<Route path="/todolist" element={<TodoList />} />
 							<Route path="/projects" element={<Projects />} />
 							<Route

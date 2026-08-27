@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import Schedule from "./Schedule.jsx";
-import TimeCard from "../../Components/TimeCard.jsx";
+import TimeCard from "../../Components/Cards/TimeCard.jsx";
 import { useDate } from "../../Utils/useTime";
 import Tasks from "../../fakeData/fakeTasks";
 import { format } from "../../Utils/timeUtilities";
 import { getCurrentAndNextTask } from "../../Utils/Utils";
-import TaskStatusCard from "../../Components/TaskStatusCard.jsx";
+import TaskStatusCard from "../../Components/Cards/TaskStatusCard.jsx";
 
 function Myeveryday() {
 	const Date = useDate();
