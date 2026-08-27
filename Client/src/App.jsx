@@ -9,7 +9,6 @@ import Calendar from "./Pages/Calendar/Calendar.jsx";
 import Projects from "./Pages/Projects/Projects.jsx";
 import Home from "./Pages/Home/Home.jsx";
 
-
 function First() {
 	return (
 		<div className="d-flex align-items-center justify-content-center flex-column h-100">
@@ -22,6 +21,7 @@ function App() {
 	const pagesList = [
 		"Home",
 		"TODO list",
+		"Prayer Times",
 		"Projects",
 		"MyEveryday",
 		"Calender",
@@ -29,12 +29,12 @@ function App() {
 	return (
 		<>
 			<BrowserRouter>
-				<div className="d-flex p-0">
+				<div className="d-flex p-0 app-shell">
 					<nav className="navbar vh-100 p-4 d-flex flex-column">
 						<Navlist List={pagesList}></Navlist>
 					</nav>
 					<div className="span"></div>
-					<div className="flex-grow-1 p-5 overflow-auto">
+					<div className="flex-grow-1 app-content p-4 overflow-auto">
 						<Routes>
 							<Route path="/" element={<First />} />
 							<Route path="/home" element={<Home />} />

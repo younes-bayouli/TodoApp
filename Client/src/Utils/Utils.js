@@ -1,6 +1,12 @@
 import { checkOverLapTime } from "./timeUtilities";
 
-export const checkOverlap = (activeTask, newStart, newEnd, tasks, onOverlapChange) => {
+export const checkOverlap = (
+	activeTask,
+	newStart,
+	newEnd,
+	tasks,
+	onOverlapChange,
+) => {
 	if (!onOverlapChange) return;
 
 	let hasOverlap = false;
@@ -15,7 +21,12 @@ export const checkOverlap = (activeTask, newStart, newEnd, tasks, onOverlapChang
 		if (!dayOverlap) continue;
 
 		// Check time overlap
-		const overlap = checkOverLapTime(newStart, newEnd, task.start, task.end);
+		const overlap = checkOverLapTime(
+			newStart,
+			newEnd,
+			task.start,
+			task.end,
+		);
 		if (overlap) {
 			hasOverlap = true;
 			overlapMessage = `Overlaps with: ${task.title} (${task.start}-${task.end})`;
@@ -33,6 +44,7 @@ export function getCurrentAndNextTask(time, tasks, dayIndex = 0) {
 	let currentTask = null;
 	let nextTask = null;
 	let nextTaskIndex = tasks.length;
+	let nextTaskStartTotal = Infinity;
 
 	tasks.forEach((task, index) => {
 		if (!task.days[dayIndex]) return;
@@ -42,30 +54,21 @@ export function getCurrentAndNextTask(time, tasks, dayIndex = 0) {
 		const startTotal = startHours * 60 + startMinutes;
 		const endTotal = endHours * 60 + endMinutes;
 
-		const isOvernight = endTotal < startTotal;
-
 		let isCurrent = false;
 		let isAfter = false;
 
-		if (isOvernight) {
-			isCurrent =
-				givenMinutesTotal >= startTotal || givenMinutesTotal < endTotal;
-			isAfter =
-				givenMinutesTotal >= endTotal && givenMinutesTotal < startTotal;
-		} else {
-			isCurrent =
-				givenMinutesTotal >= startTotal && givenMinutesTotal < endTotal;
-			isAfter = givenMinutesTotal >= endTotal;
-		}
+		isCurrent =
+			givenMinutesTotal >= startTotal && givenMinutesTotal < endTotal;
+		isAfter = givenMinutesTotal <= startTotal;
 
 		if (isCurrent) {
 			currentTask = task;
 		}
 
 		if (isAfter) {
-			if (index < nextTaskIndex) {
-				nextTaskIndex = index;
+			if (startTotal < nextTaskStartTotal) {
 				nextTask = task;
+				nextTaskStartTotal=startTotal;
 			}
 		}
 	});

@@ -20,6 +20,7 @@ const photos = Object.values(
 		import: "default",
 	}),
 );
+console.log("Loaded photos:", photos);
 let nextPhotoIndex = 0;
 
 function Home() {

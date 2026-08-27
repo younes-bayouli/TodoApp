@@ -20,12 +20,12 @@ function Myeveryday() {
 
 	return (
 		<>
-			<div className="d-flex flex-column h-100">
+			<div className="d-flex flex-column h-100 gap-5">
 				<div className="d-flex align-items-center justify-content-between">
 					<h3 className="mb-0">My Every Day</h3>
 					<div ref={scheduleControlsRef}></div>
 				</div>
-				<div className="flex-grow-1 d-flex flex-column gap-5 pt-4">
+				<div className="flex-grow-1 d-flex flex-column gap-5">
 					<Schedule
 						time={Date}
 						Tasks={Tasks}
