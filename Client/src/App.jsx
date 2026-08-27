@@ -8,6 +8,7 @@ import TodoList from "./Pages/TodoList/TodoList.jsx";
 import Calendar from "./Pages/Calendar/Calendar.jsx";
 import Projects from "./Pages/Projects/Projects.jsx";
 import Home from "./Pages/Home/Home.jsx";
+import PrayerTimes from "./Pages/PrayerTimes/PrayerTimes.jsx";
 
 function First() {
 	return (
@@ -38,6 +39,10 @@ function App() {
 						<Routes>
 							<Route path="/" element={<First />} />
 							<Route path="/home" element={<Home />} />
+							<Route
+								path="/prayertimes"
+								element={<PrayerTimes />}
+							/>
 							<Route path="/todolist" element={<TodoList />} />
 							<Route path="/projects" element={<Projects />} />
 							<Route

@@ -1,0 +1,190 @@
+.prayer-page {
+	min-height: 0;
+}
+
+.prayer-page-date {
+	margin: 0;
+	color: var(--bs-secondary-color);
+	font-size: 0.9rem;
+}
+
+.prayer-card-grid {
+	display: grid;
+	flex: 1 1 auto;
+	min-height: 0;
+	grid-template-columns: minmax(260px, 1.15fr) minmax(180px, 0.85fr) minmax(
+			180px,
+			0.85fr
+		);
+	grid-template-rows: minmax(0, 1fr) minmax(0, 0.8fr);
+	gap: 1rem;
+	align-items: stretch;
+}
+
+.prayer-card {
+	min-width: 0;
+}
+
+.prayer-time-card {
+	min-width: 0;
+}
+
+.prayer-times-card {
+	grid-column: 1;
+	grid-row: 1 / span 2;
+}
+
+.islamic-date-card {
+	grid-column: 2;
+	grid-row: 1;
+}
+
+.next-prayer-card {
+	grid-column: 3;
+	grid-row: 1;
+}
+
+.prayer-time-card {
+	grid-column: 2 / span 2;
+	grid-row: 2;
+}
+
+.prayer-card h2 {
+	margin: 0;
+	font-size: 1.3rem;
+	font-weight: 500;
+}
+
+.prayer-times-list {
+	display: grid;
+	gap: 0.3rem;
+}
+
+.prayer-time-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.55rem 0;
+	border-bottom: var(--bs-border-width) solid
+		var(--bs-border-color-translucent);
+}
+
+.prayer-time-row:last-child {
+	border-bottom: 0;
+}
+
+.prayer-time-name {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+}
+
+.prayer-time-icon {
+	width: 2rem;
+	height: 2rem;
+	object-fit: contain;
+}
+
+.prayer-card-icon {
+	width: 2.5rem;
+	height: 2.5rem;
+	object-fit: contain;
+}
+
+.prayer-time-row time {
+	font-weight: 600;
+}
+
+.islamic-date-card,
+.next-prayer-card {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.next-prayer-card {
+	padding-left: 1.25rem;
+	border-left: 1px solid #dee2e6;
+}
+
+.islamic-date-number {
+	margin: 0.5rem 0 0;
+	font-size: clamp(3rem, 6vw, 5rem);
+	font-weight: 300;
+	line-height: 1;
+}
+
+.islamic-date-card h2 {
+	margin-top: 0.5rem;
+}
+
+.islamic-date-year,
+.islamic-date-gregorian,
+.next-prayer-countdown,
+.next-prayer-tomorrow {
+	margin: 0.35rem 0 0;
+	color: var(--bs-secondary-color);
+}
+
+.islamic-date-gregorian {
+	margin-top: auto;
+	padding-top: 1rem;
+	font-size: 0.82rem;
+}
+
+.next-prayer-time {
+	font-size: clamp(2.5rem, 5vw, 4rem);
+	font-weight: 300;
+	line-height: 1;
+}
+
+.next-prayer-countdown {
+	font-size: 0.95rem;
+}
+
+.next-prayer-tomorrow {
+	color: var(--bs-primary);
+	font-size: 0.8rem;
+}
+
+@media (max-width: 850px) {
+	.prayer-card-grid {
+		flex: 0 1 auto;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-template-rows: auto;
+	}
+
+	.prayer-times-card {
+		grid-column: 1 / -1;
+		grid-row: auto;
+	}
+
+	.islamic-date-card,
+	.next-prayer-card,
+	.prayer-time-card {
+		grid-column: auto;
+		grid-row: auto;
+	}
+}
+
+@media (max-width: 550px) {
+	.prayer-page {
+		height: auto !important;
+	}
+
+	.prayer-page-header {
+		align-items: start;
+		flex-direction: column;
+	}
+
+	.prayer-card-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.next-prayer-card {
+		padding-top: 1.25rem;
+		padding-left: 0;
+		border-top: 1px solid #dee2e6;
+		border-left: 0;
+	}
+}
