@@ -6,7 +6,7 @@ function getPrayerDate(time, date, addDay = false) {
 	return prayerDate;
 }
 
-function NextPrayerCard({ prayers, date }) {
+function NextPrayerCard({ prayers, date, small = false, className="" }) {
 	const prayerNames = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
 	let nextPrayer = prayerNames
 		.map((name) => ({
@@ -34,17 +34,21 @@ function NextPrayerCard({ prayers, date }) {
 	const label = nextPrayer.name[0].toUpperCase() + nextPrayer.name.slice(1);
 
 	return (
-		<div className="card shadow-sm border rounded bg-white p-4 next-prayer-card">
+		<div className={`card shadow-sm border rounded bg-white p-4 next-prayer-card ${className}`}>
 			<p className="text-secondary small fw-semibold text-uppercase mb-1">
 				Up next
 			</p>
 			<h2>{label}</h2>
-			<div
-				className="next-prayer-time"
-				aria-label="Time remaining"
-			>
-				{countdown}
-			</div>
+			{small && (
+				<h4 className="next-prayer-time-sm" aria-label="Time remaining">
+					{countdown}
+				</h4>
+			)}
+			{!small && (
+				<h1 className="next-prayer-time" aria-label="Time remaining">
+					{countdown}
+				</h1>
+			)}
 		</div>
 	);
 }

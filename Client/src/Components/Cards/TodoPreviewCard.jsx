@@ -4,9 +4,9 @@ const priorityColors = {
 	low: "#4b7a5a",
 };
 
-function TodoPreviewCard({ todos = [], limit = 5 }) {
+function TodoPreviewCard({ todos = [], limit = 3 }) {
 	const visibleTodos = todos
-		.filter((todo) => !todo.completed)
+		.filter((todo) => !todo.completed && todo.priority==="high")
 		.slice(0, limit);
 
 	return (
@@ -20,7 +20,7 @@ function TodoPreviewCard({ todos = [], limit = 5 }) {
 					{todos.filter((todo) => !todo.completed).length}
 				</span>
 			</div>
-			<ul className="home-todo-list">
+			<ul className="home-todo-list mt-2">
 				{visibleTodos.length > 0 ? (
 					visibleTodos.map((todo) => (
 						<li key={todo.id}>

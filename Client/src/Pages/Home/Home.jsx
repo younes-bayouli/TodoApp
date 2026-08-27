@@ -1,12 +1,15 @@
 import { useState } from "react";
-import TodayEventsCard from "../../Components/Cards/TodayEventsCard";
 import PhotoCard from "../../Components/Cards/PhotoCard";
-import TodoPreviewCard from "../../Components/Cards/TodoPreviewCard";
 import TimeCard from "../../Components/Cards/TimeCard";
 import TaskStatusCard from "../../Components/Cards/TaskStatusCard";
+import TodoPreviewCard from "../../Components/Cards/TodoPreviewCard";
+import TodayEventsCard from "../../Components/Cards/TodayEventsCard";
+import IslamicDateCard from "../../Components/Cards/IslamicDateCard";
+import NextPrayerCard from "../../Components/Cards/NextPrayerCard";
 import fakeEvents from "../../fakeData/fakeEvents.json";
 import fakeTodos from "../../fakeData/fakeTodos.json";
 import fakeTasks from "../../fakeData/fakeTasks.json";
+import prayers from "../../fakeData/fakePrayers.json";
 import { toDateKey } from "../../Utils/dateUtilities";
 import { useDate } from "../../Utils/useTime";
 import { format } from "../../Utils/timeUtilities";
@@ -55,12 +58,16 @@ function Home() {
 				<div className="home-card home-time-card">
 					<TimeCard date={date} />
 				</div>
-				<div className="home-card home-status-card">
-					<TaskStatusCard currentTask={current} nextTask={next} />
+				<div className="d-flex gap-3">
+					<IslamicDateCard date={date} />
+					<NextPrayerCard prayers={prayers} className="flex-fill" date={date} small={true}/>
 				</div>
-				<TodayEventsCard events={todaysEvents} date={date} />
-				<PhotoCard photo={photo} />
+				<TaskStatusCard currentTask={current} nextTask={next} />
+				<div className="d-flex gap-3">
+					<TodayEventsCard events={todaysEvents} date={date} />
 				<TodoPreviewCard todos={fakeTodos} />
+				</div>
+				<PhotoCard photo={photo} />
 			</section>
 		</main>
 	);
