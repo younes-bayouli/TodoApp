@@ -22,3 +22,12 @@ export const toDateKeyFromString = (dateString) => {
 	const [year, month, day] = dateString.slice(0, 10).split("-").map(Number);
 	return toDateKey(new Date(year, month - 1, day));
 };
+
+export const formatDate = (dateString) => {
+	const date = new Date(dateString);
+	return date.toLocaleDateString("en-US", {
+		month: "short",
+		day: "numeric",
+		year: "numeric",
+	});
+};

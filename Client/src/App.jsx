@@ -6,6 +6,7 @@ import Navlist from "./Navigation/Navlist";
 import EveryDayTasks from "./Pages/EveryDayTasks/EveryDayTasks.jsx";
 import TodoList from "./Pages/TodoList/TodoList.jsx";
 import Calendar from "./Pages/Calendar/Calendar.jsx";
+import Projects from "./Pages/Projects/Projects.jsx";
 
 function First() {
 	return (
@@ -36,7 +37,7 @@ function App() {
 							<Route path="/" element={<First />} />
 							{/* <Route path="/home" element={<Home />}></Route> */}
 							<Route path="/todolist" element={<TodoList />} />
-							{/* <Route path="/projects" element={<Projects />} /> */}
+							<Route path="/projects" element={<Projects />} />
 							<Route
 								path="/Myeveryday"
 								element={<EveryDayTasks />}
