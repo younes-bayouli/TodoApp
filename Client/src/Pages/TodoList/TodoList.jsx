@@ -1,20 +1,33 @@
-import { useState } from "react";
-import Todos from "../../fakeData/fakeTodos.json";
+import { useEffect, useState } from "react";
 import Todo from "./Todo.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api/api.js";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
 
 function TodoList() {
-	const [tasks, setTasks] = useState(() =>
-		Todos.map((task) => ({ ...task, completed: false })),
-	);
+	const {
+        data: tasks,
+        isPending,
+		isLoading,
+        isError,
+        error
+    } = useQuery({
+        queryKey: ["todos"],
+        queryFn: api.todos.getAll
+    });
+	// const [tasks, setTasks] = useState(() =>
+	// 	Todos?Todos.map((task) => ({ ...task, completed: false })):[],
+	// );
+	// useEffect(()=>{
+	// 	setTasks(() => Todos?Todos.map((task) => ({ ...task, completed: false })):[]);
+	// },[Todos])
 	const [filter, setFilter] = useState("All");
 	const [title, setTitle] = useState("");
 	const [priority, setPriority] = useState("medium");
 
-	const visibleTasks = tasks
-		.filter((task) => {
+	const visibleTasks = tasks?.filter((task) => {
 			if (filter === "Open") return !task.completed;
 			if (filter === "Completed") return task.completed;
 			return true;
@@ -32,7 +45,7 @@ function TodoList() {
 			);
 		});
 
-	const openCount = tasks.filter((task) => !task.completed).length;
+	const openCount = tasks?.filter((task) => !task.completed).length;
 
 	const addTask = (event) => {
 		event.preventDefault();
@@ -120,7 +133,8 @@ function TodoList() {
 			</div>
 
 			<div className="list-group list-group-flush border rounded">
-				{visibleTasks.length ? (
+				{isLoading && <h1>Loading...</h1> }
+				{visibleTasks?.length ? (
 					visibleTasks.map((task) => (
 						<Todo
 							key={task.id}

@@ -37,7 +37,7 @@ export const checkOverlap = (
 	onOverlapChange({ check: hasOverlap, mesg: overlapMessage });
 };
 
-export function getCurrentAndNextTask(time, tasks, dayIndex = 0) {
+export function getCurrentAndNextTask(time, tasks=[], dayIndex = 0) {
 	const [givenHours, givenMinutes] = time.split(":").map(Number);
 	const givenMinutesTotal = givenHours * 60 + givenMinutes;
 

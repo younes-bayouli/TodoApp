@@ -1,4 +1,5 @@
 function getPrayerDate(time, date, addDay = false) {
+	if(!time) {return null};
 	const [hours, minutes] = time.split(":").map(Number);
 	const prayerDate = new Date(date);
 	prayerDate.setHours(hours, minutes, 0, 0);
@@ -6,8 +7,8 @@ function getPrayerDate(time, date, addDay = false) {
 	return prayerDate;
 }
 
-function NextPrayerCard({ prayers, date, small = false, className="" }) {
-	const prayerNames = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+function NextPrayerCard({ prayers={}, date, small = false, className="" }) {
+	const prayerNames = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 	let nextPrayer = prayerNames
 		.map((name) => ({
 			name,
@@ -15,7 +16,7 @@ function NextPrayerCard({ prayers, date, small = false, className="" }) {
 			date: getPrayerDate(prayers[name], date),
 		}))
 		.find((prayer) => prayer.date > date);
-
+	
 	if (!nextPrayer) {
 		const tomorrow = getPrayerDate(prayers.fajr, date, true);
 		nextPrayer = { name: "fajr", time: prayers.fajr, date: tomorrow };
@@ -23,7 +24,7 @@ function NextPrayerCard({ prayers, date, small = false, className="" }) {
 
 	const remainingSeconds = Math.max(
 		0,
-		Math.floor((nextPrayer.date.getTime() - date.getTime()) / 1000),
+		Math.floor((nextPrayer.date?.getTime() - date.getTime()) / 1000),
 	);
 	const hours = Math.floor(remainingSeconds / 3600);
 	const minutes = Math.floor((remainingSeconds % 3600) / 60);

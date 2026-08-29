@@ -4,7 +4,6 @@ import dhuhrIcon from "../../icons/dhuhr.png";
 import asrIcon from "../../icons/asr.png";
 import maghribIcon from "../../icons/ma8rib.png";
 import ishaIcon from "../../icons/isha.png";
-import prayerTimesIcon from "../../icons/prayertimes.png";
 
 const prayerLabels = {
 	fajr: "Fajr",
@@ -16,15 +15,15 @@ const prayerLabels = {
 };
 
 const prayerIcons = {
-	fajr: fajrIcon,
-	sunrise: sunriseIcon,
-	dhuhr: dhuhrIcon,
-	asr: asrIcon,
-	maghrib: maghribIcon,
-	isha: ishaIcon,
+	Fajr: fajrIcon,
+	Sunrise: sunriseIcon,
+	Dhuhr: dhuhrIcon,
+	Asr: asrIcon,
+	Maghrib: maghribIcon,
+	Isha: ishaIcon,
 };
 
-function PrayerTimesCard({ prayers }) {
+function PrayerTimesCard({ prayers=[] }) {
 	return (
 		<article className="card shadow-sm border rounded bg-white p-4 h-100 prayer-times-card">
 			<div className="d-flex align-items-start justify-content-between mb-3">
@@ -36,7 +35,7 @@ function PrayerTimesCard({ prayers }) {
 				</div>
 			</div>
 			<div className="prayer-times-list">
-				{Object.entries(prayers).map(([key, time]) => (
+				{Object.entries(prayers).slice(0,7).filter((prayer)=> prayer[0]!=="Sunset").map(([key, time]) => (
 					<div className="prayer-time-row" key={key}>
 						<div className="prayer-time-name">
 							<img

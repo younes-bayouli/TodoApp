@@ -1,16 +1,21 @@
 import { useState } from "react";
-import fakeProjectsData from "../../fakeData/fakeProjects.json";
 import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
 import "./Projects.css";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api/api";
 
 function Projects() {
-	const [projects, setProjects] = useState(fakeProjectsData);
+	const {
+		data:projects,
+	}=useQuery({
+		queryKey:["projects"],
+		queryFn:api.projects.getAll
+	})
 	const [selectedProject, setSelectedProject] = useState(null);
 	const [filter, setFilter] = useState("all");
 
 	const handleProjectClick = (project) => {
-		console.log("Project clicked:", project);
 		setSelectedProject(project);
 	};
 
@@ -23,7 +28,7 @@ function Projects() {
 	};
 
 	const toggleTodo = (todoId) => {
-		const updatedProjects = projects.map((proj) => {
+		const updatedProjects = projects?.map((proj) => {
 			if (proj.id === selectedProject.id) {
 				const updatedTodos = proj.todos.map((todo) =>
 					todo.id === todoId

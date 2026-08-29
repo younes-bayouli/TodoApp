@@ -24,7 +24,7 @@ const nullTask = {
 	details: "",
 };
 
-function Schedule({ time, Tasks, controlsTargetRef }) {
+function Schedule({ time, Tasks=[], controlsTargetRef }) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [chosenDay, setChosenDay] = useState(() => (time.getDay() + 6) % 7);
 	const [controlsTarget, setControlsTarget] = useState(null);

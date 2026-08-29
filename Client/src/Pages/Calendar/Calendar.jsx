@@ -10,14 +10,17 @@ import {
 	toDateKey,
 	toDateKeyFromString,
 } from "../../Utils/dateUtilities.js";
-import fakeEvents from "../../fakeData/fakeEvents.json";
 import { useDate } from "../../Utils/useTime.js";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api/api.js";
 
 function Calendar() {
 	const calendarRef = useRef(null);
 	const showTooltipTimer = useRef(null);
-	const [events, setEvents] = useState(fakeEvents);
-	const [eventsRef] = useState({ current: fakeEvents });
+	const {data:events}=useQuery({
+		queryKey:["events"],
+		queryFn:api.events.getAll
+	})
 	const [dayTooltip, setDayTooltip] = useState(null);
 	const [dayEvents, setDayEvents] = useState(null);
 	const [eventModal, setEventModal] = useState(false);
@@ -33,7 +36,7 @@ function Calendar() {
 
 	const getEventsForDay = (date) => {
 		const dateKey = date instanceof Date ? toDateKey(date) : toDateKeyFromString(date);
-		return eventsRef.current.filter(
+		return events?.filter(
 			(event) => event.start.slice(0, 10) === dateKey,
 		);
 	};
@@ -117,8 +120,6 @@ function Calendar() {
 			backgroundColor: planColor,
 			borderColor: planColor,
 		};
-		eventsRef.current = [...eventsRef.current, newPlan];
-		setEvents((currentEvents) => [...currentEvents, newPlan]);
 		closePlanModal();
 	};
 
@@ -133,13 +134,6 @@ function Calendar() {
 				backgroundColor: eventColor,
 				borderColor: eventColor,
 			};
-			const updatedEvents = eventsRef.current.map((currentEvent) =>
-				currentEvent.id === editingEvent.id
-					? updatedEvent
-					: currentEvent,
-			);
-			eventsRef.current = updatedEvents;
-			setEvents(updatedEvents);
 		} else {
 			const newEvent = {
 				id: `event-${Date.now()}`,
@@ -149,22 +143,14 @@ function Calendar() {
 				backgroundColor: eventColor,
 				borderColor: eventColor,
 			};
-			eventsRef.current = [...eventsRef.current, newEvent];
-			setEvents((currentEvents) => [...currentEvents, newEvent]);
 		}
 		closeEventModal();
 	};
 
 	const deleteEvent = (eventId) => {
-		const remainingEvents = eventsRef.current.filter(
-			(currentEvent) => currentEvent.id !== eventId,
-		);
-		eventsRef.current = remainingEvents;
-		setEvents(remainingEvents);
 	};
 
 	const handleDateClick = ({ dateStr }) => {
-		console.log("Date clicked:", dateStr);
 		openDayEvents(dateStr);
 	};
 

@@ -16,7 +16,7 @@ function ProjectList({
 	const [projectTeam, setProjectTeam] = useState("");
 	const [projectColor, setProjectColor] = useState("#0d6efd");
 
-	const filteredProjects = projects.filter((project) => {
+	const filteredProjects = projects?.filter((project) => {
 		if (filter === "all") return true;
 		if (filter === "active") {
 			return project.todos.some((t) => !t.completed);
@@ -62,7 +62,7 @@ function ProjectList({
 			<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
 				<h3 className="mb-0 fw-semibold">Projects</h3>
 				<span className="badge text-primary-emphasis fw-normal">
-					{projects.length} projects
+					{projects?.length} projects
 				</span>
 			</div>
 
@@ -87,7 +87,7 @@ function ProjectList({
 			</div>
 
 			<div className="row g-4">
-				{filteredProjects.map((project) => (
+				{filteredProjects?.map((project) => (
 					<div className="col-12 col-md-6 col-lg-4" key={project.id}>
 						<ProjectCard
 							project={project}
@@ -111,12 +111,6 @@ function ProjectList({
 					</button>
 				</div>
 			</div>
-
-			{filteredProjects.length === 0 && (
-				<p className="text-center text-secondary">
-					No projects found with the selected filter.
-				</p>
-			)}
 
 			{showAddProject && (
 				<div

@@ -2,12 +2,19 @@ import { useRef } from "react";
 import Schedule from "./Schedule.jsx";
 import TimeCard from "../../Components/Cards/TimeCard.jsx";
 import { useDate } from "../../Utils/useTime";
-import Tasks from "../../fakeData/fakeTasks";
 import { format } from "../../Utils/timeUtilities";
 import { getCurrentAndNextTask } from "../../Utils/Utils";
 import TaskStatusCard from "../../Components/Cards/TaskStatusCard.jsx";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api/api.js";
 
 function Myeveryday() {
+	const {
+		data:Tasks
+	}=useQuery({
+		queryKey:["tasks"],
+		queryFn:api.tasks.getAll
+	})
 	const Date = useDate();
 	const scheduleControlsRef = useRef(null);
 	const currentTime = format(Date).hour24;
