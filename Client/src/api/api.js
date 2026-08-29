@@ -111,7 +111,7 @@ export const api = {
 	},
 
 	prayerTimes: {
-		get: (latitude,longitude,date) =>
+		get: (latitude = "", longitude = "", date) =>
 			request(
 				`https://api.aladhan.com/v1/timings/${date}?latitude=${latitude}&longitude=${longitude}`,
 				true,
@@ -119,75 +119,97 @@ export const api = {
 	},
 
 	location: {
-        get: () =>
-            new Promise((resolve, reject) => {
-                if (!navigator.geolocation) {
-                    reject(
-                        new Error(
-                            "Geolocation is not supported by this browser."
-                        )
-                    );
-                    return;
-                }
+		get: () =>
+			new Promise((resolve, reject) => {
+				if (!navigator.geolocation) {
+					reject(
+						new Error(
+							"Geolocation is not supported by this browser.",
+						),
+					);
+					return;
+				}
 
-                navigator.geolocation.getCurrentPosition(
-                    async (position) => {
-                        const { latitude, longitude } = position.coords;
+				navigator.geolocation.getCurrentPosition(
+					async (position) => {
+						const { latitude, longitude } = position.coords;
 
-                        try {
-                            const url = new URL(NOMINATIM_URL);
+						try {
+							const url = new URL(NOMINATIM_URL);
 
-                            url.searchParams.set("format", "jsonv2");
-                            url.searchParams.set("lat", latitude);
-                            url.searchParams.set("lon", longitude);
-                            url.searchParams.set("addressdetails", "1");
+							url.searchParams.set("format", "jsonv2");
+							url.searchParams.set("lat", latitude);
+							url.searchParams.set("lon", longitude);
+							url.searchParams.set("addressdetails", "1");
+							const response = await fetch(url);
 
-                            const response = await fetch(url);
+							if (!response.ok) {
+								throw new Error("Failed to determine city.");
+							}
 
-                            if (!response.ok) {
-                                throw new Error(
-                                    "Failed to determine city."
-                                );
-                            }
+							const data = await response.json();
+							const address = data.address;
 
-                            const data = await response.json();
-                            const address = data.address;
+							resolve({
+								latitude,
+								longitude,
+								...address,
+								country: address.country || null,
+							});
+						} catch (error) {
+							reject(error);
+						}
+					},
 
-                            resolve({
-                                latitude,
-                                longitude,
-                                ...address,
-                                country: address.country || null,
-                            });
-                        } catch (error) {
-                            reject(error);
-                        }
-                    },
+					async (error) => {
+						let message;
 
-                    (error) => {
-                        let message;
+						switch (error.code) {
+							case error.PERMISSION_DENIED:
+								console.log("Location permission was denied.")
+								message = "Location permission was denied.";
+								let latitude = 36.406355;
+								let longitude = 10.622964;
+								const url = new URL(NOMINATIM_URL);
 
-                        switch (error.code) {
-                            case error.PERMISSION_DENIED:
-                                message = "Location permission was denied.";
-                                break;
+								url.searchParams.set("format", "jsonv2");
+								url.searchParams.set("lat", latitude);
+								url.searchParams.set("lon", longitude);
+								url.searchParams.set("addressdetails", "1");
+								const response = await fetch(url);
 
-                            case error.POSITION_UNAVAILABLE:
-                                message =
-                                    "Location information is unavailable.";
-                                break;
+								if (!response.ok) {
+									throw new Error(
+										"Failed to determine city.",
+									);
+								}
 
-                            case error.TIMEOUT:
-                                message = "Location request timed out.";
-                                break;
+								const data = await response.json();
+								const address = data.address;
 
-                            default:
-                                message = "Unable to get your location.";
-                        }
+								resolve({
+									latitude,
+									longitude,
+									...address,
+									country: address.country || null,
+								});
+								break;
 
-                        reject(new Error(message));
-                    }
-                );
-            }),
-    },
+							case error.POSITION_UNAVAILABLE:
+								message =
+									"Location information is unavailable.";
+								break;
+
+							case error.TIMEOUT:
+								message = "Location request timed out.";
+								break;
+
+							default:
+								message = "Unable to get your location.";
+						}
+
+					},
+				);
+			}),
+	},
 };

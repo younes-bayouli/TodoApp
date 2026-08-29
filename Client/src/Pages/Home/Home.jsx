@@ -6,10 +6,7 @@ import TodoPreviewCard from "../../Components/Cards/TodoPreviewCard";
 import TodayEventsCard from "../../Components/Cards/TodayEventsCard";
 import IslamicDateCard from "../../Components/Cards/IslamicDateCard";
 import NextPrayerCard from "../../Components/Cards/NextPrayerCard";
-import fakeEvents from "../../fakeData/fakeEvents.json";
-import fakeTodos from "../../fakeData/fakeTodos.json";
-import prayers from "../../fakeData/fakePrayers.json";
-import { toDateKey } from "../../Utils/dateUtilities";
+import { dateToString, toDateKey } from "../../Utils/dateUtilities";
 import { useDate } from "../../Utils/useTime";
 import { format } from "../../Utils/timeUtilities";
 import { getCurrentAndNextTask } from "../../Utils/Utils";
@@ -27,6 +24,7 @@ const photos = Object.values(
 let nextPhotoIndex = 0;
 
 function Home() {
+	const date = useDate();
 	const {
 		data:Tasks
 	}=useQuery({
@@ -37,18 +35,32 @@ function Home() {
 		queryKey:["events"],
 		queryFn:api.events.getAll
 	})
-	const [photo] = useState(() => {
-		const selectedPhoto = photos[nextPhotoIndex % photos.length];
-		nextPhotoIndex += 1;
-		return selectedPhoto;
-	});
 	const {
         data: Todos
     } = useQuery({
         queryKey: ["todos"],
         queryFn: api.todos.getAll
     });
-	const date = useDate();
+	const {
+		data: location,
+	} = useQuery({
+		queryKey: ["location"],
+		queryFn: api.location.get,
+	});
+	const { data: prayers } = useQuery({
+		queryKey: ["prayers"],
+		queryFn: () =>
+			api.prayerTimes.get(
+				location?.latitude,
+				location?.longitude,
+				dateToString(date),
+			),
+	});
+	const [photo] = useState(() => {
+		const selectedPhoto = photos[nextPhotoIndex % photos.length];
+		nextPhotoIndex += 1;
+		return selectedPhoto;
+	});
 	const todayKey = toDateKey(date);
 	const currentDayIndex = (date.getDay() + 6) % 7;
 	const { current, next } = getCurrentAndNextTask(
@@ -76,7 +88,7 @@ function Home() {
 				</div>
 				<div className="d-flex gap-3">
 					<IslamicDateCard date={date} />
-					<NextPrayerCard prayers={prayers} className="flex-fill" date={date} small={true}/>
+					<NextPrayerCard prayers={prayers?.data.timings} className="flex-fill" date={date} small={true}/>
 				</div>
 				<TaskStatusCard currentTask={current} nextTask={next} />
 				<div className="d-flex gap-3">
