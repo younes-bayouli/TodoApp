@@ -10,7 +10,7 @@ const Navlist = ({ List }) => {
 				style={{ cursor: "pointer" }}
 				end
 			>
-				<img src="../src/icons/todo.png" className="icon me-2" alt="" />
+				<img src="logo.png" className="icon me-2" alt="" />
 				MyTODO
 			</NavLink>
 			<div className={`flex-grow-1 flex-column py-5 align-self-start`}>
@@ -27,7 +27,7 @@ const Navlist = ({ List }) => {
 						>
 							<div className="active-indicator me-3"></div>
 							<img
-								src={`../src/icons/${item
+								src={`./Pages/${item
 									.toLowerCase()
 									.replace(/\s+/g, "")}.png`}
 								className="me-2"

@@ -1,9 +1,9 @@
-import fajrIcon from "../../icons/fajr.png";
-import sunriseIcon from "../../icons/sunrise.png";
-import dhuhrIcon from "../../icons/dhuhr.png";
-import asrIcon from "../../icons/asr.png";
-import maghribIcon from "../../icons/ma8rib.png";
-import ishaIcon from "../../icons/isha.png";
+import fajrIcon from "../../assets/icons/prayerIcons/fajr.png";
+import sunriseIcon from "../../assets/icons/prayerIcons/sunrise.png";
+import dhuhrIcon from "../../assets/icons/prayerIcons/dhuhr.png";
+import asrIcon from "../../assets/icons/prayerIcons/asr.png";
+import maghribIcon from "../../assets/icons/prayerIcons/ma8rib.png";
+import ishaIcon from "../../assets/icons/prayerIcons/isha.png";
 
 const prayerLabels = {
 	fajr: "Fajr",

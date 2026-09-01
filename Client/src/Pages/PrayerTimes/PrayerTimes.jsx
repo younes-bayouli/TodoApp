@@ -6,26 +6,31 @@ import { useDate } from "../../Utils/useTime";
 import { dateToString } from "../../Utils/dateUtilities";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api";
+import pinLocation from "../../assets/icons/location-pin.png"
 import "./PrayerTimes.css";
+import { usePosition } from "../../hooks/usePosition";
 
 function PrayerTimes() {
 	const date = useDate();
+	const dateString = dateToString(date);
+	const [position, error] = usePosition();
 	const {
 		data: location,
-		isLoading,
-		error,
+		error:locationError
 	} = useQuery({
-		queryKey: ["location"],
-		queryFn: api.location.get,
+		queryKey: ["location", position, error],
+		queryFn: () => api.location.get(position, error),
+		enabled: !!position?.latitude && !!position?.longitude,
 	});
 	const { data: prayers } = useQuery({
-		queryKey: ["prayers"],
+		queryKey: ["prayers", position],
 		queryFn: () =>
 			api.prayerTimes.get(
-				location?.latitude,
-				location?.longitude,
-				dateToString(date),
+				position?.latitude,
+				position?.longitude,
+				dateString,
 			),
+		enabled: !!position?.latitude && !!position?.longitude,
 	});
 
 	return (
@@ -34,13 +39,8 @@ function PrayerTimes() {
 				<h1 className="mb-0 fw-semibold">Prayer Times</h1>
 				{location && (
 					<span className="prayer-page-location">
-						<img src="../../src/icons/location-pin.png" alt="" />
+						<img src={pinLocation} alt="" />
 						{`${location?.country}, ${location?.county}, ${location?.state_district}`}
-					</span>
-				)}
-				{!isLoading && error && (
-					<span className="prayer-page-location text-danger">
-						{error}
 					</span>
 				)}
 			</header>

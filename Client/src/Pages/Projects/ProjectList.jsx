@@ -41,8 +41,7 @@ function ProjectList({
 		event.preventDefault();
 		if (!projectName.trim() || !projectDeadline) return;
 
-		onAddProject({
-			id: `proj-${Date.now()}`,
+		const newProject={
 			name: projectName.trim(),
 			description: projectDescription.trim(),
 			deadline: projectDeadline,
@@ -53,7 +52,9 @@ function ProjectList({
 				.filter(Boolean),
 			color: projectColor,
 			todos: [],
-		});
+		}
+
+		onAddProject(newProject);
 		closeAddProject();
 	};
 

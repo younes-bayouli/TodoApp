@@ -15,6 +15,8 @@ import { DAYS } from "../../Utils/dateUtilities";
 import TimeInputClock from "./TimeInputClock.jsx";
 import StaticTimeBars from "../../Components/StaticTimeBars.jsx";
 import TimeBar from "../../Components/TimeBar.jsx";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "../../api/api.js";
 
 const nullTask = {
 	title: "",
@@ -36,6 +38,19 @@ function Schedule({ time, Tasks=[], controlsTargetRef }) {
 	const distanceMouseLeftedge = useMouseDistance(scrollRef);
 	const todayDayIndex = (time.getDay() + 6) % 7;
 	const visibleTasks = Tasks.filter((task) => task.days[chosenDay]);
+
+	const queryClient= useQueryClient()
+
+	const addTaskMutation=useMutation({
+		mutationFn:(newTask) => api.tasks.create(newTask),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["tasks"] });
+		},
+	})
+
+	const updateTaskMutation=useMutation({
+		mutationFn:(newTask) => api.tasks.update(newTask)
+	})
 
 	const scroll = (direction) => {
 		const amount = 500;
@@ -69,6 +84,8 @@ function Schedule({ time, Tasks=[], controlsTargetRef }) {
 	const save = () => {
 		if (editMode) {
 			setEditMode(false);
+		}else{
+			addTaskMutation.mutate(activeTask)
 		}
 		setIsModalOpen(false);
 		setActiveTask(nullTask);

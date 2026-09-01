@@ -11,16 +11,36 @@ import {
 	toDateKeyFromString,
 } from "../../Utils/dateUtilities.js";
 import { useDate } from "../../Utils/useTime.js";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
 
 function Calendar() {
 	const calendarRef = useRef(null);
 	const showTooltipTimer = useRef(null);
-	const {data:events}=useQuery({
-		queryKey:["events"],
-		queryFn:api.events.getAll
-	})
+	const queryClient = useQueryClient();
+	const { data: events } = useQuery({
+		queryKey: ["events"],
+		queryFn: api.events.getAll,
+	});
+	const createEventMutation = useMutation({
+		mutationFn: (newEvent) => api.events.create(newEvent),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["events"] });
+		},
+	});
+	const updateEventMutation = useMutation({
+		mutationFn: ({ eventId, eventData }) =>
+			api.events.update(eventId, eventData),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["events"] });
+		},
+	});
+	const deleteEventMutation = useMutation({
+		mutationFn: (eventId) => api.events.delete(eventId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["events"] });
+		},
+	});
 	const [dayTooltip, setDayTooltip] = useState(null);
 	const [dayEvents, setDayEvents] = useState(null);
 	const [eventModal, setEventModal] = useState(false);
@@ -35,10 +55,9 @@ function Calendar() {
 	const [selectedMonth, setSelectedMonth] = useState(toMonthValue(useDate()));
 
 	const getEventsForDay = (date) => {
-		const dateKey = date instanceof Date ? toDateKey(date) : toDateKeyFromString(date);
-		return events?.filter(
-			(event) => event.start.slice(0, 10) === dateKey,
-		);
+		const dateKey =
+			date instanceof Date ? toDateKey(date) : toDateKeyFromString(date);
+		return events?.filter((event) => event.start.slice(0, 10) === dateKey);
 	};
 
 	const showDayTooltip = (date, pointerEvent) => {
@@ -112,7 +131,6 @@ function Calendar() {
 		const endDate = new Date(`${planEnd}T00:00:00`);
 		endDate.setDate(endDate.getDate() + 1);
 		const newPlan = {
-			id: `plan-${Date.now()}`,
 			title: planTitle.trim(),
 			start: planStart,
 			end: toDateKey(endDate),
@@ -120,7 +138,9 @@ function Calendar() {
 			backgroundColor: planColor,
 			borderColor: planColor,
 		};
-		closePlanModal();
+		createEventMutation.mutate(newPlan, {
+			onSuccess: () => closePlanModal(),
+		});
 	};
 
 	const addEvent = (event) => {
@@ -134,20 +154,27 @@ function Calendar() {
 				backgroundColor: eventColor,
 				borderColor: eventColor,
 			};
-		} else {
-			const newEvent = {
-				id: `event-${Date.now()}`,
-				title: eventTitle.trim(),
-				start: dayEvents,
-				allDay: true,
-				backgroundColor: eventColor,
-				borderColor: eventColor,
-			};
+			updateEventMutation.mutate(
+				{ eventId: editingEvent.id, eventData: updatedEvent },
+				{ onSuccess: () => closeEventModal() },
+			);
+			return;
 		}
-		closeEventModal();
+
+		const newEvent = {
+			title: eventTitle.trim(),
+			start: dayEvents,
+			allDay: true,
+			backgroundColor: eventColor,
+			borderColor: eventColor,
+		};
+		createEventMutation.mutate(newEvent, {
+			onSuccess: () => closeEventModal(),
+		});
 	};
 
 	const deleteEvent = (eventId) => {
+		deleteEventMutation.mutate(eventId);
 	};
 
 	const handleDateClick = ({ dateStr }) => {

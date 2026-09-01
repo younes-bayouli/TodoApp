@@ -7,19 +7,19 @@ function getPrayerDate(time, date, addDay = false) {
 	return prayerDate;
 }
 
-function NextPrayerCard({ prayers={}, date, small = false, className="" }) {
+function NextPrayerCard({ prayers, date, small = false, className="" }) {
 	const prayerNames = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 	let nextPrayer = prayerNames
 		.map((name) => ({
 			name,
-			time: prayers[name],
-			date: getPrayerDate(prayers[name], date),
+			time: prayers?.[name],
+			date: getPrayerDate(prayers?.[name], date),
 		}))
 		.find((prayer) => prayer.date > date);
 	
 	if (!nextPrayer) {
-		const tomorrow = getPrayerDate(prayers.fajr, date, true);
-		nextPrayer = { name: "fajr", time: prayers.fajr, date: tomorrow };
+		const tomorrow = getPrayerDate(prayers?.Fajr, date, true);
+		nextPrayer = { name: "Fajr", time: prayers?.Fajr, date: tomorrow };
 	}
 
 	const remainingSeconds = Math.max(
@@ -29,9 +29,9 @@ function NextPrayerCard({ prayers={}, date, small = false, className="" }) {
 	const hours = Math.floor(remainingSeconds / 3600);
 	const minutes = Math.floor((remainingSeconds % 3600) / 60);
 	const seconds = remainingSeconds % 60;
-	const countdown = [hours, minutes, seconds]
+	const countdown = prayers?[hours, minutes, seconds]
 		.map((unit) => String(unit).padStart(2, "0"))
-		.join(":");
+		.join(":"):"--:--:--";
 	const label = nextPrayer.name[0].toUpperCase() + nextPrayer.name.slice(1);
 
 	return (

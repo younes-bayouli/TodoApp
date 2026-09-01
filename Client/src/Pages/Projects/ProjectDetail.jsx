@@ -33,7 +33,6 @@ function ProjectDetail({
 		if (!newTodoTitle.trim()) return;
 
 		const newTodo = {
-			id: `todo-${Date.now()}`,
 			title: newTodoTitle.trim(),
 			completed: false,
 			priority: newTodoPriority,

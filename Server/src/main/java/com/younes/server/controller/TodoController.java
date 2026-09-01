@@ -35,7 +35,9 @@ public class TodoController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public Todo delete(@PathVariable Long id) {
+        Todo temp=service.findById(id);
         service.delete(id);
+        return temp;
     }
 }

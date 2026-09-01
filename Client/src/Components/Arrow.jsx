@@ -1,15 +1,15 @@
 import React from "react";
-import image from "../icons/arrow.png";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 function ArrowH({ deg, onClick, className = "", cliCkable=true }) {
 	return (
-		<img
+		<ChevronDown
 			style={{
 				cursor: cliCkable?"pointer":"not-allowed",
 				rotate: `${deg}deg`,
 			}}
 			className={className}
-			src={image}
+			color="#D1D5DB"
 			alt=""
 			onClick={onClick}
 		/>

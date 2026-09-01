@@ -1,33 +1,61 @@
 import { useEffect, useState } from "react";
 import Todo from "./Todo.jsx";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
 
 function TodoList() {
-	const {
-        data: tasks,
-        isPending,
-		isLoading,
-        isError,
-        error
-    } = useQuery({
-        queryKey: ["todos"],
-        queryFn: api.todos.getAll
-    });
-	// const [tasks, setTasks] = useState(() =>
-	// 	Todos?Todos.map((task) => ({ ...task, completed: false })):[],
-	// );
-	// useEffect(()=>{
-	// 	setTasks(() => Todos?Todos.map((task) => ({ ...task, completed: false })):[]);
-	// },[Todos])
+	const queryClient = useQueryClient();
+	const { data: tasks, isLoading } = useQuery({
+		queryKey: ["todos"],
+		queryFn: api.todos.getAll,
+	});
+	const addTaskMutation = useMutation({
+		mutationFn: (newTask) => api.todos.create(newTask),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["todos"] });
+		},
+	});
+	const updateTaskMutation = useMutation({
+		mutationFn: ({ taskId, taskData }) =>
+			api.todos.update(taskId, taskData),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["todos"] });
+		},
+	});
+	const toggleTaskMutation = useMutation({
+		mutationFn: ({ taskId, taskData }) =>
+			api.todos.update(taskId, taskData),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["todos"] });
+		},
+	});
+	const deleteTaskMutation = useMutation({
+		mutationFn: (taskId) => api.todos.delete(taskId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["todos"] });
+		},
+	});
 	const [filter, setFilter] = useState("All");
 	const [title, setTitle] = useState("");
 	const [priority, setPriority] = useState("medium");
+	const [editingTask, setEditingTask] = useState(null);
+	const [editTitle, setEditTitle] = useState("");
+	const [editDetails, setEditDetails] = useState("");
+	const [editPriority, setEditPriority] = useState("medium");
 
-	const visibleTasks = tasks?.filter((task) => {
+	useEffect(() => {
+		if (!editingTask) return;
+
+		setEditTitle(editingTask.title || "");
+		setEditDetails(editingTask.details || "");
+		setEditPriority(editingTask.priority || "medium");
+	}, [editingTask]);
+
+	const visibleTasks = tasks
+		?.filter((task) => {
 			if (filter === "Open") return !task.completed;
 			if (filter === "Completed") return task.completed;
 			return true;
@@ -52,33 +80,61 @@ function TodoList() {
 		const trimmedTitle = title.trim();
 		if (!trimmedTitle) return;
 
-		setTasks((currentTasks) => [
-			...currentTasks,
-			{
-				id: Date.now(),
-				title: trimmedTitle,
-				details: "",
-				priority,
-				completed: false,
-			},
-		]);
+		addTaskMutation.mutate({
+			title: trimmedTitle,
+			details: "",
+			priority,
+			completed: false,
+		});
 		setTitle("");
 	};
 
 	const toggleTask = (taskId) => {
-		setTasks((currentTasks) =>
-			currentTasks.map((task) =>
-				task.id === taskId
-					? { ...task, completed: !task.completed }
-					: task,
-			),
-		);
+		const task = tasks?.find((item) => item.id === taskId);
+		if (!task) return;
+
+		toggleTaskMutation.mutate({
+			taskId,
+			taskData: {
+				...task,
+				completed: !task.completed,
+			},
+		});
+	};
+
+	const openEditDialog = (task) => {
+		setEditingTask(task);
+	};
+
+	const closeEditDialog = () => {
+		setEditingTask(null);
+	};
+
+	const saveTaskChanges = (event) => {
+		event.preventDefault();
+		if (!editingTask) return;
+
+		const trimmedTitle = editTitle.trim();
+		if (!trimmedTitle) return;
+
+		updateTaskMutation.mutate({
+			taskId: editingTask.id,
+			taskData: {
+				...editingTask,
+				title: trimmedTitle,
+				details: editDetails.trim(),
+				priority: editPriority,
+			},
+		});
+		closeEditDialog();
 	};
 
 	const removeTask = (taskId) => {
-		setTasks((currentTasks) =>
-			currentTasks.filter((task) => task.id !== taskId),
-		);
+		try {
+			deleteTaskMutation.mutate(taskId);
+		} catch (error) {
+			alert("failed to delete");
+		}
 	};
 
 	return (
@@ -133,7 +189,7 @@ function TodoList() {
 			</div>
 
 			<div className="list-group list-group-flush border rounded">
-				{isLoading && <h1>Loading...</h1> }
+				{isLoading && <h1>Loading...</h1>}
 				{visibleTasks?.length ? (
 					visibleTasks.map((task) => (
 						<Todo
@@ -141,6 +197,7 @@ function TodoList() {
 							task={task}
 							onToggle={toggleTask}
 							onRemove={removeTask}
+							onEdit={openEditDialog}
 						/>
 					))
 				) : (
@@ -149,6 +206,120 @@ function TodoList() {
 					</div>
 				)}
 			</div>
+
+			{editingTask && (
+				<div
+					className="modal show d-block bg-dark bg-opacity-50"
+					role="dialog"
+					aria-modal="true"
+					style={{ backdropFilter: "blur(3px)" }}
+					onClick={closeEditDialog}
+				>
+					<div
+						className="modal-dialog modal-dialog-centered"
+						onClick={(event) => event.stopPropagation()}
+					>
+						<div className="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+							<div className="modal-header border-0 bg-light-subtle px-4 py-3">
+								<div>
+									<p className="text-uppercase small text-primary fw-semibold mb-1">
+										Update task
+									</p>
+									<h5 className="modal-title mb-0">
+										Edit todo
+									</h5>
+								</div>
+								<button
+									type="button"
+									className="btn-close"
+									onClick={closeEditDialog}
+									aria-label="Close edit dialog"
+								></button>
+							</div>
+							<form onSubmit={saveTaskChanges}>
+								<div className="modal-body px-4 py-4">
+									<div className="mb-3">
+										<label
+											htmlFor="editTodoTitle"
+											className="form-label fw-medium"
+										>
+											Title
+										</label>
+										<input
+											id="editTodoTitle"
+											className="form-control form-control-lg"
+											value={editTitle}
+											onChange={(event) =>
+												setEditTitle(event.target.value)
+											}
+											placeholder="Task title"
+										/>
+									</div>
+									<div className="mb-3">
+										<label
+											htmlFor="editTodoDetails"
+											className="form-label fw-medium"
+										>
+											Details
+										</label>
+										<textarea
+											id="editTodoDetails"
+											className="form-control"
+											rows="4"
+											value={editDetails}
+											onChange={(event) =>
+												setEditDetails(
+													event.target.value,
+												)
+											}
+											placeholder="Add more context or notes"
+										></textarea>
+									</div>
+									<div>
+										<label
+											htmlFor="editTodoPriority"
+											className="form-label fw-medium"
+										>
+											Priority
+										</label>
+										<select
+											id="editTodoPriority"
+											className="form-select"
+											value={editPriority}
+											onChange={(event) =>
+												setEditPriority(
+													event.target.value,
+												)
+											}
+										>
+											<option value="high">High</option>
+											<option value="medium">
+												Medium
+											</option>
+											<option value="low">Low</option>
+										</select>
+									</div>
+								</div>
+								<div className="modal-footer border-0 px-4 pb-4 pt-0">
+									<button
+										type="button"
+										className="btn btn-light"
+										onClick={closeEditDialog}
+									>
+										Cancel
+									</button>
+									<button
+										type="submit"
+										className="btn btn-primary px-4 rounded-pill"
+									>
+										Save changes
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

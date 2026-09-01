@@ -2,16 +2,29 @@ import { useState } from "react";
 import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
 import "./Projects.css";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../api/api";
 
 function Projects() {
-	const {
-		data:projects,
-	}=useQuery({
-		queryKey:["projects"],
-		queryFn:api.projects.getAll
-	})
+	const queryClient = useQueryClient();
+	const { data: projects } = useQuery({
+		queryKey: ["projects"],
+		queryFn: api.projects.getAll,
+	});
+	const createProjectMutation = useMutation({
+		mutationFn: (project) => api.projects.create(project),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["projects"] });
+		},
+	});
+	const updateProjectMutation = useMutation({
+		mutationFn: ({ projectId, projectData }) =>
+			api.projects.update(projectId, projectData),
+		onSuccess: (updatedProject) => {
+			queryClient.invalidateQueries({ queryKey: ["projects"] });
+			setSelectedProject(updatedProject);
+		},
+	});
 	const [selectedProject, setSelectedProject] = useState(null);
 	const [filter, setFilter] = useState("all");
 
@@ -24,55 +37,55 @@ function Projects() {
 	};
 
 	const addProject = (project) => {
-		setProjects((currentProjects) => [...currentProjects, project]);
+		createProjectMutation.mutate(project);
 	};
 
 	const toggleTodo = (todoId) => {
-		const updatedProjects = projects?.map((proj) => {
-			if (proj.id === selectedProject.id) {
-				const updatedTodos = proj.todos.map((todo) =>
-					todo.id === todoId
-						? { ...todo, completed: !todo.completed }
-						: todo,
-				);
-				return { ...proj, todos: updatedTodos };
-			}
-			return proj;
-		});
-		setProjects(updatedProjects);
-		setSelectedProject(
-			updatedProjects.find((p) => p.id === selectedProject.id),
+		if (!selectedProject || !projects) return;
+		const project = projects.find((proj) => proj.id === selectedProject.id);
+		if (!project) return;
+
+		const updatedTodos = project.todos.map((todo) =>
+			todo.id === todoId ? { ...todo, completed: !todo.completed } : todo,
 		);
+
+		updateProjectMutation.mutate({
+			projectId: project.id,
+			projectData: {
+				...project,
+				todos: updatedTodos,
+			},
+		});
 	};
 
 	const deleteTodo = (todoId) => {
-		const updatedProjects = projects.map((proj) => {
-			if (proj.id === selectedProject.id) {
-				const updatedTodos = proj.todos.filter(
-					(todo) => todo.id !== todoId,
-				);
-				return { ...proj, todos: updatedTodos };
-			}
-			return proj;
+		if (!selectedProject || !projects) return;
+		const project = projects.find((proj) => proj.id === selectedProject.id);
+		if (!project) return;
+
+		const updatedTodos = project.todos.filter((todo) => todo.id !== todoId);
+
+		updateProjectMutation.mutate({
+			projectId: project.id,
+			projectData: {
+				...project,
+				todos: updatedTodos,
+			},
 		});
-		setProjects(updatedProjects);
-		setSelectedProject(
-			updatedProjects.find((p) => p.id === selectedProject.id),
-		);
 	};
 
 	const addTodo = (newTodo) => {
-		const updatedProjects = projects.map((proj) => {
-			if (proj.id === selectedProject.id) {
-				return { ...proj, todos: [...proj.todos, newTodo] };
-			}
-			return proj;
-		});
+		if (!selectedProject || !projects) return;
+		const project = projects.find((proj) => proj.id === selectedProject.id);
+		if (!project) return;
 
-		setProjects(updatedProjects);
-		setSelectedProject(
-			updatedProjects.find((p) => p.id === selectedProject.id),
-		);
+		updateProjectMutation.mutate({
+			projectId: project.id,
+			projectData: {
+				...project,
+				todos: [...(project.todos ?? []), newTodo],
+			},
+		});
 	};
 
 	// Project Cards View

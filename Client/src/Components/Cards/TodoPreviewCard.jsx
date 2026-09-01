@@ -10,7 +10,7 @@ function TodoPreviewCard({ todos = [], limit = 3 }) {
 		.slice(0, limit);
 
 	return (
-		<article className="home-card todo-preview-card">
+		<article className="home-card todo-preview-card flex-fill">
 			<div className="home-card-heading">
 				<div>
 					<p className="home-card-kicker">Focus list</p>
