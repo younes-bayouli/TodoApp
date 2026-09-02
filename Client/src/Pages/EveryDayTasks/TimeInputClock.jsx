@@ -9,64 +9,39 @@ export default function TimeInputClock({
 	onChange,
 	className = "",
 }) {
-	const [hours, setHours] = useState(parseInt(initialTime.split(":")[0]));
-	const [minutes, setMinutes] = useState(parseInt(initialTime.split(":")[1]));
+	const [[hours, minutes], setHM] = useState(
+		initialTime.split(":").map((h) => parseInt(h)),
+	);
 	const [hovered, setHovered] = useState(false);
 	const [activeButtons, setActiveButtons] = useState([1, 1, 1, 1]);
 
-	// Check for overlaps when time changes
+	const updateTime = (delta) => {
+		let temp=[hours,minutes].map((h, i) => (h + delta[i] + [24, 60][i]) % [24, 60][i]);
 
-	const updateTime = (field, delta) => {
-		let newValue = (field === "hours" ? hours : minutes) + delta;
-		if (field === "hours" && newValue > 23) newValue = 0;
-		if (field === "hours" && newValue < 0) newValue = 23;
-		if (field === "minutes" && newValue > 59) newValue = 0;
-		if (field === "minutes" && newValue < 0) newValue = 59;
+		setHM(temp);
 
-		let h = hours;
-		let m = minutes;
-
-		if (field === "hours") {
-			setHours(newValue);
-			h = newValue;
+		const newTime = `${String(temp[0]).padStart(2, "0")}:${String(temp[1]).padStart(2, "0")}`;
+		setActiveButtons(() =>
+		{
+			let t=[
+				[1, 0],
+				[-1, 0],
+				[0, 1],
+				[0, -1],
+			].map((vect) => {
+				let [h, m] = vect.map(
+					(k, i) =>
+						(k + temp[i] + [24, 60][i]) % [24, 60][i],
+				);
+				let time = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+				return compareTime(time, maxTime) <= 0 && compareTime(time, minTime) >= 0;
+			})
+			return t;
 		}
-		if (field === "minutes") {
-			setMinutes(newValue);
-			m = newValue;
-		}
-
-		const newTime = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
-
-		let copy = activeButtons;
-		h = (h - 1 + 24) % 24;
-		copy[0] =
-			compareTime(
-				`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`,
-				minTime,
-			) > 0;
-		h = (h+2) % 24;
-		copy[1] =
-			compareTime(
-				`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`,
-				maxTime,
-			) < 0;
-		h = (h - 1+24) % 24;
-		m = (m - 1 + 60) % 60;
-		copy[2] =
-			compareTime(
-				`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`,
-				minTime,
-			) > 0;
-		m = (m + 2) % 60;
-		copy[3] =
-			compareTime(
-				`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`,
-				maxTime,
-			) < 0;
-		setActiveButtons(copy);
+		);
 		onChange(newTime);
 	};
-	
+
 	return (
 		<div
 			style={{ fontSize: "1.8rem", fontWeight: "600" }}
@@ -79,8 +54,8 @@ export default function TimeInputClock({
 				<Arrow
 					deg={180}
 					className={`h-25 ${hovered ? "" : "invisible"}`}
-					onClick={() => updateTime("hours", 1*activeButtons[1])}
-					cliCkable={activeButtons[1]}
+					onClick={() => updateTime([1 * activeButtons[0],0])}
+					cliCkable={activeButtons[0]}
 				></Arrow>
 				<span
 					className="h-50 d-flex align-items-center justify-content-center"
@@ -90,8 +65,8 @@ export default function TimeInputClock({
 				</span>
 				<Arrow
 					className={`h-25 ${hovered ? "" : "invisible"}`}
-					onClick={() => updateTime("hours", -1*activeButtons[0])}
-					cliCkable={activeButtons[0]}
+					onClick={() => updateTime([-1 * activeButtons[1],0])}
+					cliCkable={activeButtons[1]}
 				></Arrow>
 			</div>
 			<div className="pb-1">:</div>
@@ -101,8 +76,8 @@ export default function TimeInputClock({
 				<Arrow
 					deg={180}
 					className={`h-25 ${hovered ? "" : "invisible"}`}
-					onClick={() => updateTime("minutes", 1*activeButtons[3])}
-					cliCkable={activeButtons[3]}
+					onClick={() => updateTime([0,1 * activeButtons[2]])}
+					cliCkable={activeButtons[2]}
 				></Arrow>
 
 				<span
@@ -114,8 +89,8 @@ export default function TimeInputClock({
 
 				<Arrow
 					className={`h-25 ${hovered ? "" : "invisible"}`}
-					onClick={() => updateTime("minutes", -1*activeButtons[2])}
-					cliCkable={activeButtons[2]}
+					onClick={() => updateTime([0,-1 * activeButtons[3]])}
+					cliCkable={activeButtons[3]}
 				></Arrow>
 			</div>
 		</div>

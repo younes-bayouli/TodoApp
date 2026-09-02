@@ -1,13 +1,12 @@
 const API_URL = import.meta.env.VITE_API_URL;
 const NOMINATIM_URL = import.meta.env.VITE_NOMINATIM_URL;
 const ALADHAN_API = import.meta.env.VITE_ALADHAN_API;
-console.log(NOMINATIM_URL,ALADHAN_API)
 
 async function request(endpoint, {options = {}, fullEndpoint = false}={}) {
 	const response = await fetch(`${fullEndpoint ? "" : API_URL}${endpoint}`, {
 		headers: {
 			"Content-Type": "application/json",
-			...options.headers,
+			...options,
 		},
 		...options,
 	});

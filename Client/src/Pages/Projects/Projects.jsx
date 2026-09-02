@@ -25,6 +25,14 @@ function Projects() {
 			setSelectedProject(updatedProject);
 		},
 	});
+	const deleteProjectMutation = useMutation({
+		mutationFn: (projectId) => api.projects.delete(projectId),
+		onSuccess: () => {
+			console.log("Project deleted successfully");
+			queryClient.invalidateQueries({ queryKey: ["projects"] });
+			setSelectedProject(null);
+		},
+	});
 	const [selectedProject, setSelectedProject] = useState(null);
 	const [filter, setFilter] = useState("all");
 
@@ -74,6 +82,11 @@ function Projects() {
 		});
 	};
 
+	const deleteProject = (projectId) => {
+		if (!projectId) return;
+		deleteProjectMutation.mutate(projectId);
+	};
+
 	const addTodo = (newTodo) => {
 		if (!selectedProject || !projects) return;
 		const project = projects.find((proj) => proj.id === selectedProject.id);
@@ -113,6 +126,7 @@ function Projects() {
 			onToggleTodo={toggleTodo}
 			onDeleteTodo={deleteTodo}
 			onAddTodo={addTodo}
+			onDeleteProject={deleteProject}
 		/>
 	);
 }

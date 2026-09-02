@@ -3,6 +3,8 @@ package com.younes.server.controller;
 import com.younes.server.model.Task;
 import com.younes.server.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,27 +17,28 @@ public class TaskController {
     private final TaskService service;
 
     @GetMapping
-    public List<Task> getAll() {
-        return service.findAll();
+    public ResponseEntity<List<Task>> getAll() {
+        return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public Task getById(@PathVariable Long id) {
-        return service.findById(id);
+    public ResponseEntity<Task> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping
-    public Task create(@RequestBody Task task) {
-        return service.save(task);
+    public ResponseEntity<Task> create(@RequestBody Task task) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(task));
     }
 
     @PutMapping("/{id}")
-    public Task update(@PathVariable Long id, @RequestBody Task task) {
-        return service.update(id, task);
+    public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody Task task) {
+        return ResponseEntity.ok(service.update(id, task));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

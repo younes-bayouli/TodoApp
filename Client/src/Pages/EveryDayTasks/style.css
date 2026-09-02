@@ -10,3 +10,14 @@
 .scroller::-webkit-scrollbar {
 	display: none;
 }
+
+.parent {
+	width: 500px;
+}
+
+.parent::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    right: -5px;
+}

@@ -46,9 +46,7 @@ export function getCurrentAndNextTask(time, tasks=[], dayIndex = 0) {
 	let nextTaskIndex = tasks.length;
 	let nextTaskStartTotal = Infinity;
 
-	tasks.forEach((task, index) => {
-		if (!task.days[dayIndex]) return;
-
+	tasks.forEach((task) => {
 		const [startHours, startMinutes] = task.start.split(":").map(Number);
 		const [endHours, endMinutes] = task.end.split(":").map(Number);
 		const startTotal = startHours * 60 + startMinutes;
@@ -59,7 +57,7 @@ export function getCurrentAndNextTask(time, tasks=[], dayIndex = 0) {
 
 		isCurrent =
 			givenMinutesTotal >= startTotal && givenMinutesTotal < endTotal;
-		isAfter = givenMinutesTotal <= startTotal;
+		isAfter = givenMinutesTotal < startTotal;
 
 		if (isCurrent) {
 			currentTask = task;
@@ -72,22 +70,6 @@ export function getCurrentAndNextTask(time, tasks=[], dayIndex = 0) {
 			}
 		}
 	});
-
-	if (!currentTask) {
-		tasks.forEach((task, index) => {
-			if (!task.days[dayIndex]) return;
-
-			const [startHours, startMinutes] = task.start
-				.split(":")
-				.map(Number);
-			const startTotal = startHours * 60 + startMinutes;
-
-			if (startTotal > givenMinutesTotal && index < nextTaskIndex) {
-				nextTaskIndex = index;
-				nextTask = task;
-			}
-		});
-	}
 
 	return { current: currentTask, next: nextTask };
 }

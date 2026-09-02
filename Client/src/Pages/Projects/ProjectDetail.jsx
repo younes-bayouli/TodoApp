@@ -16,10 +16,12 @@ function ProjectDetail({
 	onToggleTodo,
 	onDeleteTodo,
 	onAddTodo,
+	onDeleteProject,
 }) {
 	const [newTodoTitle, setNewTodoTitle] = useState("");
 	const [newTodoPriority, setNewTodoPriority] = useState("medium");
 	const [showAddTodo, setShowAddTodo] = useState(false);
+	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
 	const sortedTodos = [...project.todos].sort((a, b) => {
 		if (a.completed !== b.completed) {
@@ -44,6 +46,11 @@ function ProjectDetail({
 		setShowAddTodo(false);
 	};
 
+	const handleConfirmDelete = () => {
+		onDeleteProject(project.id);
+		setShowDeleteDialog(false);
+	};
+
 	return (
 		<div className="container bg-white">
 			<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
@@ -53,6 +60,13 @@ function ProjectDetail({
 							project: {project.name}
 						</h3>
 					</div>
+					<button
+						type="button"
+						className="btn btn-outline-danger m-0 p-2"
+						onClick={() => setShowDeleteDialog(true)}
+					>
+						Delete Project
+					</button>
 				</div>
 				<div className="d-flex align-items-center gap-2">
 					<small className="text-secondary">
@@ -64,6 +78,7 @@ function ProjectDetail({
 					>
 						{showAddTodo ? "Cancel" : "Add Todo"}
 					</div>
+
 					<div
 						className="btn alert alert-light m-0 p-2"
 						onClick={onBack}
@@ -101,6 +116,56 @@ function ProjectDetail({
 								</div>
 							</div>
 						</form>
+					</div>
+				</div>
+			)}
+
+			{showDeleteDialog && (
+				<div
+					className="modal fade show d-block"
+					style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+					onClick={() => setShowDeleteDialog(false)}
+				>
+					<div
+						className="modal-dialog modal-dialog-centered"
+						onClick={(e) => e.stopPropagation()}
+					>
+						<div className="modal-content border-0 shadow-lg rounded-4">
+							<div className="modal-header border-0 pb-2">
+								<h5 className="modal-title fw-bold text-danger">
+									Delete project?
+								</h5>
+								<button
+									type="button"
+									className="btn-close"
+									onClick={() => setShowDeleteDialog(false)}
+									aria-label="Close"
+								></button>
+							</div>
+							<div className="modal-body py-3">
+								<p className="mb-0 text-secondary">
+									This will permanently remove{" "}
+									<strong>{project.name}</strong> and all of
+									its todos. This action cannot be undone.
+								</p>
+							</div>
+							<div className="modal-footer border-0 pt-2">
+								<button
+									type="button"
+									className="btn btn-outline-secondary"
+									onClick={() => setShowDeleteDialog(false)}
+								>
+									Cancel
+								</button>
+								<button
+									type="button"
+									className="btn btn-danger"
+									onClick={handleConfirmDelete}
+								>
+									Delete Project
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			)}

@@ -3,6 +3,8 @@ package com.younes.server.controller;
 import com.younes.server.model.Todo;
 import com.younes.server.service.TodoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,29 +17,28 @@ public class TodoController {
     private final TodoService service;
 
     @GetMapping
-    public List<Todo> getAll() {
-        return service.findAll();
+    public ResponseEntity<List<Todo>> getAll() {
+        return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public Todo getById(@PathVariable Long id) {
-        return service.findById(id);
+    public ResponseEntity<Todo> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping
-    public Todo create(@RequestBody Todo todo) {
-        return service.save(todo);
+    public ResponseEntity<Todo> create(@RequestBody Todo todo) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(todo));
     }
 
     @PutMapping("/{id}")
-    public Todo update(@PathVariable Long id, @RequestBody Todo todo) {
-        return service.update(id, todo);
+    public ResponseEntity<Todo> update(@PathVariable Long id, @RequestBody Todo todo) {
+        return ResponseEntity.ok(service.update(id, todo));
     }
 
     @DeleteMapping("/{id}")
-    public Todo delete(@PathVariable Long id) {
-        Todo temp=service.findById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
-        return temp;
+        return ResponseEntity.noContent().build();
     }
 }

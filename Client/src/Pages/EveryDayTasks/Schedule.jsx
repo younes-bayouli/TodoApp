@@ -1,5 +1,4 @@
 import Arrow from "../../Components/Arrow";
-import { createPortal } from "react-dom";
 import { useRef, useCallback, useState, useEffect } from "react";
 import "./style.css";
 import {
@@ -26,31 +25,43 @@ const nullTask = {
 	details: "",
 };
 
-function Schedule({ time, Tasks=[], controlsTargetRef }) {
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [chosenDay, setChosenDay] = useState(() => (time.getDay() + 6) % 7);
-	const [controlsTarget, setControlsTarget] = useState(null);
+function Schedule({
+	time,
+	Tasks = [],
+	chosenDay,
+	isModalOpen,
+	setIsModalOpen,
+}) {
 	const [editMode, setEditMode] = useState(false);
 	const [activeTask, setActiveTask] = useState(nullTask);
 	const [Hovered, setHovered] = useState(false);
 	const [overlap, setOverlap] = useState({ check: false, mesg: "" });
 	const scrollRef = useRef(null);
 	const distanceMouseLeftedge = useMouseDistance(scrollRef);
-	const todayDayIndex = (time.getDay() + 6) % 7;
-	const visibleTasks = Tasks.filter((task) => task.days[chosenDay]);
 
-	const queryClient= useQueryClient()
+	const queryClient = useQueryClient();
 
-	const addTaskMutation=useMutation({
-		mutationFn:(newTask) => api.tasks.create(newTask),
+	const addTaskMutation = useMutation({
+		mutationFn: (newTask) => api.tasks.create(newTask),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["tasks"] });
 		},
-	})
+	});
 
-	const updateTaskMutation=useMutation({
-		mutationFn:(newTask) => api.tasks.update(newTask)
-	})
+	const updateTaskMutation = useMutation({
+		mutationFn: (updatedTask) =>
+			api.tasks.update(updatedTask.id, updatedTask),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["tasks"] });
+		},
+	});
+
+	const deleteTaskMutation = useMutation({
+		mutationFn: (taskId) => api.tasks.delete(taskId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["tasks"] });
+		},
+	});
 
 	const scroll = (direction) => {
 		const amount = 500;
@@ -62,14 +73,6 @@ function Schedule({ time, Tasks=[], controlsTargetRef }) {
 			behavior: "smooth",
 		});
 	};
-
-	const addTask = () => {
-		setIsModalOpen(true);
-	};
-
-	useEffect(() => {
-		setControlsTarget(controlsTargetRef.current);
-	}, [controlsTargetRef]);
 
 	useEffect(() => {
 		scrollRef.current.scrollLeft = (timeToMinutes(time) * 10) / 6 - 300;
@@ -84,15 +87,25 @@ function Schedule({ time, Tasks=[], controlsTargetRef }) {
 	const save = () => {
 		if (editMode) {
 			setEditMode(false);
-		}else{
-			addTaskMutation.mutate(activeTask)
+			updateTaskMutation.mutate(activeTask);
+		} else {
+			addTaskMutation.mutate(activeTask);
 		}
 		setIsModalOpen(false);
 		setActiveTask(nullTask);
 	};
 
 	const updateTask = (e) => {
-		const { name, value } = e.target;
+		const { name, value, checked } = e.target;
+
+		if (name === "allDays") {
+			setActiveTask((prevTask) => ({
+				...prevTask,
+				days: DAYS.map(() => checked),
+			}));
+			return;
+		}
+
 		name === "days"
 			? setActiveTask((oldVersion) => {
 					const newDays = [...oldVersion.days];
@@ -109,57 +122,10 @@ function Schedule({ time, Tasks=[], controlsTargetRef }) {
 				}));
 	};
 
+	const allDaysSelected = activeTask.days.every(Boolean);
+
 	return (
 		<>
-			{controlsTarget &&
-				createPortal(
-					<div className="d-flex align-items-center gap-2">
-						<div
-							className="d-flex gap-1"
-							role="group"
-							aria-label="Day navigation"
-						>
-							<div
-								className="btn alert alert-light d-flex align-items-center justify-content-center p-1 m-0"
-								aria-label="Previous day"
-								onClick={() =>
-									setChosenDay(
-										(day) =>
-											(day - 1 + DAYS.length) %
-											DAYS.length,
-									)
-								}
-							>
-								<Arrow deg={90} />
-							</div>
-							<div
-								className="btn alert alert-light d-flex align-items-center justify-content-center p-1 m-0"
-								aria-label="Next day"
-								onClick={() =>
-									setChosenDay(
-										(day) => (day + 1) % DAYS.length,
-									)
-								}
-							>
-								<Arrow deg={-90} />
-							</div>
-							<div
-								className="btn alert alert-light d-flex align-items-center justify-content-center p-1 m-0"
-							>
-								For {chosenDay === todayDayIndex && "Today ("}
-								{DAYS[chosenDay]}
-								{chosenDay === todayDayIndex && ")"}
-							</div>
-						</div>
-						<div
-							className="btn alert alert-light p-1 m-0"
-							onClick={addTask}
-						>
-							Add Task
-						</div>
-					</div>,
-					controlsTarget,
-				)}
 			<div className="container w-100 h-100 p-0 d-flex flex-column overflow-hidden">
 				<div className="d-flex flex-grow-1 align-items-center overflow-hidden">
 					<Arrow
@@ -173,43 +139,50 @@ function Schedule({ time, Tasks=[], controlsTargetRef }) {
 						ref={scrollRef}
 						onMouseEnter={() => setHovered(true)}
 						onMouseLeave={() => setHovered(false)}
-						onClick={() => {
-							if (!Hovered) return;
-							let min = Math.ceil(
-								((distanceMouseLeftedge -
-									20 +
-									scrollRef.current.scrollLeft) *
-									6) /
-									10,
-							);
-							let nextTask = getCurrentAndNextTask(
-								format(minutesToTime(min)).hour24,
-								Tasks,
-								chosenDay,
-							).next;
-							let end = min;
-							if (
-								nextTask &&
-								stringToMinutes(nextTask.start) < min + 30
-							) {
-								end = stringToMinutes(nextTask.start) - 30;
-							}
-							const newTask = {
-								...nullTask,
-								start: format(minutesToTime(min)).hour24,
-								end: format(minutesToTime(end + 30)).hour24,
-							};
-							checkOverlap(
-								newTask,
-								newTask.start,
-								newTask.end,
-								Tasks,
-								setOverlap,
-							);
-							setActiveTask(newTask);
-							setIsModalOpen(true);
-						}}
 					>
+						<div
+							className="h-100 w-100 position-absolute"
+							style={{
+								zIndex: 3,
+								marginLeft: scrollRef.current?.scrollLeft - 20,
+							}}
+							onClick={() => {
+								if (!Hovered) return;
+								let min = Math.ceil(
+									((distanceMouseLeftedge -
+										20 +
+										scrollRef.current.scrollLeft) *
+										6) /
+										10,
+								);
+								let nextTask = getCurrentAndNextTask(
+									format(minutesToTime(min)).hour24,
+									Tasks,
+									chosenDay,
+								).next;
+								let end = min;
+								if (
+									nextTask &&
+									stringToMinutes(nextTask.start) < min + 30
+								) {
+									end = stringToMinutes(nextTask.start) - 30;
+								}
+								const newTask = {
+									...nullTask,
+									start: format(minutesToTime(min)).hour24,
+									end: format(minutesToTime(end + 30)).hour24,
+								};
+								checkOverlap(
+									newTask,
+									newTask.start,
+									newTask.end,
+									Tasks,
+									setOverlap,
+								);
+								setActiveTask(newTask);
+								setIsModalOpen(true);
+							}}
+						></div>
 						<StaticTimeBars />
 						<TimeBar
 							LeftMargin={(timeToMinutes(time) * 10) / 6}
@@ -248,10 +221,16 @@ function Schedule({ time, Tasks=[], controlsTargetRef }) {
 							></TimeBar>
 						)}
 						<div className="h-100 w-100 position-absolute d-flex align-items-center">
-							{visibleTasks.map((task) => (
+							{Tasks.map((task) => (
 								<Task
 									task={task}
 									onClick={handleClickOnTask}
+									onDelete={(selectedTask) =>
+										deleteTaskMutation.mutate(
+											selectedTask.id,
+										)
+									}
+									style={{ zIndex: 4 }}
 								></Task>
 							))}
 						</div>
@@ -363,10 +342,24 @@ function Schedule({ time, Tasks=[], controlsTargetRef }) {
 												></TimeInputClock>
 											</div>
 										</div>
-										<div className="my-5 w-100 d-flex">
-											<label className="form-label me-3">
-												Repeat on:
-											</label>
+										<div className="my-3 w-100 d-flex flex-column align-items-center">
+											<div className="w-100 d-flex align-items-center mb-3">
+												<label className="form-label m-0">
+													Repeat on:
+												</label>
+												<label>
+													<input
+														type="checkbox"
+														className="mx-2"
+														name="allDays"
+														checked={
+															allDaysSelected
+														}
+														onChange={updateTask}
+													/>
+													All days
+												</label>
+											</div>
 											<div className="w-75 d-flex justify-content-between">
 												{DAYS.map((day, index) => (
 													<label className="d-flex flex-column align-items-center justify-content-center">
