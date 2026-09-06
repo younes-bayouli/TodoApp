@@ -1,5 +1,5 @@
 import Arrow from "../../Components/Arrow";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Schedule from "./Schedule.jsx";
 import TimeCard from "../../Components/Cards/TimeCard.jsx";
 import { useDate } from "../../Utils/useTime";
@@ -9,9 +9,11 @@ import TaskStatusCard from "../../Components/Cards/TaskStatusCard.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
 import { DAYS } from "../../Utils/dateUtilities";
+import { useAppContext } from "../../Context.jsx";
 
 function Myeveryday() {
-	const { data: Tasks } = useQuery({
+	const { addError } = useAppContext();
+	const { data: Tasks, error: tasksError } = useQuery({
 		queryKey: ["tasks"],
 		queryFn: api.tasks.getAll,
 	});
@@ -31,6 +33,10 @@ function Myeveryday() {
 	const addTask = () => {
 		setIsModalOpen(true);
 	};
+	
+	useEffect(() => {
+		addError([tasksError]);
+	}, [tasksError]);
 
 	return (
 		<>

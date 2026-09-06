@@ -2,16 +2,21 @@ const API_URL = import.meta.env.VITE_API_URL;
 const NOMINATIM_URL = import.meta.env.VITE_NOMINATIM_URL;
 const ALADHAN_API = import.meta.env.VITE_ALADHAN_API;
 
-async function request(endpoint, {options = {}, fullEndpoint = false}={}) {
-	const response = await fetch(`${fullEndpoint ? "" : API_URL}${endpoint}`, {
+async function request(endpoint, { options = {}, fullEndpoint = false } = {}) {
+	let response;
+	try{
+		response = await fetch(`${fullEndpoint ? "" : API_URL}${endpoint}`, {
 		headers: {
 			"Content-Type": "application/json",
-			...options,
 		},
 		...options,
 	});
+	}catch (error) {
+		throw new Error("Network error.");
+	}
 
 	if (!response.ok) {
+		console.log("Request failed:", response.status, response.statusText);
 		throw new Error(`Request failed: ${response.status}`);
 	}
 
@@ -22,7 +27,7 @@ async function request(endpoint, {options = {}, fullEndpoint = false}={}) {
 	return response.json();
 }
 
-async function getLocation(latitude, longitude,error) {
+async function getLocation(latitude, longitude, error) {
 	if (error) throw error;
 	const url = new URL(NOMINATIM_URL);
 
@@ -46,22 +51,35 @@ export const api = {
 		getAll: () => request("/todos"),
 		getById: (id) => request(`/todos/${id}`),
 
-		create: (todo) =>
-			request("/todos", {options:{
-				method: "POST",
-				body: JSON.stringify(todo),
-			}}),
+		create: (todo) => {
+			console.log("1 - Creating todo:", todo);
+
+			const body = JSON.stringify(todo);
+
+			console.log("2 - JSON:", body);
+
+			return request("/todos", {
+				options: {
+					method: "POST",
+					body: body,
+				},
+			});
+		},
 
 		update: (id, todo) =>
-			request(`/todos/${id}`, {options:{
-				method: "PUT",
-				body: JSON.stringify(todo),
-			}}),
+			request(`/todos/${id}`, {
+				options: {
+					method: "PUT",
+					body: JSON.stringify(todo),
+				},
+			}),
 
 		delete: (id) =>
-			request(`/todos/${id}`, {options:{
-				method: "DELETE",
-			}}),
+			request(`/todos/${id}`, {
+				options: {
+					method: "DELETE",
+				},
+			}),
 	},
 
 	events: {
@@ -69,21 +87,27 @@ export const api = {
 		getById: (id) => request(`/events/${id}`),
 
 		create: (event) =>
-			request("/events", {options:{
-				method: "POST",
-				body: JSON.stringify(event),
-			}}),
+			request("/events", {
+				options: {
+					method: "POST",
+					body: JSON.stringify(event),
+				},
+			}),
 
 		update: (id, event) =>
-			request(`/events/${id}`, {options:{
-				method: "PUT",
-				body: JSON.stringify(event),
-			}}),
+			request(`/events/${id}`, {
+				options: {
+					method: "PUT",
+					body: JSON.stringify(event),
+				},
+			}),
 
 		delete: (id) =>
-			request(`/events/${id}`, {options:{
-				method: "DELETE",
-			}}),
+			request(`/events/${id}`, {
+				options: {
+					method: "DELETE",
+				},
+			}),
 	},
 
 	projects: {
@@ -91,21 +115,27 @@ export const api = {
 		getById: (id) => request(`/projects/${id}`),
 
 		create: (project) =>
-			request("/projects", {options:{
-				method: "POST",
-				body: JSON.stringify(project),
-			}}),
+			request("/projects", {
+				options: {
+					method: "POST",
+					body: JSON.stringify(project),
+				},
+			}),
 
 		update: (id, project) =>
-			request(`/projects/${id}`, {options:{
-				method: "PUT",
-				body: JSON.stringify(project),
-			}}),
+			request(`/projects/${id}`, {
+				options: {
+					method: "PUT",
+					body: JSON.stringify(project),
+				},
+			}),
 
 		delete: (id) =>
-			request(`/projects/${id}`, {options:{
-				method: "DELETE",
-			}}),
+			request(`/projects/${id}`, {
+				options: {
+					method: "DELETE",
+				},
+			}),
 	},
 
 	tasks: {
@@ -113,30 +143,36 @@ export const api = {
 		getById: (id) => request(`/tasks/${id}`),
 
 		create: (task) =>
-			request("/tasks", {options:{
-				method: "POST",
-				body: JSON.stringify(task),
-			}}),
+			request("/tasks", {
+				options: {
+					method: "POST",
+					body: JSON.stringify(task),
+				},
+			}),
 
 		update: (id, task) =>
-			request(`/tasks/${id}`, {options:{
-				method: "PUT",
-				body: JSON.stringify(task),
-			}}),
+			request(`/tasks/${id}`, {
+				options: {
+					method: "PUT",
+					body: JSON.stringify(task),
+				},
+			}),
 
 		delete: (id) =>
-			request(`/tasks/${id}`, {options:{
-				method: "DELETE",
-			}}),
+			request(`/tasks/${id}`, {
+				options: {
+					method: "DELETE",
+				},
+			}),
 	},
 
 	prayerTimes: {
-		get: (latitude, longitude, date) =>{
+		get: (latitude, longitude, date) => {
 			return request(
 				`${ALADHAN_API}${date}?latitude=${latitude}&longitude=${longitude}`,
-				{fullEndpoint:true}
-			)
-		}
+				{ fullEndpoint: true },
+			);
+		},
 	},
 
 	location: {

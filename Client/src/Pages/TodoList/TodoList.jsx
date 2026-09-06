@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import Todo from "./Todo.jsx";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
+import { useAppContext } from "../../Context.jsx";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
 
 function TodoList() {
+	const { addError } = useAppContext();
 	const queryClient = useQueryClient();
-	const { data: tasks, isLoading } = useQuery({
+	const { data: tasks, isLoading,error: tasksError } = useQuery({
 		queryKey: ["todos"],
 		queryFn: api.todos.getAll,
 	});
@@ -136,6 +138,11 @@ function TodoList() {
 			alert("failed to delete");
 		}
 	};
+
+	
+	useEffect(() => {
+		addError(tasksError);
+	}, [tasksError]);
 
 	return (
 		<div className="container bg-white">

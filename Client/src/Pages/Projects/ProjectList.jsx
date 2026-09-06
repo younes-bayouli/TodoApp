@@ -15,6 +15,7 @@ function ProjectList({
 	const [projectOwner, setProjectOwner] = useState("");
 	const [projectTeam, setProjectTeam] = useState("");
 	const [projectColor, setProjectColor] = useState("#0d6efd");
+	const [errors, setErrors] = useState({});
 
 	const filteredProjects = projects?.filter((project) => {
 		if (filter === "all") return true;
@@ -39,9 +40,9 @@ function ProjectList({
 
 	const handleAddProject = (event) => {
 		event.preventDefault();
-		if (!projectName.trim() || !projectDeadline) return;
+		if (!validateForm()) return;
 
-		const newProject={
+		const newProject = {
 			name: projectName.trim(),
 			description: projectDescription.trim(),
 			deadline: projectDeadline,
@@ -52,10 +53,28 @@ function ProjectList({
 				.filter(Boolean),
 			color: projectColor,
 			todos: [],
-		}
+		};
 
 		onAddProject(newProject);
 		closeAddProject();
+	};
+
+	const validateForm = () => {
+		const newErrors = {};
+		if (!projectName.trim()) {
+			newErrors.projectName = "Project name is required";
+		}
+		else if (!projectDeadline) {
+			newErrors.projectDeadline = "Project deadline is required";
+		}
+		else if (!projectOwner.trim()) {
+			newErrors.projectOwner = "Project owner is required";
+		}
+		else if (!projectTeam.trim()) {
+			newErrors.projectTeam = "Project team is required";
+		}
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
 	};
 
 	return (
@@ -143,14 +162,19 @@ function ProjectList({
 											id="project-name"
 											className="form-control"
 											value={projectName}
-											onChange={(event) =>
+											onChange={(event) => {
 												setProjectName(
 													event.target.value,
-												)
-											}
-											required
+												);
+												setErrors({});
+											}}
 											autoFocus
 										/>
+										{errors.projectName && (
+											<div className="text-danger">
+												{errors.projectName}
+											</div>
+										)}
 									</div>
 									<div className="mb-3">
 										<label
@@ -163,11 +187,11 @@ function ProjectList({
 											id="project-description"
 											className="form-control"
 											value={projectDescription}
-											onChange={(event) =>
+											onChange={(event) => {
 												setProjectDescription(
 													event.target.value,
-												)
-											}
+												);
+											}}
 											rows="2"
 										/>
 									</div>
@@ -184,13 +208,18 @@ function ProjectList({
 												type="date"
 												className="form-control"
 												value={projectDeadline}
-												onChange={(event) =>
+												onChange={(event) => {
 													setProjectDeadline(
 														event.target.value,
-													)
-												}
-												required
+													);
+													setErrors({});
+												}}
 											/>
+											{errors.projectDeadline && (
+												<div className="text-danger">
+													{errors.projectDeadline}
+												</div>
+											)}
 										</div>
 										<div className="col-sm-6">
 											<label
@@ -223,12 +252,18 @@ function ProjectList({
 											id="project-owner"
 											className="form-control"
 											value={projectOwner}
-											onChange={(event) =>
+											onChange={(event) => {
 												setProjectOwner(
 													event.target.value,
-												)
-											}
+												);
+												setErrors({});
+											}}
 										/>
+										{errors.projectOwner && (
+											<div className="text-danger">
+												{errors.projectOwner}
+											</div>
+										)}
 									</div>
 									<div>
 										<label
@@ -241,13 +276,19 @@ function ProjectList({
 											id="project-team"
 											className="form-control"
 											value={projectTeam}
-											onChange={(event) =>
+											onChange={(event) => {
 												setProjectTeam(
 													event.target.value,
-												)
-											}
+												);
+												setErrors({});
+											}}
 											placeholder="Alice Chen, Bob Smith"
 										/>
+										{errors.projectTeam && (
+											<div className="text-danger">
+												{errors.projectTeam}
+											</div>
+										)}
 									</div>
 								</div>
 								<div className="modal-footer">

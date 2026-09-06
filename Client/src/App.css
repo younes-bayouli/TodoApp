@@ -28,6 +28,15 @@
 	}
 }
 
+.slide-left {
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
 .hero {
 	position: relative;
 

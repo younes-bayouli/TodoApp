@@ -6,6 +6,7 @@ import {
 	timeToMinutes,
 	minutesToTime,
 	stringToMinutes,
+	compareTime,
 } from "../../Utils/timeUtilities";
 import { checkOverlap, getCurrentAndNextTask } from "../../Utils/Utils.js";
 import { useMouseDistance } from "../../Utils/useMouseDistance";
@@ -36,6 +37,7 @@ function Schedule({
 	const [activeTask, setActiveTask] = useState(nullTask);
 	const [Hovered, setHovered] = useState(false);
 	const [overlap, setOverlap] = useState({ check: false, mesg: "" });
+	const [errors, setErrors] = useState({});
 	const scrollRef = useRef(null);
 	const distanceMouseLeftedge = useMouseDistance(scrollRef);
 
@@ -85,6 +87,8 @@ function Schedule({
 	};
 
 	const save = () => {
+		if (!validateForm()) return;
+
 		if (editMode) {
 			setEditMode(false);
 			updateTaskMutation.mutate(activeTask);
@@ -93,10 +97,23 @@ function Schedule({
 		}
 		setIsModalOpen(false);
 		setActiveTask(nullTask);
+		setErrors({});
 	};
 
 	const updateTask = (e) => {
 		const { name, value, checked } = e.target;
+
+		if (name === "title") {
+			setErrors((prev) => ({ ...prev, taskTitle: "" }));
+		}
+
+		if (name === "start" || name === "end") {
+			setErrors((prev) => ({ ...prev, taskTime: "" }));
+		}
+
+		if (name === "allDays" || name === "days") {
+			setErrors((prev) => ({ ...prev, taskDays: "" }));
+		}
 
 		if (name === "allDays") {
 			setActiveTask((prevTask) => ({
@@ -120,6 +137,19 @@ function Schedule({
 					...prevTask,
 					[name]: value,
 				}));
+	};
+
+	const validateForm = () => {
+		const newErrors = {};
+		if (!activeTask.title.trim()) {
+			newErrors.taskTitle = "Task title is required";
+		} else if (compareTime(activeTask.start, activeTask.end) >= 0) {
+			newErrors.taskTime = "End time must be after start time";
+		} else if (activeTask.days.every((day) => !day)) {
+			newErrors.taskDays = "At least one day must be selected";
+		}
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
 	};
 
 	const allDaysSelected = activeTask.days.every(Boolean);
@@ -244,7 +274,7 @@ function Schedule({
 
 				{isModalOpen && (
 					<div
-						className="modal show d-block  bg-light bg-opacity-50 position-fixed d-flex align-items-center justify-content-center"
+						className="modal show d-block bg-light bg-opacity-50 position-fixed d-flex align-items-center justify-content-center"
 						style={{ zIndex: 947852634958 }}
 					>
 						<div className="modal-dialog w-50">
@@ -271,7 +301,13 @@ function Schedule({
 												value={activeTask.title}
 												onChange={updateTask}
 											/>
+											{errors.taskTitle && (
+												<p className="text-danger mt-1 mb-0">
+													{errors.taskTitle}
+												</p>
+											)}
 										</div>
+
 										<div className="mb-3 w-100">
 											<label className="form-label">
 												Details:
@@ -285,8 +321,9 @@ function Schedule({
 												style={{ resize: "none" }}
 											></textarea>
 										</div>
-										<div className="px-5 w-100 d-flex justify-content-center gap-4 ">
-											<div className=" flex-fill">
+
+										<div className="px-5 w-100 d-flex justify-content-center gap-4">
+											<div className="flex-fill">
 												<label className="form-label">
 													Start at:
 												</label>
@@ -304,6 +341,10 @@ function Schedule({
 														setActiveTask(
 															updatedTask,
 														);
+														setErrors((prev) => ({
+															...prev,
+															taskTime: "",
+														}));
 														checkOverlap(
 															updatedTask,
 															newTime,
@@ -315,7 +356,7 @@ function Schedule({
 												></TimeInputClock>
 											</div>
 											<span className="span"></span>
-											<div className=" flex-fill">
+											<div className="flex-fill">
 												<label className="form-label">
 													End at:
 												</label>
@@ -331,6 +372,10 @@ function Schedule({
 														setActiveTask(
 															updatedTask,
 														);
+														setErrors((prev) => ({
+															...prev,
+															taskTime: "",
+														}));
 														checkOverlap(
 															updatedTask,
 															updatedTask.start,
@@ -342,12 +387,21 @@ function Schedule({
 												></TimeInputClock>
 											</div>
 										</div>
+
+										{errors.taskTime && (
+											<div className="w-100 text-center">
+												<p className="text-danger mt-1 mb-0">
+													{errors.taskTime}
+												</p>
+											</div>
+										)}
+
 										<div className="my-3 w-100 d-flex flex-column align-items-center">
 											<div className="w-100 d-flex align-items-center mb-3">
 												<label className="form-label m-0">
 													Repeat on:
 												</label>
-												<label>
+												<label className="ms-3 mb-0">
 													<input
 														type="checkbox"
 														className="mx-2"
@@ -362,7 +416,10 @@ function Schedule({
 											</div>
 											<div className="w-75 d-flex justify-content-between">
 												{DAYS.map((day, index) => (
-													<label className="d-flex flex-column align-items-center justify-content-center">
+													<label
+														key={day}
+														className="d-flex flex-column align-items-center justify-content-center"
+													>
 														<input
 															type="checkbox"
 															name="days"
@@ -375,13 +432,20 @@ function Schedule({
 															onChange={
 																updateTask
 															}
-															id=""
 														/>
 														{day.slice(0, 3)}
 													</label>
 												))}
 											</div>
+											{errors.taskDays && (
+												<div className="w-100">
+													<p className="text-danger mt-1 mb-0">
+														{errors.taskDays}
+													</p>
+												</div>
+											)}
 										</div>
+
 										<div className="align-self-end d-flex align-items-center">
 											<p className="text-danger">
 												{overlap.mesg}

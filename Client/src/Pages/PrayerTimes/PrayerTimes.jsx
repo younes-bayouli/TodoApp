@@ -9,8 +9,11 @@ import { api } from "../../api/api";
 import pinLocation from "../../assets/icons/location-pin.png"
 import "./PrayerTimes.css";
 import { usePosition } from "../../hooks/usePosition";
+import { useAppContext } from "../../Context";
+import { useEffect } from "react";
 
 function PrayerTimes() {
+	const { addError } = useAppContext();
 	const date = useDate();
 	const dateString = dateToString(date);
 	const [position, error] = usePosition();
@@ -22,7 +25,7 @@ function PrayerTimes() {
 		queryFn: () => api.location.get(position, error),
 		enabled: !!position?.latitude && !!position?.longitude,
 	});
-	const { data: prayers } = useQuery({
+	const { data: prayers, error: prayersError } = useQuery({
 		queryKey: ["prayers", position],
 		queryFn: () =>
 			api.prayerTimes.get(
@@ -32,6 +35,18 @@ function PrayerTimes() {
 			),
 		enabled: !!position?.latitude && !!position?.longitude,
 	});
+
+	useEffect(() => {
+		addError(error);
+	}, [error]);
+
+	useEffect(() => {
+		addError(locationError);
+	}, [locationError]);
+
+	useEffect(() => {
+		addError(prayersError);
+	}, [prayersError]);
 
 	return (
 		<main className="prayer-page h-100 w-100 min-vh-0 d-flex flex-column">

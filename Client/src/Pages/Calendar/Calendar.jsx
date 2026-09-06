@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -13,34 +13,13 @@ import {
 import { useDate } from "../../Utils/useTime.js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
+import { useAppContext } from "../../Context.jsx";
 
 function Calendar() {
+	const { addError } = useAppContext();
 	const calendarRef = useRef(null);
 	const showTooltipTimer = useRef(null);
 	const queryClient = useQueryClient();
-	const { data: events } = useQuery({
-		queryKey: ["events"],
-		queryFn: api.events.getAll,
-	});
-	const createEventMutation = useMutation({
-		mutationFn: (newEvent) => api.events.create(newEvent),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["events"] });
-		},
-	});
-	const updateEventMutation = useMutation({
-		mutationFn: ({ eventId, eventData }) =>
-			api.events.update(eventId, eventData),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["events"] });
-		},
-	});
-	const deleteEventMutation = useMutation({
-		mutationFn: (eventId) => api.events.delete(eventId),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["events"] });
-		},
-	});
 	const [dayTooltip, setDayTooltip] = useState(null);
 	const [dayEvents, setDayEvents] = useState(null);
 	const [eventModal, setEventModal] = useState(false);
@@ -53,6 +32,41 @@ function Calendar() {
 	const [planEnd, setPlanEnd] = useState(toDateKey(new Date()));
 	const [planColor, setPlanColor] = useState("#0d6efd");
 	const [selectedMonth, setSelectedMonth] = useState(toMonthValue(useDate()));
+	const [errors, setErrors] = useState({});
+	const { data: events, error: eventsError } = useQuery({
+		queryKey: ["events"],
+		queryFn: api.events.getAll,
+	});
+	const createEventMutation = useMutation({
+		mutationFn: (newEvent) => api.events.create(newEvent),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["events"] });
+		},
+		onError: (error) => {
+			addError(error);
+			closeEventModal();
+		},
+	});
+	const updateEventMutation = useMutation({
+		mutationFn: ({ eventId, eventData }) =>
+			api.events.update(eventId, eventData),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["events"] });
+		},
+		onError: (error) => {
+			addError(error);
+			closeEventModal();
+		},
+	});
+	const deleteEventMutation = useMutation({
+		mutationFn: (eventId) => api.events.delete(eventId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["events"] });
+		},
+		onError: (error) => {
+			addError(error);
+		},
+	});
 
 	const getEventsForDay = (date) => {
 		const dateKey =
@@ -100,6 +114,7 @@ function Calendar() {
 		setEditingEvent(event);
 		setEventTitle(event?.title ?? "");
 		setEventColor(event?.backgroundColor ?? "#0d6efd");
+		setErrors({});
 		setEventModal(true);
 	};
 
@@ -108,25 +123,51 @@ function Calendar() {
 		setEditingEvent(null);
 		setEventTitle("");
 		setEventColor("#0d6efd");
+		setErrors({});
 	};
 
-	const openPlanModal = () => {
+	const openPlanModal = (Plan = null) => {
 		setDayTooltip(null);
-		setPlanTitle("");
-		setPlanStart(toDateKey(new Date()));
-		setPlanEnd(toDateKey(new Date()));
-		setPlanColor("#0d6efd");
+		setEditingEvent(Plan);
+		setPlanTitle(Plan?.title ?? "");
+		setPlanStart(Plan?.start ?? toDateKey(new Date()));
+		setPlanEnd(Plan?.end ?? toDateKey(new Date()));
+		setPlanColor(Plan?.backgroundColor ?? "#0d6efd");
+		setErrors({});
 		setPlanModal(true);
 	};
 
 	const closePlanModal = () => {
 		setPlanModal(false);
+		setEditingEvent(null);
 		setPlanTitle("");
+		setErrors({});
+	};
+
+	const validatePlanForm = () => {
+		const newErrors = {};
+		if (!planTitle.trim()) {
+			newErrors.planTitle = "Plan title is required";
+		}
+		if (planEnd < planStart) {
+			newErrors.planDates = "End date must be on or after start date";
+		}
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	};
+
+	const validateEventForm = () => {
+		const newErrors = {};
+		if (!eventTitle.trim()) {
+			newErrors.eventTitle = "Event title is required";
+		}
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
 	};
 
 	const addPlan = (event) => {
 		event.preventDefault();
-		if (!planTitle.trim() || planEnd < planStart) return;
+		if (!validatePlanForm()) return;
 
 		const endDate = new Date(`${planEnd}T00:00:00`);
 		endDate.setDate(endDate.getDate() + 1);
@@ -138,28 +179,25 @@ function Calendar() {
 			backgroundColor: planColor,
 			borderColor: planColor,
 		};
+		if (editingEvent) {
+			updateEventMutation.mutate(
+				{ eventId: editingEvent.id, eventData: newPlan },
+				{ onSuccess: () => closePlanModal() },
+			);
+			return;
+		}
 		createEventMutation.mutate(newPlan, {
 			onSuccess: () => closePlanModal(),
+			onError: (error) => {
+				addError(error);
+				closePlanModal();
+			},
 		});
 	};
 
 	const addEvent = (event) => {
 		event.preventDefault();
-		if (!eventTitle.trim() || !dayEvents) return;
-
-		if (editingEvent) {
-			const updatedEvent = {
-				...editingEvent,
-				title: eventTitle.trim(),
-				backgroundColor: eventColor,
-				borderColor: eventColor,
-			};
-			updateEventMutation.mutate(
-				{ eventId: editingEvent.id, eventData: updatedEvent },
-				{ onSuccess: () => closeEventModal() },
-			);
-			return;
-		}
+		if (!validateEventForm()) return;
 
 		const newEvent = {
 			title: eventTitle.trim(),
@@ -168,6 +206,13 @@ function Calendar() {
 			backgroundColor: eventColor,
 			borderColor: eventColor,
 		};
+		if (editingEvent) {
+			updateEventMutation.mutate(
+				{ eventId: editingEvent.id, eventData: newEvent },
+				{ onSuccess: () => closeEventModal() },
+			);
+			return;
+		}
 		createEventMutation.mutate(newEvent, {
 			onSuccess: () => closeEventModal(),
 		});
@@ -190,6 +235,10 @@ function Calendar() {
 	const handleDatesSet = ({ view }) => {
 		setSelectedMonth(toMonthValue(view.currentStart));
 	};
+
+	useEffect(() => {
+		addError(eventsError);
+	}, [eventsError]);
 
 	return (
 		<section className="d-flex flex-column h-100">
@@ -247,6 +296,7 @@ function Calendar() {
 					<FullCalendar
 						ref={calendarRef}
 						plugins={[dayGridPlugin, interactionPlugin]}
+						fixedWeekCount={false}
 						initialView="dayGridMonth"
 						headerToolbar={{
 							left: "",
@@ -281,7 +331,7 @@ function Calendar() {
 					<div className="fw-semibold mb-2">
 						{formatDay(dayTooltip.date)}
 					</div>
-					{dayTooltip.events.length > 0 ? (
+					{dayTooltip.events?.length > 0 ? (
 						<ul className="list-unstyled mb-3">
 							{dayTooltip.events.map((event) => (
 								<li
@@ -323,7 +373,7 @@ function Calendar() {
 						</div>
 					</div>
 					<div className="list-group">
-						{getEventsForDay(dayEvents).length > 0 ? (
+						{getEventsForDay(dayEvents)?.length > 0 ? (
 							getEventsForDay(dayEvents).map((calendarEvent) => (
 								<div
 									key={calendarEvent.id}
@@ -344,7 +394,13 @@ function Calendar() {
 											type="button"
 											className="btn btn-sm btn-outline-primary"
 											onClick={() =>
-												openEventModal(calendarEvent)
+												calendarEvent.end === null
+													? openEventModal(
+															calendarEvent,
+														)
+													: openPlanModal(
+															calendarEvent,
+														)
 											}
 										>
 											Edit
@@ -355,8 +411,13 @@ function Calendar() {
 											onClick={() =>
 												deleteEvent(calendarEvent.id)
 											}
+											disabled={
+												deleteEventMutation.isPending
+											}
 										>
-											Delete
+											{deleteEventMutation.isPending
+												? "Deleting..."
+												: "Delete"}
 										</button>
 									</div>
 								</div>
@@ -409,14 +470,22 @@ function Calendar() {
 											type="text"
 											className="form-control"
 											value={eventTitle}
-											onChange={(inputEvent) =>
+											onChange={(inputEvent) => {
 												setEventTitle(
 													inputEvent.target.value,
-												)
-											}
+												);
+												setErrors((prev) => ({
+													...prev,
+													eventTitle: "",
+												}));
+											}}
 											autoFocus
-											required
 										/>
+										{errors.eventTitle && (
+											<p className="text-danger mt-1 mb-0">
+												{errors.eventTitle}
+											</p>
+										)}
 									</div>
 									<label
 										htmlFor="event-color"
@@ -495,14 +564,24 @@ function Calendar() {
 											type="text"
 											className="form-control"
 											value={planTitle}
-											onChange={(event) =>
-												setPlanTitle(event.target.value)
-											}
+											onChange={(event) => {
+												setPlanTitle(
+													event.target.value,
+												);
+												setErrors((prev) => ({
+													...prev,
+													planTitle: "",
+												}));
+											}}
 											autoFocus
-											required
 										/>
+										{errors.planTitle && (
+											<p className="text-danger mt-1 mb-0">
+												{errors.planTitle}
+											</p>
+										)}
 									</div>
-									<div className="row g-3 mb-3">
+									<div className="row g-3">
 										<div className="col">
 											<label
 												htmlFor="plan-start"
@@ -515,12 +594,15 @@ function Calendar() {
 												type="date"
 												className="form-control"
 												value={planStart}
-												onChange={(event) =>
+												onChange={(event) => {
 													setPlanStart(
 														event.target.value,
-													)
-												}
-												required
+													);
+													setErrors((prev) => ({
+														...prev,
+														planDates: "",
+													}));
+												}}
 											/>
 										</div>
 										<div className="col">
@@ -535,16 +617,23 @@ function Calendar() {
 												type="date"
 												className="form-control"
 												value={planEnd}
-												min={planStart}
-												onChange={(event) =>
+												onChange={(event) => {
 													setPlanEnd(
 														event.target.value,
-													)
-												}
-												required
+													);
+													setErrors((prev) => ({
+														...prev,
+														planDates: "",
+													}));
+												}}
 											/>
 										</div>
 									</div>
+									{errors.planDates && (
+										<p className="text-danger mt-1 mb-0">
+											{errors.planDates}
+										</p>
+									)}
 									<label
 										htmlFor="plan-color"
 										className="form-label"
@@ -574,7 +663,13 @@ function Calendar() {
 										type="submit"
 										className="btn btn-primary"
 									>
-										Save plan
+										{editingEvent
+											? updateEventMutation.isPending
+												? "saving..."
+												: "Save plan"
+											: createEventMutation.isPending
+												? "creating..."
+												: "Create plan"}
 									</button>
 								</div>
 							</form>

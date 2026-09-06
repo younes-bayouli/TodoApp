@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
 import "./Projects.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../api/api";
+import { useAppContext } from "../../Context";
 
 function Projects() {
+	const { addError } = useAppContext();
 	const queryClient = useQueryClient();
-	const { data: projects } = useQuery({
+	const { data: projects, error: projectsError } = useQuery({
 		queryKey: ["projects"],
 		queryFn: api.projects.getAll,
 	});
@@ -28,7 +30,6 @@ function Projects() {
 	const deleteProjectMutation = useMutation({
 		mutationFn: (projectId) => api.projects.delete(projectId),
 		onSuccess: () => {
-			console.log("Project deleted successfully");
 			queryClient.invalidateQueries({ queryKey: ["projects"] });
 			setSelectedProject(null);
 		},
@@ -100,6 +101,10 @@ function Projects() {
 			},
 		});
 	};
+	
+	useEffect(() => {
+		addError([projectsError]);
+	}, [projectsError]);
 
 	// Project Cards View
 	if (!selectedProject) {
