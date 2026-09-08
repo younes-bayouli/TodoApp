@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import com.younes.server.exceptions.DataNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -17,7 +19,7 @@ public class TaskService {
     }
 
     public Task findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(() -> new DataNotFoundException("Task not found with id: " + id));
     }
 
     public Task save(Task task) {
@@ -25,12 +27,13 @@ public class TaskService {
     }
 
     public Task update(Long id, Task task) {
-        if (!repository.existsById(id)) return null;
+        repository.findById(id).orElseThrow(() -> new DataNotFoundException("Task with id: " + id+" does not exist"));
         task.setId(id);
         return repository.save(task);
     }
 
     public void delete(Long id) {
+        repository.findById(id).orElseThrow(() -> new DataNotFoundException("Task not found with id: " + id));
         repository.deleteById(id);
     }
 }

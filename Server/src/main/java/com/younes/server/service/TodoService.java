@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import com.younes.server.exceptions.DataNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class TodoService {
@@ -17,7 +19,7 @@ public class TodoService {
     }
 
     public Todo findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(() -> new DataNotFoundException("Todo not found with id: " + id));
     }
 
     public Todo save(Todo todo) {
@@ -25,12 +27,13 @@ public class TodoService {
     }
 
     public Todo update(Long id, Todo todo) {
-        if (!repository.existsById(id)) return null;
+        repository.findById(id).orElseThrow(() -> new DataNotFoundException("Todo with id: " + id+" does not exist"));
         todo.setId(id);
         return repository.save(todo);
     }
 
     public void delete(Long id) {
+        repository.findById(id).orElseThrow(() -> new DataNotFoundException("Todo not found with id: " + id));
         repository.deleteById(id);
     }
 }

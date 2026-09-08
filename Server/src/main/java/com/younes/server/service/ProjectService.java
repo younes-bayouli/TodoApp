@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import com.younes.server.exceptions.DataNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -17,7 +19,7 @@ public class ProjectService {
     }
 
     public Project findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(() -> new DataNotFoundException("Project not found with id: " + id));
     }
 
     public Project save(Project project) {
@@ -25,12 +27,13 @@ public class ProjectService {
     }
 
     public Project update(Long id, Project project) {
-        if (!repository.existsById(id)) return null;
+        repository.findById(id).orElseThrow(() -> new DataNotFoundException("Project with id: " + id+" does not exist"));
         project.setId(id);
         return repository.save(project);
     }
 
     public void delete(Long id) {
+        repository.findById(id).orElseThrow(() -> new DataNotFoundException("Project not found with id: " + id));
         repository.deleteById(id);
     }
 }
