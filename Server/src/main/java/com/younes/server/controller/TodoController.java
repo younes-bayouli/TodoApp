@@ -2,12 +2,16 @@ package com.younes.server.controller;
 
 import com.younes.server.model.Todo;
 import com.younes.server.service.TodoService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/todos")
@@ -27,12 +31,12 @@ public class TodoController {
     }
 
     @PostMapping
-    public ResponseEntity<Todo> create(@RequestBody Todo todo) {
+    public ResponseEntity<Todo> create(@Valid @RequestBody Todo todo) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(todo));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Todo> update(@PathVariable Long id, @RequestBody Todo todo) {
+    public ResponseEntity<Todo> update(@PathVariable Long id, @Valid @RequestBody Todo todo) {
         return ResponseEntity.ok(service.update(id, todo));
     }
 

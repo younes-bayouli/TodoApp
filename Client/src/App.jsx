@@ -16,7 +16,7 @@ import { use, useEffect, useState } from "react";
 function First() {
 	return (
 		<div className="d-flex align-items-center justify-content-center flex-column h-100">
-			<h3>Welcome, Younes. Happy engineering!</h3>
+			<h3>Welcome, Younes. Happy Engineering!</h3>
 		</div>
 	);
 }

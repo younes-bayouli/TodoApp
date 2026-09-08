@@ -1,22 +1,48 @@
 package com.younes.server.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import java.time.LocalDate;
+
+import com.younes.server.interfaces.HasStartEnd;
+import com.younes.server.validation.StartBeforeEnd;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Event {
+@StartBeforeEnd
+public class Event implements HasStartEnd<LocalDate> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String title;
-    private String start;
-    private String end;
-    private String backgroundColor;
-    private String borderColor;
-    private Boolean allDay;
+
+    @NotNull
+    private LocalDate start;
+    
+    @NotNull
+    private LocalDate end;
+
+    private String backgroundColor="#bd4b4b";
+    private String borderColor="#bd4b4b";
+    private Boolean allDay=false;
+
+    @Override
+    public LocalDate getStart() {
+        return start;
+    }
+
+    @Override
+    public LocalDate getEnd() {
+        return end;
+    }
 }

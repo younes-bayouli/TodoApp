@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.younes.server.model.Project;
 import com.younes.server.service.ProjectService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -37,12 +38,12 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Project> create(@RequestBody Project project) {
+    public ResponseEntity<Project> create(@Valid @RequestBody Project project) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(project));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Project> update(@PathVariable Long id, @RequestBody Project project) {
+    public ResponseEntity<Project> update(@PathVariable Long id, @Valid @RequestBody Project project) {
         return ResponseEntity.ok(service.update(id, project));
     }
 
