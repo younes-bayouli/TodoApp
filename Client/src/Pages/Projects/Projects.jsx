@@ -1,137 +1,135 @@
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
 import "./Projects.css";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "../../api/api";
-import { useAppContext } from "../../Context";
+import useData from "../../Utils/useData";
+import ProjectModal from "./ProjectModal";
+
+const nullProject = {
+	name: "",
+	description: "",
+	deadline: "",
+	owner: "",
+	teamMembers: [],
+	color: "#0d6efd",
+};
 
 function Projects() {
-	const { addError } = useAppContext();
-	const queryClient = useQueryClient();
-	const { data: projects, error: projectsError } = useQuery({
-		queryKey: ["projects"],
-		queryFn: api.projects.getAll,
-	});
-	const createProjectMutation = useMutation({
-		mutationFn: (project) => api.projects.create(project),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["projects"] });
-		},
-	});
-	const updateProjectMutation = useMutation({
-		mutationFn: ({ projectId, projectData }) =>
-			api.projects.update(projectId, projectData),
-		onSuccess: (updatedProject) => {
-			queryClient.invalidateQueries({ queryKey: ["projects"] });
-			setSelectedProject(updatedProject);
-		},
-	});
-	const deleteProjectMutation = useMutation({
-		mutationFn: (projectId) => api.projects.delete(projectId),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["projects"] });
-			setSelectedProject(null);
-		},
-	});
-	const [selectedProject, setSelectedProject] = useState(null);
+	const projects = useData("projects");
+	const [selectedProject, openDetails] = useState(null);
+	const [showAddProject, setShowAddProject] = useState(false);
+	const [project, setProject] = useState(nullProject);
+	const [errors, setErrors] = useState({});
 	const [filter, setFilter] = useState("all");
 
-	const handleProjectClick = (project) => {
-		setSelectedProject(project);
+	const filteredProjects = projects.data?.filter((project) => {
+		if (filter === "all") return true;
+		if (filter === "active") {
+			return project.todos.some((t) => !t.completed);
+		}
+		if (filter === "completed") {
+			return project.todos.every((t) => t.completed);
+		}
+		return true;
+	});
+
+	const closeAddProject = () => {
+		setShowAddProject(false);
+		setProject(nullProject);
 	};
 
-	const handleBackToProjects = () => {
-		setSelectedProject(null);
+	const addProject = (event) => {
+		event.preventDefault();
+		if (!validateForm()) return;
+
+		const newProject = {
+			name: project.name.trim(),
+			description: project.description.trim(),
+			deadline: project.deadline,
+			owner: project.owner.trim(),
+			color: project.color,
+			todos: [],
+		};
+
+		projects.create.mutate(newProject);
+		closeAddProject();
 	};
 
-	const addProject = (project) => {
-		createProjectMutation.mutate(project);
+	const changeValues = (event) => {
+		let field = event.target.name;
+		let value = event.target.value;
+		setProject((old) => ({ ...old, [field]: value }));
 	};
 
-	const toggleTodo = (todoId) => {
-		if (!selectedProject || !projects) return;
-		const project = projects.find((proj) => proj.id === selectedProject.id);
-		if (!project) return;
-
-		const updatedTodos = project.todos.map((todo) =>
-			todo.id === todoId ? { ...todo, completed: !todo.completed } : todo,
-		);
-
-		updateProjectMutation.mutate({
-			projectId: project.id,
-			projectData: {
-				...project,
-				todos: updatedTodos,
-			},
-		});
+	const validateForm = () => {
+		const newErrors = {};
+		if (!project.name.trim()) {
+			newErrors.projectName = "Project name is required";
+		} else if (!project.deadline) {
+			newErrors.projectDeadline = "Project deadline is required";
+		} else if (!project.owner.trim()) {
+			newErrors.projectOwner = "Project owner is required";
+		}
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
 	};
 
-	const deleteTodo = (todoId) => {
-		if (!selectedProject || !projects) return;
-		const project = projects.find((proj) => proj.id === selectedProject.id);
-		if (!project) return;
-
-		const updatedTodos = project.todos.filter((todo) => todo.id !== todoId);
-
-		updateProjectMutation.mutate({
-			projectId: project.id,
-			projectData: {
-				...project,
-				todos: updatedTodos,
-			},
-		});
-	};
-
-	const deleteProject = (projectId) => {
-		if (!projectId) return;
-		deleteProjectMutation.mutate(projectId);
-	};
-
-	const addTodo = (newTodo) => {
-		if (!selectedProject || !projects) return;
-		const project = projects.find((proj) => proj.id === selectedProject.id);
-		if (!project) return;
-
-		updateProjectMutation.mutate({
-			projectId: project.id,
-			projectData: {
-				...project,
-				todos: [...(project.todos ?? []), newTodo],
-			},
-		});
-	};
-	
-	useEffect(() => {
-		addError([projectsError]);
-	}, [projectsError]);
-
-	// Project Cards View
 	if (!selectedProject) {
 		return (
-			<ProjectList
-				projects={projects}
-				onProjectClick={handleProjectClick}
-				filter={filter}
-				onFilterChange={setFilter}
-				onAddProject={addProject}
-			/>
+			<div>
+				<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
+					<h3 className="mb-0 fw-semibold">Projects</h3>
+					<span className="badge text-primary-emphasis fw-normal">
+						{filteredProjects?.length} projects
+					</span>
+				</div>
+
+				<div className="w-100 d-flex justify-content-end mb-4">
+					<ul className="nav nav-pills gap-2">
+						{["all", "active", "completed"].map((filterOption) => (
+							<li className="nav-item" key={filterOption}>
+								<button
+									type="button"
+									className={`nav-link alert p-1 m-0 text-capitalize ${
+										filter === filterOption
+											? "alert-primary"
+											: "alert-light"
+									}`}
+									onClick={() => setFilter(filterOption)}
+								>
+									{filterOption}
+								</button>
+							</li>
+						))}
+					</ul>
+				</div>
+
+				<ProjectList
+					onClick={openDetails}
+					projects={filteredProjects}
+					showAddProject={setShowAddProject}
+				></ProjectList>
+
+				{showAddProject && (
+					<ProjectModal
+						project={project}
+						onSubmit={addProject}
+						closeModal={closeAddProject}
+						onChange={changeValues}
+						errors={errors}
+						title={"Add Project"}
+					></ProjectModal>
+				)}
+			</div>
 		);
 	}
 
-	// Project Detail View
-	const selectedProjectData = projects.find(
-		(p) => p.id === selectedProject.id,
-	);
-
 	return (
 		<ProjectDetail
-			project={selectedProjectData}
-			onBack={handleBackToProjects}
-			onToggleTodo={toggleTodo}
-			onDeleteTodo={deleteTodo}
-			onAddTodo={addTodo}
-			onDeleteProject={deleteProject}
+			project={selectedProject}
+			onBack={() => openDetails(null)}
+			deleteProject={projects.remove?.mutate}
+			updateProject={projects.update?.mutate}
 		/>
 	);
 }

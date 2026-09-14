@@ -29,7 +29,6 @@ function App() {
 		if (errors?.length === 0) return;
 
 		const timer = setTimeout(() => {
-			console.log(`hidingerror-${hiddenIndex}`);
 			document
 				.getElementById(`error-${hiddenIndex}`)
 				?.classList.add("hidden");
@@ -64,7 +63,6 @@ function App() {
 								}}
 							>
 								{errors.map((error, index) => {
-									console.log(`showing error-${nbrErr-index}`);
 									return (
 										<ErrorMessage
 											id={`error-${nbrErr-index}`}

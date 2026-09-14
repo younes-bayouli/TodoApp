@@ -16,7 +16,6 @@ async function request(endpoint, { options = {}, fullEndpoint = false } = {}) {
 	}
 
 	if (!response.ok) {
-		console.log("Request failed:", response.status, response.statusText);
 		throw new Error(`Request failed: ${response.status}`);
 	}
 
@@ -52,11 +51,8 @@ export const api = {
 		getById: (id) => request(`/todos/${id}`),
 
 		create: (todo) => {
-			console.log("1 - Creating todo:", todo);
 
 			const body = JSON.stringify(todo);
-
-			console.log("2 - JSON:", body);
 
 			return request("/todos", {
 				options: {

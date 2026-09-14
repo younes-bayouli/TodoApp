@@ -29,7 +29,6 @@ const reducer = (state, action) => {
 				nbrErr: state.nbrErr + 1,
 			};
 		case "POP":
-			console.log(`removing error-${state.nbrErr}`);
 			return state.errors.length > 0
 				? { errors: state.errors.slice(0, -1), nbrErr: state.nbrErr }
 				: state;

@@ -7,15 +7,12 @@ const PRIORITY_BADGES = {
 	low: "bg-secondary",
 };
 
-function ProjectCard({ project, onClick, isSelected, colorScheme }) {
-	const handleCardClick = () => {
-		onClick(project);
-	};
+function ProjectCard({ project, onClick }) {
 
 	return (
 		<div
 			className="card h-100 project-card"
-			onClick={handleCardClick}
+			onClick={()=>onClick(project)}
 			style={{ cursor: "pointer" }}
 		>
 			<div
@@ -46,22 +43,6 @@ function ProjectCard({ project, onClick, isSelected, colorScheme }) {
 				<div className="mt-2">
 					<small className="text-secondary d-block mb-1">Owner</small>
 					<span className="small">{project.owner}</span>
-				</div>
-
-				<div className="mt-2">
-					<small className="text-secondary d-block mb-1">
-						Team ({project.teamMembers.length})
-					</small>
-					<div className="small">
-						{project.teamMembers.map((member, index) => (
-							<span key={index}>
-								{member}
-								{index < project.teamMembers.length - 1
-									? ", "
-									: ""}
-							</span>
-						))}
-					</div>
 				</div>
 			</div>
 		</div>

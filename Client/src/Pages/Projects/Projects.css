@@ -4,6 +4,7 @@
 		box-shadow 0.2s ease;
 	border: 1px solid #e9ecef;
 	border-radius: 0.5rem;
+	min-height: 250px;
 }
 
 .project-card:hover {
@@ -14,7 +15,6 @@
 .add-project-card {
 	align-items: center;
 	justify-content: center;
-	min-height: 250px;
 	background: transparent;
 	border: 2px dashed #adb5bd;
 }
