@@ -13,14 +13,10 @@ export default function useData(target) {
 
 	const create = useMutation({
 		mutationFn: (Data) => {
-			console.log(data);
 			return api[target].create(Data);
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: [target] });
-		},
-		onError: () => {
-			console.log("hello");
 		},
 	});
 	const update = useMutation({

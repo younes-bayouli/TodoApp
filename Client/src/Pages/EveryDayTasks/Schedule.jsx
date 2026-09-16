@@ -17,6 +17,7 @@ import StaticTimeBars from "../../Components/StaticTimeBars.jsx";
 import TimeBar from "../../Components/TimeBar.jsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
+import useData from "../../Utils/useData.js";
 
 const nullTask = {
 	title: "",
@@ -40,30 +41,11 @@ function Schedule({
 	const [errors, setErrors] = useState({});
 	const scrollRef = useRef(null);
 	const distanceMouseLeftedge = useMouseDistance(scrollRef);
-
-	const queryClient = useQueryClient();
-
-	const addTaskMutation = useMutation({
-		mutationFn: (newTask) => api.tasks.create(newTask),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["tasks"] });
-		},
-	});
-
-	const updateTaskMutation = useMutation({
-		mutationFn: (updatedTask) =>
-			api.tasks.update(updatedTask.id, updatedTask),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["tasks"] });
-		},
-	});
-
-	const deleteTaskMutation = useMutation({
-		mutationFn: (taskId) => api.tasks.delete(taskId),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["tasks"] });
-		},
-	});
+	const {
+		create: addTaskMutation,
+		update: updateTaskMutation,
+		remove: deleteTaskMutation,
+	} = useData("tasks");
 
 	const scroll = (direction) => {
 		const amount = 500;
@@ -142,14 +124,13 @@ function Schedule({
 	const validateForm = () => {
 		const newErrors = {};
 		if (!activeTask.title.trim()) {
-			newErrors.taskTitle = "Task title is required";
+			newErrors.title = "Task title is required";
 		} else if (compareTime(activeTask.start, activeTask.end) >= 0) {
-			newErrors.taskTime = "End time must be after start time";
+			newErrors.end = "End time must be after start time";
 		} else if (activeTask.days.every((day) => !day)) {
-			newErrors.taskDays = "At least one day must be selected";
+			newErrors.days = "At least one day must be selected";
 		}
-		setErrors(newErrors);
-		return Object.keys(newErrors).length === 0;
+		return newErrors;
 	};
 
 	const allDaysSelected = activeTask.days.every(Boolean);
@@ -202,13 +183,8 @@ function Schedule({
 									start: format(minutesToTime(min)).hour24,
 									end: format(minutesToTime(end + 30)).hour24,
 								};
-								checkOverlap(
-									newTask,
-									newTask.start,
-									newTask.end,
-									Tasks,
-									setOverlap,
-								);
+								const overlap = checkOverlap(newTask, Tasks);
+								setOverlap(overlap);
 								setActiveTask(newTask);
 								setIsModalOpen(true);
 							}}

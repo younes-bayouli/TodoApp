@@ -2,31 +2,25 @@ import { checkOverLapTime } from "./timeUtilities";
 
 export const checkOverlap = (
 	activeTask,
-	newStart,
-	newEnd,
 	tasks,
-	onOverlapChange,
 ) => {
-	if (!onOverlapChange) return;
 
 	let hasOverlap = false;
 	let overlapMessage = "";
 
 	for (const task of tasks) {
-		// Skip the task being edited
 		if (activeTask && task.id === activeTask.id) continue;
 
-		// Check if days overlap (simplified - check if any day matches)
 		const dayOverlap = task.days.some((day) => day);
 		if (!dayOverlap) continue;
 
-		// Check time overlap
 		const overlap = checkOverLapTime(
-			newStart,
-			newEnd,
+			activeTask.newStart,
+			activeTask.newEnd,
 			task.start,
 			task.end,
 		);
+
 		if (overlap) {
 			hasOverlap = true;
 			overlapMessage = `Overlaps with: ${task.title} (${task.start}-${task.end})`;
@@ -34,7 +28,7 @@ export const checkOverlap = (
 		}
 	}
 
-	onOverlapChange({ check: hasOverlap, mesg: overlapMessage });
+	return { check: hasOverlap, mesg: overlapMessage };
 };
 
 export function getCurrentAndNextTask(time, tasks=[], dayIndex = 0) {
