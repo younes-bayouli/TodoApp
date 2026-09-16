@@ -3,23 +3,20 @@ import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
 import "./Projects.css";
 import useData from "../../Utils/useData";
-import ProjectModal from "./ProjectModal";
+import useModal from "../../hooks/useModal";
 
 const nullProject = {
 	name: "",
 	description: "",
 	deadline: "",
-	owner: "",
-	teamMembers: [],
 	color: "#0d6efd",
+	owner: "",
 };
 
 function Projects() {
 	const projects = useData("projects");
 	const [selectedProject, openDetails] = useState(null);
-	const [showAddProject, setShowAddProject] = useState(false);
 	const [project, setProject] = useState(nullProject);
-	const [errors, setErrors] = useState({});
 	const [filter, setFilter] = useState("all");
 
 	const filteredProjects = projects.data?.filter((project) => {
@@ -38,10 +35,7 @@ function Projects() {
 		setProject(nullProject);
 	};
 
-	const addProject = (event) => {
-		event.preventDefault();
-		if (!validateForm()) return;
-
+	const addProject = () => {
 		const newProject = {
 			name: project.name.trim(),
 			description: project.description.trim(),
@@ -55,12 +49,6 @@ function Projects() {
 		closeAddProject();
 	};
 
-	const changeValues = (event) => {
-		let field = event.target.name;
-		let value = event.target.value;
-		setProject((old) => ({ ...old, [field]: value }));
-	};
-
 	const validateForm = () => {
 		const newErrors = {};
 		if (!project.name.trim()) {
@@ -70,9 +58,10 @@ function Projects() {
 		} else if (!project.owner.trim()) {
 			newErrors.projectOwner = "Project owner is required";
 		}
-		setErrors(newErrors);
-		return Object.keys(newErrors).length === 0;
+		return newErrors;
 	};
+
+	const {Modal,closeModal,openModal}=useModal(project,setProject,validateForm,nullProject,addProject)
 
 	if (!selectedProject) {
 		return (
@@ -107,19 +96,10 @@ function Projects() {
 				<ProjectList
 					onClick={openDetails}
 					projects={filteredProjects}
-					showAddProject={setShowAddProject}
+					showAddProject={openModal}
 				></ProjectList>
 
-				{showAddProject && (
-					<ProjectModal
-						project={project}
-						onSubmit={addProject}
-						closeModal={closeAddProject}
-						onChange={changeValues}
-						errors={errors}
-						title={"Add Project"}
-					></ProjectModal>
-				)}
+				{Modal}
 			</div>
 		);
 	}

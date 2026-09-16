@@ -122,13 +122,13 @@ export default function useModal(
 		<div className="modal show d-block bg-light bg-opacity-50 position-fixed d-flex align-items-center justify-content-center">
 			<div className="modal-dialog w-50">
 				<div className="modal-content">
-					<div className="modal-header">
+					<div className="modal-header p-3">
 						<h5 className="modal-title">
 							{isNewObject ? "Add" : "Edit"} {title}
 						</h5>
 						<button
 							type="button"
-							className="btn-close align-self-end m-3"
+							className="btn-close align-self-end m-0"
 							onClick={() => {
 								setVisible(false);
 							}}

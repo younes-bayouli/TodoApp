@@ -1,6 +1,6 @@
 import ProjectCard from "./ProjectCard";
 
-function ProjectList({ projects, onClick,showAddProject,hideAddProject }) {
+function ProjectList({ projects, onClick,showAddProject }) {
 	return (
 		<div>
 			<div className="row g-4">

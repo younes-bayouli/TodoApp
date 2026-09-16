@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { formatDate } from "../../Utils/dateUtilities";
 import "./Projects.css";
-import ProjectModal from "./ProjectModal";
 
 const PRIORITY_BADGES = {
 	high: "bg-danger",
@@ -296,16 +295,6 @@ function ProjectDetail({ project, onBack, deleteProject, updateProject }) {
 					)}
 				</div>
 			</div>
-			{showUpdateProject && (
-				<ProjectModal
-					onSubmit={handleUpdateProject}
-					closeModal={() => setShowUpdateProject(false)}
-					project={updProject}
-					onChange={changeValues}
-					errors={errors}
-					title={"Modify Project"}
-				></ProjectModal>
-			)}
 		</>
 	);
 }
