@@ -13,6 +13,41 @@ const nullProject = {
 	owner: "",
 };
 
+const taskFields = {
+	name: {
+		type: "text",
+		label: "Title",
+		placeholder: "Enter task title",
+		size: "full",
+	},
+
+	description: {
+		type: "textarea",
+		label: "Description",
+		placeholder: "Enter task details...",
+		size: "full",
+	},
+
+	deadline: {
+		type: "date",
+		label: "Deadline",
+		placeholder: "",
+		size: "half",
+	},
+
+	color: {
+		type: "color",
+		label: "Color",
+		size: "small",
+	},
+	owner: {
+		type: "text",
+		label: "Project Owner",
+		placeholder: "Younes Bayouli",
+		size: "full",
+	},
+};
+
 function Projects() {
 	const projects = useData("projects");
 	const [selectedProject, openDetails] = useState(null);
@@ -35,7 +70,7 @@ function Projects() {
 		setProject(nullProject);
 	};
 
-	const addProject = () => {
+	const normalise = () => {
 		const newProject = {
 			name: project.name.trim(),
 			description: project.description.trim(),
@@ -44,9 +79,7 @@ function Projects() {
 			color: project.color,
 			todos: [],
 		};
-
-		projects.create.mutate(newProject);
-		closeAddProject();
+		setProject(newProject);
 	};
 
 	const validateForm = () => {
@@ -61,7 +94,16 @@ function Projects() {
 		return newErrors;
 	};
 
-	const {Modal,closeModal,openModal}=useModal(project,setProject,validateForm,nullProject,addProject)
+	const { Modal, closeModal, openModal } = useModal(
+		project,
+		setProject,
+		validateForm,
+		nullProject,
+		projects.create,
+		projects.update,
+		"Project",
+		taskFields,
+	);
 
 	if (!selectedProject) {
 		return (

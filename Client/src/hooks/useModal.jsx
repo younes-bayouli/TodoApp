@@ -1,11 +1,20 @@
 import { useMemo, useState } from "react";
 import TimeInputClock from "../Pages/EveryDayTasks/TimeInputClock";
 
-const inputType = (name) => {
-	if (name.toLowerCase().includes("deadline")) return "date";
-	if (name.toLowerCase().includes("time")) return "time";
-	if (name.toLowerCase().includes("details")) return "details";
-	return name.toLowerCase();
+const getSizeClass = (size) => {
+	switch (size) {
+		case "full":
+			return "col-12";
+
+		case "half":
+			return "col-6";
+
+		case "small":
+			return "col-auto";
+
+		default:
+			return "col-12";
+	}
 };
 
 export default function useModal(
@@ -16,9 +25,12 @@ export default function useModal(
 	saveMutation,
 	editMutation,
 	title = "TODO",
+	fieldsConfig = {},
+	onSubmit=()=>{},
 ) {
 	const [visible, setVisible] = useState(false);
 	const [errors, setErrors] = useState({});
+
 	const isNewObject = object === nullObject;
 
 	const handleChange = (eventOrName, value) => {
@@ -26,84 +38,138 @@ export default function useModal(
 			typeof eventOrName === "string"
 				? eventOrName
 				: eventOrName.target.name;
+
 		const nextValue =
 			typeof eventOrName === "string" ? value : eventOrName.target.value;
-		setObject((current) => ({ ...current, [name]: nextValue }));
+
+		setObject((current) => ({
+			...current,
+			[name]: nextValue,
+		}));
+
 		setErrors({});
 	};
 
 	const validate = () => {
 		const result = validateObject() ?? {};
+
 		setErrors(result);
+
 		return Object.keys(result).length === 0;
 	};
 
 	const fields = useMemo(
 		() => (
-			<>
-				{Object.entries(object || {}).map(([name, value]) => {
-					const type = inputType(name);
-					if (type === "time") {
+			<div className="row g-3">
+				{Object.entries(fieldsConfig).map(([name, config]) => {
+					const {
+						type,
+						label,
+						placeholder = "",
+						size = "full",
+					} = config;
+
+					const value = object?.[name] ?? "";
+
+					if (type === "time" && name === "start") {
+						const endConfig = fieldsConfig.end;
+
 						return (
-							<div className="px-5 w-100 d-flex justify-content-center gap-4">
-								<div className="flex-fill">
-									<label className="form-label">
-										Start at:
-									</label>
-									<TimeInputClock
-										initialTime={object?.start}
-										maxTime={object?.end}
-										className="py-1 alert alert-light bg-transparent"
-										onChange={(newTime) =>
-											handleChange("start", newTime)
-										}
-									></TimeInputClock>
-								</div>
-								<span className="span"></span>
-								<div className="flex-fill">
-									<label className="form-label">
-										End at:
-									</label>
-									<TimeInputClock
-										initialTime={object?.end}
-										minTime={object?.start}
-										className="py-1 alert alert-light bg-transparent"
-										onChange={(newTime) =>
-											handleChange("end", newTime)
-										}
-									></TimeInputClock>
+							<div className="col-12" key="time-fields">
+								<div className="d-flex gap-4">
+									<div className="flex-fill">
+										<label className="form-label">
+											{label}
+										</label>
+
+										<TimeInputClock
+											initialTime={object?.start}
+											maxTime={object?.end}
+											className="py-1 alert alert-light bg-transparent"
+											onChange={(newTime) =>
+												handleChange("start", newTime)
+											}
+										/>
+
+										{errors.start && (
+											<p className="text-danger mt-1 mb-0">
+												{errors.start}
+											</p>
+										)}
+									</div>
+
+									{endConfig && (
+										<div className="flex-fill">
+											<label className="form-label">
+												{endConfig.label}
+											</label>
+
+											<TimeInputClock
+												initialTime={object?.end}
+												minTime={object?.start}
+												className="py-1 alert alert-light bg-transparent"
+												onChange={(newTime) =>
+													handleChange("end", newTime)
+												}
+											/>
+
+											{errors.end && (
+												<p className="text-danger mt-1 mb-0">
+													{errors.end}
+												</p>
+											)}
+										</div>
+									)}
 								</div>
 							</div>
 						);
 					}
+
+					/*
+					 * End is rendered together with start.
+					 */
+					if (type === "time" && name === "end") {
+						return null;
+					}
+
 					return (
-						<>
-							<div className="mb-3" key={name}>
-								<label
-									htmlFor="project-name"
-									className="form-label"
-								>
-									{name}
-								</label>
-								<input
+						<div className={getSizeClass(size)} key={name}>
+							<label htmlFor={name} className="form-label">
+								{label}
+							</label>
+
+							{type === "textarea" ? (
+								<textarea
+									id={name}
 									name={name}
-									type={type}
 									className="form-control"
-									value={value ?? ""}
+									value={value}
+									placeholder={placeholder}
 									onChange={handleChange}
 								/>
-							</div>
+							) : (
+								<input
+									id={name}
+									name={name}
+									type={type}
+									className={`form-control ${type==="color"?"p-1":""}`}
+									value={value}
+									placeholder={placeholder}
+									onChange={handleChange}
+								/>
+							)}
+
 							{errors[name] && (
 								<p className="text-danger mt-1 mb-0">
 									{errors[name]}
 								</p>
 							)}
-						</>
+						</div>
 					);
 				})}
-			</>
+			</div>
 		),
-		[object],
+		[object, errors, fieldsConfig],
 	);
 
 	const cancel = () => {
@@ -114,8 +180,20 @@ export default function useModal(
 
 	const submit = () => {
 		if (!validate()) return;
-		(isNewObject ? saveMutation : editMutation)?.(object);
+
+		onSubmit();
+
+		(isNewObject ? saveMutation : editMutation)?.mutate(object);
+
 		setVisible(false);
+	};
+
+	const closeModal = () => {
+		setVisible(false);
+	};
+
+	const openModal = () => {
+		setVisible(true);
 	};
 
 	const Modal = visible && (
@@ -126,32 +204,43 @@ export default function useModal(
 						<h5 className="modal-title">
 							{isNewObject ? "Add" : "Edit"} {title}
 						</h5>
+
 						<button
 							type="button"
-							className="btn-close align-self-end m-0"
-							onClick={() => {
-								setVisible(false);
-							}}
-						></button>
+							className="btn-close m-0"
+							onClick={closeModal}
+						/>
 					</div>
+
 					<div className="modal-body">
-						<form className="d-flex flex-column align-items-center">
-							{fields}
-							<button type="button" onClick={cancel}>
+						{fields}
+
+						<div className="mt-4 d-flex gap-2 justify-content-end">
+							<button
+								type="button"
+								className="btn btn-secondary"
+								onClick={cancel}
+							>
 								Cancel
 							</button>
-							<button type="button" onClick={submit}>
+
+							<button
+								type="button"
+								className="btn btn-primary"
+								onClick={submit}
+							>
 								{isNewObject ? "Add" : "Edit"}
 							</button>
-						</form>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	);
 
-	const closeModal = () => setVisible(false);
-	const openModal = () => setVisible(true);
-
-	return { openModal, closeModal, Modal };
+	return {
+		openModal,
+		closeModal,
+		Modal,
+	};
 }
