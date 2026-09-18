@@ -3,58 +3,24 @@ import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
 import "./Projects.css";
 import useData from "../../Utils/useData";
-import useModal from "../../hooks/useModal";
 
-const nullProject = {
-	name: "",
-	description: "",
-	deadline: "",
-	color: "#0d6efd",
-	owner: "",
-};
-
-const taskFields = {
-	name: {
-		type: "text",
-		label: "Title",
-		placeholder: "Enter task title",
-		size: "full",
-	},
-
-	description: {
-		type: "textarea",
-		label: "Description",
-		placeholder: "Enter task details...",
-		size: "full",
-	},
-
-	deadline: {
-		type: "date",
-		label: "Deadline",
-		placeholder: "",
-		size: "half",
-	},
-
-	color: {
-		type: "color",
-		label: "Color",
-		size: "small",
-	},
-	owner: {
-		type: "text",
-		label: "Project Owner",
-		placeholder: "Younes Bayouli",
-		size: "full",
-	},
+const normalise = (project) => {
+	return {
+		name: project.name.trim(),
+		description: project.description.trim(),
+		deadline: project.deadline,
+		owner: project.owner.trim(),
+		color: project.color,
+		todos: [],
+	};
 };
 
 function Projects() {
-	const projects = useData("projects");
+	const { data: projects } = useData("projects");
 	const [selectedProject, openDetails] = useState(null);
-	const [project, setProject] = useState(nullProject);
 	const [filter, setFilter] = useState("all");
 
-	const filteredProjects = projects.data?.filter((project) => {
+	const filteredProjects = projects?.filter((project) => {
 		if (filter === "all") return true;
 		if (filter === "active") {
 			return project.todos.some((t) => !t.completed);
@@ -64,46 +30,6 @@ function Projects() {
 		}
 		return true;
 	});
-
-	const closeAddProject = () => {
-		setShowAddProject(false);
-		setProject(nullProject);
-	};
-
-	const normalise = () => {
-		const newProject = {
-			name: project.name.trim(),
-			description: project.description.trim(),
-			deadline: project.deadline,
-			owner: project.owner.trim(),
-			color: project.color,
-			todos: [],
-		};
-		setProject(newProject);
-	};
-
-	const validateForm = () => {
-		const newErrors = {};
-		if (!project.name.trim()) {
-			newErrors.projectName = "Project name is required";
-		} else if (!project.deadline) {
-			newErrors.projectDeadline = "Project deadline is required";
-		} else if (!project.owner.trim()) {
-			newErrors.projectOwner = "Project owner is required";
-		}
-		return newErrors;
-	};
-
-	const { Modal, closeModal, openModal } = useModal(
-		project,
-		setProject,
-		validateForm,
-		nullProject,
-		projects.create,
-		projects.update,
-		"Project",
-		taskFields,
-	);
 
 	if (!selectedProject) {
 		return (
@@ -138,10 +64,7 @@ function Projects() {
 				<ProjectList
 					onClick={openDetails}
 					projects={filteredProjects}
-					showAddProject={openModal}
 				></ProjectList>
-
-				{Modal}
 			</div>
 		);
 	}
@@ -150,8 +73,6 @@ function Projects() {
 		<ProjectDetail
 			project={selectedProject}
 			onBack={() => openDetails(null)}
-			deleteProject={projects.remove?.mutate}
-			updateProject={projects.update?.mutate}
 		/>
 	);
 }

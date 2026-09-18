@@ -4,14 +4,14 @@ const ALADHAN_API = import.meta.env.VITE_ALADHAN_API;
 
 async function request(endpoint, { options = {}, fullEndpoint = false } = {}) {
 	let response;
-	try{
+	try {
 		response = await fetch(`${fullEndpoint ? "" : API_URL}${endpoint}`, {
-		headers: {
-			"Content-Type": "application/json",
-		},
-		...options,
-	});
-	}catch (error) {
+			headers: {
+				"Content-Type": "application/json",
+			},
+			...options,
+		});
+	} catch (error) {
 		throw new Error("Network error.");
 	}
 
@@ -51,7 +51,6 @@ export const api = {
 		getById: (id) => request(`/todos/${id}`),
 
 		create: (todo) => {
-
 			const body = JSON.stringify(todo);
 
 			return request("/todos", {

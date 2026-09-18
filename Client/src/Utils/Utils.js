@@ -67,3 +67,20 @@ export function getCurrentAndNextTask(time, tasks=[], dayIndex = 0) {
 
 	return { current: currentTask, next: nextTask };
 }
+
+
+export function getSizeClass(size){
+	switch (size) {
+		case "full":
+			return "col-12";
+
+		case "half":
+			return "col-6";
+
+		case "small":
+			return "col-auto";
+
+		default:
+			return "col-12";
+	}
+};

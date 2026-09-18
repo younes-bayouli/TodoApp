@@ -1,37 +1,18 @@
 import { useMemo, useState } from "react";
 import TimeInputClock from "../Pages/EveryDayTasks/TimeInputClock";
-
-const getSizeClass = (size) => {
-	switch (size) {
-		case "full":
-			return "col-12";
-
-		case "half":
-			return "col-6";
-
-		case "small":
-			return "col-auto";
-
-		default:
-			return "col-12";
-	}
-};
+import { getSizeClass } from "../Utils/Utils";
 
 export default function useModal(
+	title,
 	object,
 	setObject,
-	validateObject,
-	nullObject,
-	saveMutation,
-	editMutation,
-	title = "TODO",
 	fieldsConfig = {},
-	onSubmit=()=>{},
+	validateObject,
+	onSubmit,
 ) {
 	const [visible, setVisible] = useState(false);
 	const [errors, setErrors] = useState({});
-
-	const isNewObject = object === nullObject;
+	const isNewObject=!object.id;
 
 	const handleChange = (eventOrName, value) => {
 		const name =
@@ -48,14 +29,6 @@ export default function useModal(
 		}));
 
 		setErrors({});
-	};
-
-	const validate = () => {
-		const result = validateObject() ?? {};
-
-		setErrors(result);
-
-		return Object.keys(result).length === 0;
 	};
 
 	const fields = useMemo(
@@ -152,7 +125,7 @@ export default function useModal(
 									id={name}
 									name={name}
 									type={type}
-									className={`form-control ${type==="color"?"p-1":""}`}
+									className={`form-control ${type === "color" ? " form-control-color" : ""}`}
 									value={value}
 									placeholder={placeholder}
 									onChange={handleChange}
@@ -173,17 +146,25 @@ export default function useModal(
 	);
 
 	const cancel = () => {
-		setObject(nullObject);
+		setObject({});
 		setErrors({});
 		setVisible(false);
 	};
 
+	const validate = () => {
+		const result = validateObject(object) ?? {};
+
+		setErrors(result);
+
+		return Object.keys(result).length === 0;
+	};
+
 	const submit = () => {
-		if (!validate()) return;
+		console.log("before validation");
+		if (!validate()) return
+		console.log("after validation")
 
-		onSubmit();
-
-		(isNewObject ? saveMutation : editMutation)?.mutate(object);
+		onSubmit.mutate(object,object.id);
 
 		setVisible(false);
 	};

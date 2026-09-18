@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatDate } from "../../Utils/dateUtilities";
 import "./Projects.css";
+import useData from "../../Utils/useData";
+import { useAppContext } from "../../Context";
 
 const PRIORITY_BADGES = {
 	high: "bg-danger",
@@ -10,21 +12,25 @@ const PRIORITY_BADGES = {
 
 const priorityOrder = { high: 0, medium: 1, low: 2 };
 
-function ProjectDetail({ project, onBack, deleteProject, updateProject }) {
-	const [showUpdateProject, setShowUpdateProject] = useState(false);
-	const [updProject, setupdProject] = useState(project);
+function ProjectDetail({ project, onBack }) {
+	const { update: updateProject, remove: deleteProject } =
+		useData("projects");
 	const [newTodoTitle, setNewTodoTitle] = useState("");
 	const [newTodoPriority, setNewTodoPriority] = useState("medium");
 	const [showAddTodo, setShowAddTodo] = useState(false);
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-	const [errors, setErrors] = useState({});
+	const { openModal, configModal } = useAppContext();
+
+	useEffect(() => {
+		configModal({ modalObject: project, onSubmit: updateProject });
+	}, []);
 
 	const toggleTodo = (todoId) => {
 		const updatedTodos = project.todos.map((todo) =>
 			todo.id === todoId ? { ...todo, completed: !todo.completed } : todo,
 		);
 
-		updateProject({
+		updateProject.mutate({
 			projectId: project.id,
 			projectData: {
 				...project,
@@ -36,7 +42,7 @@ function ProjectDetail({ project, onBack, deleteProject, updateProject }) {
 	const deleteTodo = (todoId) => {
 		const updatedTodos = project.todos.filter((todo) => todo.id !== todoId);
 
-		updateProject({
+		updateProject.mutate({
 			projectId: project.id,
 			projectData: {
 				...project,
@@ -62,8 +68,8 @@ function ProjectDetail({ project, onBack, deleteProject, updateProject }) {
 			priority: newTodoPriority,
 		};
 		updateProject.mutate({
-			projectId: project.id,
-			projectData: {
+			Id: project.id,
+			Data: {
 				...project,
 				todos: [...(project.todos ?? []), newTodo],
 			},
@@ -77,41 +83,6 @@ function ProjectDetail({ project, onBack, deleteProject, updateProject }) {
 		deleteProject(project.id);
 		setShowDeleteDialog(false);
 		onBack();
-	};
-	const validateForm = () => {
-		const newErrors = {};
-		if (!project.name.trim()) {
-			newErrors.projectName = "Project name is required";
-		} else if (!project.deadline) {
-			newErrors.projectDeadline = "Project deadline is required";
-		} else if (!project.owner.trim()) {
-			newErrors.projectOwner = "Project owner is required";
-		}
-		setErrors(newErrors);
-		return Object.keys(newErrors).length === 0;
-	};
-
-	const handleUpdateProject = (event) => {
-		event.preventDefault();
-		if (!validateForm()) return;
-
-		const newProject = {
-			name: updProject.name.trim(),
-			description: updProject.description.trim(),
-			deadline: updProject.deadline,
-			owner: updProject.owner.trim(),
-			color: updProject.color,
-			todos: [],
-		};
-
-		updateProject({ projectId: project.id, projectData: newProject });
-		setShowUpdateProject(false);
-	};
-
-	const changeValues = (event) => {
-		const field = event.target.name;
-		const value = event.target.value;
-		setupdProject((old) => ({ ...old, [field]: value }));
 	};
 
 	return (
@@ -140,7 +111,7 @@ function ProjectDetail({ project, onBack, deleteProject, updateProject }) {
 							className="btn alert alert-light p-2 m-0"
 							onClick={() => setShowUpdateProject(true)}
 						>
-							{showUpdateProject ? "Modifying" : "Modify Project"}
+							Modify Project
 						</div>
 						<div
 							className="btn alert alert-light p-2 m-0"

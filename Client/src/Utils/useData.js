@@ -24,6 +24,9 @@ export default function useData(target) {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: [target] });
 		},
+		onError:(err)=>{
+			console.log(err)
+		}
 	});
 	const remove = useMutation({
 		mutationFn: (Id) => api[target].delete(Id),
