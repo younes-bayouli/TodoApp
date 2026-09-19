@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Arrow from "../../Components/Arrow";
-import { compareTime } from "../../Utils/timeUtilities";
+import Arrow from "./Arrow";
+import { compareTime } from "../Utils/timeUtilities";
 
 export default function TimeInputClock({
 	initialTime = "00:00",
@@ -16,29 +16,31 @@ export default function TimeInputClock({
 	const [activeButtons, setActiveButtons] = useState([1, 1, 1, 1]);
 
 	const updateTime = (delta) => {
-		let temp=[hours,minutes].map((h, i) => (h + delta[i] + [24, 60][i]) % [24, 60][i]);
+		let temp = [hours, minutes].map(
+			(h, i) => (h + delta[i] + [24, 60][i]) % [24, 60][i],
+		);
 
 		setHM(temp);
 
 		const newTime = `${String(temp[0]).padStart(2, "0")}:${String(temp[1]).padStart(2, "0")}`;
-		setActiveButtons(() =>
-		{
-			let t=[
+		setActiveButtons(() => {
+			let t = [
 				[1, 0],
 				[-1, 0],
 				[0, 1],
 				[0, -1],
 			].map((vect) => {
 				let [h, m] = vect.map(
-					(k, i) =>
-						(k + temp[i] + [24, 60][i]) % [24, 60][i],
+					(k, i) => (k + temp[i] + [24, 60][i]) % [24, 60][i],
 				);
 				let time = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-				return compareTime(time, maxTime) <= 0 && compareTime(time, minTime) >= 0;
-			})
+				return (
+					compareTime(time, maxTime) <= 0 &&
+					compareTime(time, minTime) >= 0
+				);
+			});
 			return t;
-		}
-		);
+		});
 		onChange(newTime);
 	};
 
@@ -54,7 +56,7 @@ export default function TimeInputClock({
 				<Arrow
 					deg={180}
 					className={`h-25 ${hovered ? "" : "invisible"}`}
-					onClick={() => updateTime([1 * activeButtons[0],0])}
+					onClick={() => updateTime([1 * activeButtons[0], 0])}
 					cliCkable={activeButtons[0]}
 				></Arrow>
 				<span
@@ -65,7 +67,7 @@ export default function TimeInputClock({
 				</span>
 				<Arrow
 					className={`h-25 ${hovered ? "" : "invisible"}`}
-					onClick={() => updateTime([-1 * activeButtons[1],0])}
+					onClick={() => updateTime([-1 * activeButtons[1], 0])}
 					cliCkable={activeButtons[1]}
 				></Arrow>
 			</div>
@@ -76,7 +78,7 @@ export default function TimeInputClock({
 				<Arrow
 					deg={180}
 					className={`h-25 ${hovered ? "" : "invisible"}`}
-					onClick={() => updateTime([0,1 * activeButtons[2]])}
+					onClick={() => updateTime([0, 1 * activeButtons[2]])}
 					cliCkable={activeButtons[2]}
 				></Arrow>
 
@@ -89,7 +91,7 @@ export default function TimeInputClock({
 
 				<Arrow
 					className={`h-25 ${hovered ? "" : "invisible"}`}
-					onClick={() => updateTime([0,-1 * activeButtons[3]])}
+					onClick={() => updateTime([0, -1 * activeButtons[3]])}
 					cliCkable={activeButtons[3]}
 				></Arrow>
 			</div>

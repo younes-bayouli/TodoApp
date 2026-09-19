@@ -78,6 +78,7 @@ export function AppProvider({ children }) {
 				addError: (error) => dispatch({ type: "ADD", payload: error }),
 				removeError: () => dispatch({ type: "POP" }),
 				nbrErr,
+				object,
 				openModal,
 				closeModal,
 				configModal,

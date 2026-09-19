@@ -1,72 +1,8 @@
-import { useEffect } from "react";
 import { useAppContext } from "../../Context";
-import useData from "../../Utils/useData";
 import ProjectCard from "./ProjectCard";
 
-const projectFields = {
-	name: {
-		type: "text",
-		label: "Title",
-		placeholder: "Enter task title",
-		size: "full",
-	},
-
-	description: {
-		type: "textarea",
-		label: "Description",
-		placeholder: "Enter task details...",
-		size: "full",
-	},
-
-	deadline: {
-		type: "date",
-		label: "Deadline",
-		placeholder: "",
-		size: "half",
-	},
-
-	color: {
-		type: "color",
-		label: "Color",
-		size: "small",
-	},
-	owner: {
-		type: "text",
-		label: "Project Owner",
-		placeholder: "Younes Bayouli",
-		size: "full",
-	},
-};
-const nullProject = {
-	name: "",
-	description: "",
-	deadline: "",
-	color: "#0d6efd",
-	owner: "",
-	todos: [],
-};
-
-const validateForm = (project) => {
-	const newErrors = {};
-	if (!project?.name?.trim()) {
-		newErrors.projectName = "Project name is required";
-	} else if (!project?.owner?.trim()) {
-		newErrors.projectOwner = "Project owner is required";
-	}
-	return newErrors;
-};
-function ProjectList({ projects, onClick }) {
-	const { create } = useData("projects");
-	const { openModal, configModal } = useAppContext();
-	useEffect(() => {
-		configModal({
-			modalName: "projects",
-			modalObject: nullProject,
-			config: projectFields,
-			validate: validateForm,
-			onSubmit:create,
-		});
-	}, []);
+function ProjectList({ projects, onClick,onOpenAddProject,onCloseAddProject }) {
+	const { openModal } = useAppContext();
 	return (
 		<div>
 			<div className="row g-4">
@@ -83,7 +19,7 @@ function ProjectList({ projects, onClick }) {
 					<button
 						type="button"
 						className="card h-100 w-100 project-card add-project-card"
-						onClick={openModal}
+						onClick={onOpenAddProject}
 					>
 						<span
 							className="display-4 text-primary"

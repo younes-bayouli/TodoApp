@@ -116,7 +116,6 @@ export const api = {
 					body: JSON.stringify(project),
 				},
 			}),
-
 		update: (id, project) =>
 			request(`/projects/${id}`, {
 				options: {

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import TimeInputClock from "../Pages/EveryDayTasks/TimeInputClock";
+import TimeInputClock from "../Components/TimeInputClock";
 import { getSizeClass } from "../Utils/Utils";
 
 export default function useModal(
@@ -12,7 +12,7 @@ export default function useModal(
 ) {
 	const [visible, setVisible] = useState(false);
 	const [errors, setErrors] = useState({});
-	const isNewObject=!object.id;
+	const isNewObject = !object.id;
 
 	const handleChange = (eventOrName, value) => {
 		const name =
@@ -145,12 +145,6 @@ export default function useModal(
 		[object, errors, fieldsConfig],
 	);
 
-	const cancel = () => {
-		setObject({});
-		setErrors({});
-		setVisible(false);
-	};
-
 	const validate = () => {
 		const result = validateObject(object) ?? {};
 
@@ -160,16 +154,13 @@ export default function useModal(
 	};
 
 	const submit = () => {
-		console.log("before validation");
-		if (!validate()) return
-		console.log("after validation")
+		if (!validate()) return;
 
-		onSubmit.mutate(object,object.id);
-
-		setVisible(false);
+		onSubmit.mutate({ Data: object, Id: object.id });
 	};
 
 	const closeModal = () => {
+		setErrors({});
 		setVisible(false);
 	};
 
@@ -200,7 +191,7 @@ export default function useModal(
 							<button
 								type="button"
 								className="btn btn-secondary"
-								onClick={cancel}
+								onClick={closeModal}
 							>
 								Cancel
 							</button>

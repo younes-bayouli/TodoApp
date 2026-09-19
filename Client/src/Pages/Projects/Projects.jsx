@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
 import "./Projects.css";
 import useData from "../../Utils/useData";
+import { useAppContext } from "../../Context";
 
 const normalise = (project) => {
 	return {
@@ -15,10 +16,86 @@ const normalise = (project) => {
 	};
 };
 
+const projectFields = {
+	name: {
+		type: "text",
+		label: "Title",
+		placeholder: "Enter task title",
+		size: "full",
+	},
+
+	description: {
+		type: "textarea",
+		label: "Description",
+		placeholder: "Enter task details...",
+		size: "full",
+	},
+
+	deadline: {
+		type: "date",
+		label: "Deadline",
+		placeholder: "",
+		size: "half",
+	},
+
+	color: {
+		type: "color",
+		label: "Color",
+		size: "small",
+	},
+	owner: {
+		type: "text",
+		label: "Project Owner",
+		placeholder: "Younes Bayouli",
+		size: "full",
+	},
+};
+const nullProject = {
+	name: "",
+	description: "",
+	deadline: "",
+	color: "#0d6efd",
+	owner: "",
+	todos: [],
+};
+
+const validateForm = (project) => {
+	const newErrors = {};
+	if (!project?.name?.trim()) {
+		newErrors.projectName = "Project name is required";
+	} else if (!project?.owner?.trim()) {
+		newErrors.projectOwner = "Project owner is required";
+	}
+	return newErrors;
+};
+
 function Projects() {
-	const { data: projects } = useData("projects");
-	const [selectedProject, openDetails] = useState(null);
+	const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 	const [filter, setFilter] = useState("all");
+	const { data: projects, create, update } = useData("projects");
+	const { configModal,openModal } = useAppContext();
+	useEffect(() => {
+		configModal({
+			modalName: "projects",
+			modalObject: nullProject,
+			config: projectFields,
+			validate: validateForm,
+			onSubmit: create,
+		});
+	}, []);
+	const openDetails = (project) => {
+		configModal({ modalObject: project, onSubmit: update });
+		setIsDetailsOpen(true);
+	};
+	const closeDetails = () => {
+		configModal({ modalObject: nullProject, onSubmit: create });
+		setIsDetailsOpen(false);
+	};
+
+	const openAddProject=()=>{
+		configModal({ modalObject: nullProject, onSubmit: create });
+		openModal();
+	}
 
 	const filteredProjects = projects?.filter((project) => {
 		if (filter === "all") return true;
@@ -31,7 +108,7 @@ function Projects() {
 		return true;
 	});
 
-	if (!selectedProject) {
+	if (!isDetailsOpen) {
 		return (
 			<div>
 				<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
@@ -63,18 +140,14 @@ function Projects() {
 
 				<ProjectList
 					onClick={openDetails}
+					onOpenAddProject={openAddProject}
 					projects={filteredProjects}
 				></ProjectList>
 			</div>
 		);
 	}
 
-	return (
-		<ProjectDetail
-			project={selectedProject}
-			onBack={() => openDetails(null)}
-		/>
-	);
+	return <ProjectDetail onBack={closeDetails}/>;
 }
 
 export default Projects;

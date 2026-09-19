@@ -4,51 +4,50 @@ import "./Projects.css";
 import useData from "../../Utils/useData";
 import { useAppContext } from "../../Context";
 
-const PRIORITY_BADGES = {
-	high: "bg-danger",
-	medium: "bg-warning",
-	low: "bg-secondary",
+const priorityStyles = {
+	high: { label: "High", dot: "#B54545" },
+	medium: { label: "Medium", dot: "#B08A3E" },
+	low: { label: "Low", dot: "#4B7A5A" },
 };
 
 const priorityOrder = { high: 0, medium: 1, low: 2 };
 
-function ProjectDetail({ project, onBack }) {
+function ProjectDetail({ onBack }) {
 	const { update: updateProject, remove: deleteProject } =
 		useData("projects");
 	const [newTodoTitle, setNewTodoTitle] = useState("");
 	const [newTodoPriority, setNewTodoPriority] = useState("medium");
-	const [showAddTodo, setShowAddTodo] = useState(false);
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-	const { openModal, configModal } = useAppContext();
-
-	useEffect(() => {
-		configModal({ modalObject: project, onSubmit: updateProject });
-	}, []);
+	const { openModal, configModal, object: project } = useAppContext();
 
 	const toggleTodo = (todoId) => {
 		const updatedTodos = project.todos.map((todo) =>
 			todo.id === todoId ? { ...todo, completed: !todo.completed } : todo,
 		);
+		const updatedProject = {
+			...project,
+			todos: updatedTodos,
+		};
 
 		updateProject.mutate({
-			projectId: project.id,
-			projectData: {
-				...project,
-				todos: updatedTodos,
-			},
+			Id: project.id,
+			Data: updatedProject,
 		});
+		configModal({ modalObject: updatedProject });
 	};
 
 	const deleteTodo = (todoId) => {
 		const updatedTodos = project.todos.filter((todo) => todo.id !== todoId);
+		const updatedProject = {
+			...project,
+			todos: updatedTodos,
+		};
 
 		updateProject.mutate({
-			projectId: project.id,
-			projectData: {
-				...project,
-				todos: updatedTodos,
-			},
+			Id: project.id,
+			Data: updatedProject,
 		});
+		configModal({ modalObject: updatedProject });
 	};
 
 	const sortedTodos = [...project.todos].sort((a, b) => {
@@ -58,29 +57,32 @@ function ProjectDetail({ project, onBack }) {
 		return priorityOrder[a.priority] - priorityOrder[b.priority];
 	});
 
-	const handleAddTodo = (event) => {
-		event.preventDefault();
+	const handleAddTodo = (e) => {
+		e.preventDefault();
 		if (!newTodoTitle.trim()) return;
-
+		const id = new Date().getMilliseconds();
 		const newTodo = {
+			id: id,
 			title: newTodoTitle.trim(),
 			completed: false,
 			priority: newTodoPriority,
 		};
+		const updatedProject = {
+			...project,
+			todos: [...(project.todos ?? []), newTodo],
+		};
+
 		updateProject.mutate({
 			Id: project.id,
-			Data: {
-				...project,
-				todos: [...(project.todos ?? []), newTodo],
-			},
+			Data: updatedProject,
 		});
 		setNewTodoTitle("");
 		setNewTodoPriority("medium");
-		setShowAddTodo(false);
+		configModal({ modalObject: updatedProject });
 	};
 
 	const handleConfirmDelete = () => {
-		deleteProject(project.id);
+		deleteProject.mutate(project.id);
 		setShowDeleteDialog(false);
 		onBack();
 	};
@@ -109,15 +111,9 @@ function ProjectDetail({ project, onBack }) {
 						</small>
 						<div
 							className="btn alert alert-light p-2 m-0"
-							onClick={() => setShowUpdateProject(true)}
+							onClick={openModal}
 						>
 							Modify Project
-						</div>
-						<div
-							className="btn alert alert-light p-2 m-0"
-							onClick={() => setShowAddTodo(!showAddTodo)}
-						>
-							{showAddTodo ? "Cancel" : "Add Todo"}
 						</div>
 
 						<div
@@ -129,37 +125,48 @@ function ProjectDetail({ project, onBack }) {
 					</div>
 				</div>
 
-				{showAddTodo && (
-					<div className="card mb-4 border-primary">
-						<div className="card-body">
-							<h6 className="mb-3">Add New Todo</h6>
-							<form onSubmit={handleAddTodo}>
-								<div className="row g-3">
-									<div className="col-md-8">
-										<input
-											type="text"
-											className="form-control"
-											placeholder="What needs to be done?"
-											value={newTodoTitle}
-											onChange={(e) =>
-												setNewTodoTitle(e.target.value)
-											}
-											autoFocus
-										/>
-									</div>
-									<div className="col-md-1">
-										<button
-											type="submit"
-											className="btn btn-primary w-100"
-										>
-											Add
-										</button>
-									</div>
+				<div className="card mb-4">
+					<div className="card-body">
+						<h6 className="mb-3">Add New Todo</h6>
+						<form onSubmit={handleAddTodo}>
+							<div className="row g-3">
+								<div className="col-md-8">
+									<input
+										type="text"
+										className="form-control"
+										placeholder="What needs to be done?"
+										value={newTodoTitle}
+										onChange={(e) =>
+											setNewTodoTitle(e.target.value)
+										}
+									/>
 								</div>
-							</form>
-						</div>
+
+								<div className="col-md-3">
+									<select
+										className="form-select"
+										value={newTodoPriority}
+										onChange={(e) =>
+											setNewTodoPriority(e.target.value)
+										}
+									>
+										<option value="high">High</option>
+										<option value="medium">Medium</option>
+										<option value="low">Low</option>
+									</select>
+								</div>
+								<div className="col-md-1">
+									<button
+										type="submit"
+										className="btn btn-primary w-100"
+									>
+										Add
+									</button>
+								</div>
+							</div>
+						</form>
 					</div>
-				)}
+				</div>
 
 				{showDeleteDialog && (
 					<div
@@ -222,43 +229,57 @@ function ProjectDetail({ project, onBack }) {
 
 				<div className="list-group list-group-flush border rounded">
 					{sortedTodos.length > 0 ? (
-						sortedTodos.map((todo) => (
-							<div
-								key={todo.id}
-								className="list-group-item d-flex align-items-center gap-3 py-3"
-							>
+						sortedTodos.map((todo) => {
+							const priority = priorityStyles[todo.priority];
+							return (
 								<div
-									className="form-check mb-0"
-									onClick={() => toggleTodo(todo.id)}
-									style={{ cursor: "pointer" }}
+									key={todo.id}
+									className="list-group-item d-flex align-items-center gap-3 py-3"
 								>
-									<input
-										className="form-check-input"
-										type="checkbox"
-										checked={todo.completed}
-										onChange={() => toggleTodo(todo.id)}
-									/>
-								</div>
-								<div className="flex-grow-1">
-									<span
-										className={
-											todo.completed
-												? "text-decoration-line-through text-secondary"
-												: ""
-										}
+									<div
+										className="form-check mb-0"
+										onClick={() => toggleTodo(todo.id)}
+										style={{ cursor: "pointer" }}
 									>
-										{todo.title}
+										<input
+											className="form-check-input"
+											type="checkbox"
+											checked={todo.completed}
+											onChange={() => toggleTodo(todo.id)}
+										/>
+									</div>
+									<div className="flex-grow-1">
+										<span
+											className={
+												todo.completed
+													? "text-decoration-line-through text-secondary"
+													: ""
+											}
+										>
+											{todo.title}
+										</span>
+									</div>
+									<button
+										type="button"
+										className="btn btn-sm text-danger"
+										onClick={() => deleteTodo(todo.id)}
+									>
+										Delete
+									</button>
+									<span className="d-flex align-items-center gap-2 small text-secondary">
+										<span
+											className="rounded-circle"
+											style={{
+												width: "8px",
+												height: "8px",
+												backgroundColor: priority.dot,
+											}}
+										/>
+										{priority.label}
 									</span>
 								</div>
-								<button
-									type="button"
-									className="btn btn-sm text-danger"
-									onClick={() => deleteTodo(todo.id)}
-								>
-									Delete
-								</button>
-							</div>
-						))
+							);
+						})
 					) : (
 						<div className="text-center text-secondary py-5">
 							No todos yet. Click "Add Todo" to create one.
