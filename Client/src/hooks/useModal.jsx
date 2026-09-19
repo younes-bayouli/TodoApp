@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import TimeInputClock from "../Components/TimeInputClock";
 import { getSizeClass } from "../Utils/Utils";
+import { DAYS } from "../Utils/dateUtilities";
 
 export default function useModal(
 	title,
@@ -9,10 +10,15 @@ export default function useModal(
 	fieldsConfig = {},
 	validateObject,
 	onSubmit,
+	onMount=()=>{},
 ) {
 	const [visible, setVisible] = useState(false);
-	const [errors, setErrors] = useState({});
 	const isNewObject = !object.id;
+	const [errors, setErrors] = useState({});
+
+	useEffect(()=>{
+		setErrors(onMount?.(object) ?? {});
+	}, [object])
 
 	const handleChange = (eventOrName, value) => {
 		const name =
@@ -137,6 +143,63 @@ export default function useModal(
 										</option>
 									))}
 								</select>
+							) : type === "days" ? (
+								<div className="my-3 w-100 d-flex flex-column align-items-center">
+									<div className="w-100 d-flex align-items-center mb-3">
+										<label className="form-label m-0">
+											Repeat on:
+										</label>
+										<label className="ms-3 mb-0">
+											<input
+												type="checkbox"
+												className="mx-2"
+												name="allDays"
+												checked={() =>
+													object.days.every(Boolean)
+												}
+												onChange={() =>
+													handleChange(
+														"days",
+														DAYS.map(
+															() =>
+																!object.days.every(
+																	Boolean,
+																),
+														),
+													)
+												}
+											/>
+											All days
+										</label>
+									</div>
+									<div className="w-75 d-flex justify-content-between">
+										{DAYS.map((day, index) => (
+											<label
+												key={day}
+												className="d-flex flex-column align-items-center justify-content-center"
+											>
+												<input
+													type="checkbox"
+													name="days"
+													value={index}
+													checked={object.days[index]}
+													onChange={() =>
+														handleChange(
+															"days",
+															object.days.map(
+																(item, i) =>
+																	i === index
+																		? !object.days[index]
+																		: item,
+															),
+														)
+													}
+												/>
+												{day.slice(0, 3)}
+											</label>
+										))}
+									</div>
+								</div>
 							) : (
 								<input
 									id={name}

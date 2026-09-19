@@ -47,6 +47,7 @@ export function AppProvider({ children }) {
 	const [fieldsConfig, setFieldsConfig] = useState({});
 	const [validateObject, setValidateObject] = useState(() => true);
 	const [onSubmit, setOnSubmit] = useState(() => {});
+	const [onMount,setOnMount]=useState(null);
 
 	const configModal = ({
 		modalName,
@@ -54,12 +55,14 @@ export function AppProvider({ children }) {
 		config,
 		validate,
 		onSubmit,
+		onMount,
 	}) => {
 		setName((prev) => modalName ?? prev);
 		setObject((prev) => modalObject ?? prev);
 		setFieldsConfig((prev) => config ?? prev);
 		setValidateObject((prev) => validate ?? prev);
 		setOnSubmit((prev) => onSubmit ?? prev);
+		setOnMount((prev)=>onMount ?? prev)
 	};
 
 	const { Modal, openModal, closeModal } = useModal(
@@ -69,6 +72,7 @@ export function AppProvider({ children }) {
 		fieldsConfig,
 		validateObject,
 		onSubmit,
+		onMount,
 	);
 	return (
 		<AppContext.Provider

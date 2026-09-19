@@ -8,25 +8,22 @@ import { getCurrentAndNextTask } from "../../Utils/Utils";
 import TaskStatusCard from "../../Components/Cards/TaskStatusCard.jsx";
 import { DAYS } from "../../Utils/dateUtilities";
 import useData from "../../Utils/useData.js";
+import { useAppContext } from "../../Context.jsx";
 
 function Myeveryday() {
 	const { data: Tasks } = useData("tasks");
+	const {openModal}=useAppContext();
 	const Date = useDate();
 	const scheduleControlsRef = useRef(null);
 	const currentDayIndex = (Date.getDay() + 6) % 7;
 	const [chosenDay, setChosenDay] = useState(() => currentDayIndex);
 	const visibleTasks = Tasks?.filter((task) => task.days[chosenDay]);
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const currentTime = format(Date).hour24;
 	const { current, next } = getCurrentAndNextTask(
 		currentTime,
 		visibleTasks,
 		chosenDay,
 	);
-
-	const addTask = () => {
-		setIsModalOpen(true);
-	};
 
 	return (
 		<>
@@ -73,7 +70,7 @@ function Myeveryday() {
 							</div>
 							<div
 								className="btn alert alert-light p-1 m-0"
-								onClick={addTask}
+								onClick={openModal}
 							>
 								Add Task
 							</div>
@@ -86,8 +83,6 @@ function Myeveryday() {
 						time={Date}
 						Tasks={visibleTasks}
 						controlsTargetRef={scheduleControlsRef}
-						isModalOpen={isModalOpen}
-						setIsModalOpen={setIsModalOpen}
 					></Schedule>
 					<div className="d-flex flex-fill gap-4 align-items-stretch">
 						<div className="flex-fill">
