@@ -10,15 +10,15 @@ export default function useModal(
 	fieldsConfig = {},
 	validateObject,
 	onSubmit,
-	onMount=()=>{},
+	onMount = () => {},
 ) {
 	const [visible, setVisible] = useState(false);
 	const isNewObject = !object.id;
 	const [errors, setErrors] = useState({});
 
-	useEffect(()=>{
+	useEffect(() => {
 		setErrors(onMount?.(object) ?? {});
-	}, [object])
+	}, [object]);
 
 	const handleChange = (eventOrName, value) => {
 		const name =
@@ -78,26 +78,32 @@ export default function useModal(
 									</div>
 
 									{endConfig && (
-										<div className="flex-fill">
-											<label className="form-label">
-												{endConfig.label}
-											</label>
+										<>
+											<span className="span"></span>
+											<div className="flex-fill">
+												<label className="form-label">
+													{endConfig.label}
+												</label>
 
-											<TimeInputClock
-												initialTime={object?.end}
-												minTime={object?.start}
-												className="py-1 alert alert-light bg-transparent"
-												onChange={(newTime) =>
-													handleChange("end", newTime)
-												}
-											/>
+												<TimeInputClock
+													initialTime={object?.end}
+													minTime={object?.start}
+													className="py-1 alert alert-light bg-transparent"
+													onChange={(newTime) =>
+														handleChange(
+															"end",
+															newTime,
+														)
+													}
+												/>
 
-											{errors.end && (
-												<p className="text-danger mt-1 mb-0">
-													{errors.end}
-												</p>
-											)}
-										</div>
+												{errors.end && (
+													<p className="text-danger mt-1 mb-0">
+														{errors.end}
+													</p>
+												)}
+											</div>
+										</>
 									)}
 								</div>
 							</div>
@@ -189,7 +195,10 @@ export default function useModal(
 															object.days.map(
 																(item, i) =>
 																	i === index
-																		? !object.days[index]
+																		? !object
+																				.days[
+																				index
+																			]
 																		: item,
 															),
 														)
