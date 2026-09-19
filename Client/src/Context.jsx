@@ -1,7 +1,6 @@
 import {
 	createContext,
 	useContext,
-	useEffect,
 	useReducer,
 	useState,
 } from "react";

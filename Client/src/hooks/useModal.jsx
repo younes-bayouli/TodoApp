@@ -120,12 +120,33 @@ export default function useModal(
 									placeholder={placeholder}
 									onChange={handleChange}
 								/>
+							) : type === "select" ? (
+								<select
+									id={name}
+									name={name}
+									className="form-select"
+									value={value}
+									onChange={handleChange}
+								>
+									{config.options?.map((option) => (
+										<option
+											key={option.value}
+											value={option.value}
+										>
+											{option.label}
+										</option>
+									))}
+								</select>
 							) : (
 								<input
 									id={name}
 									name={name}
 									type={type}
-									className={`form-control ${type === "color" ? " form-control-color" : ""}`}
+									className={`form-control ${
+										type === "color"
+											? "form-control-color"
+											: ""
+									}`}
 									value={value}
 									placeholder={placeholder}
 									onChange={handleChange}
