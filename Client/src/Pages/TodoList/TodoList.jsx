@@ -3,6 +3,7 @@ import Todo from "./Todo.jsx";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
 import { useAppContext } from "../../Context.jsx";
+import useData from "../../Utils/useData.js";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
@@ -10,32 +11,11 @@ const priorityOrder = { high: 0, medium: 1, low: 2 };
 function TodoList() {
 	const { addError } = useAppContext();
 	const queryClient = useQueryClient();
-	const { data: tasks, isLoading,error: tasksError } = useQuery({
-		queryKey: ["todos"],
-		queryFn: api.todos.getAll,
-	});
-	const addTaskMutation = useMutation({
-		mutationFn: (newTask) => api.todos.create(newTask),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["todos"] });
-		},
-	});
-	const updateTaskMutation = useMutation({
-		mutationFn: ({ taskId, taskData }) =>
-			api.todos.update(taskId, taskData),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["todos"] });
-		},
-	});
+	const {data:tasks,create:addTaskMutation,udate:updateTaskMutation,remove:deleteTaskMutation}=useData("todos")
+	
 	const toggleTaskMutation = useMutation({
 		mutationFn: ({ taskId, taskData }) =>
 			api.todos.update(taskId, taskData),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["todos"] });
-		},
-	});
-	const deleteTaskMutation = useMutation({
-		mutationFn: (taskId) => api.todos.delete(taskId),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["todos"] });
 		},
