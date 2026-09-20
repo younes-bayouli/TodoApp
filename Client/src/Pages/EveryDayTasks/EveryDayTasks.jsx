@@ -3,16 +3,29 @@ import { useRef, useState } from "react";
 import Schedule from "./Schedule.jsx";
 import TimeCard from "../../Components/Cards/TimeCard.jsx";
 import { useDate } from "../../Utils/useTime";
-import { format } from "../../Utils/timeUtilities";
+import {
+	format,
+	minutesToString,
+	stringToMinutes,
+	timeDifferenceInMinutes,
+} from "../../Utils/timeUtilities";
 import { getCurrentAndNextTask } from "../../Utils/Utils";
 import TaskStatusCard from "../../Components/Cards/TaskStatusCard.jsx";
 import { DAYS } from "../../Utils/dateUtilities";
 import useData from "../../Utils/useData.js";
 import { useAppContext } from "../../Context.jsx";
 
+const nullTask = {
+	title: "",
+	start: "00:00",
+	end: "00:30",
+	days: [false, false, false, false, false, false, false],
+	details: "",
+};
+
 function Myeveryday() {
-	const { data: Tasks } = useData("tasks");
-	const {openModal}=useAppContext();
+	const { data: Tasks, update } = useData("tasks");
+	const { openModal, configModal, object } = useAppContext();
 	const Date = useDate();
 	const scheduleControlsRef = useRef(null);
 	const currentDayIndex = (Date.getDay() + 6) % 7;
@@ -70,7 +83,32 @@ function Myeveryday() {
 							</div>
 							<div
 								className="btn alert alert-light p-1 m-0"
-								onClick={openModal}
+								onClick={() => {
+									const newTask = {
+										...nullTask,
+										days: nullTask.days.map(
+											(_, index) =>
+												index === currentDayIndex,
+										),
+										start: current
+											? current.end
+											: currentTime,
+										end: next
+											? next.start
+											: minutesToString(
+													stringToMinutes(
+														current
+															? current.end
+															: currentTime,
+													) + 60,
+												),
+									};
+									configModal({
+										modalObject: newTask,
+										onSubmit: update,
+									});
+									openModal();
+								}}
 							>
 								Add Task
 							</div>

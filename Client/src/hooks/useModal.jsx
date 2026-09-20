@@ -10,15 +10,11 @@ export default function useModal(
 	fieldsConfig = {},
 	validateObject,
 	onSubmit,
-	onMount = () => {},
 ) {
 	const [visible, setVisible] = useState(false);
 	const isNewObject = !object.id;
 	const [errors, setErrors] = useState({});
 
-	useEffect(() => {
-		setErrors(onMount?.(object) ?? {});
-	}, [object]);
 
 	const handleChange = (eventOrName, value) => {
 		const name =
@@ -160,9 +156,9 @@ export default function useModal(
 												type="checkbox"
 												className="mx-2"
 												name="allDays"
-												checked={() =>
-													object.days.every(Boolean)
-												}
+												checked={object.days.every(
+													Boolean,
+												)}
 												onChange={() =>
 													handleChange(
 														"days",
@@ -281,6 +277,11 @@ export default function useModal(
 						{fields}
 
 						<div className="mt-4 d-flex gap-2 justify-content-end">
+							{errors.saveWarning && (
+								<p className="text-danger mt-1 mb-0">
+									{errors.saveWarning}
+								</p>
+							)}
 							<button
 								type="button"
 								className="btn btn-secondary"

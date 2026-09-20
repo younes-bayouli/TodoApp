@@ -27,7 +27,7 @@ export function stringToMinutes(timeString) {
 
 
 export function minutesToString(minutes){
-  `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`
+  return `${String(minutes/60).padStart(2, "0")}:${String(minutes%60).padStart(2, "0")}`
 }
 
 export function timeDifferenceInMinutes(start, end) {

@@ -21,7 +21,7 @@ import { useAppContext } from "../../Context.jsx";
 const nullTask = {
 	title: "",
 	start: "00:00",
-	end: "00:00",
+	end: "00:30",
 	days: [false, false, false, false, false, false, false],
 	details: "",
 };
@@ -60,13 +60,19 @@ const taskFields = {
 	},
 };
 
-function Schedule({
-	time,
-	Tasks = [],
-	chosenDay,
-	isModalOpen,
-	setIsModalOpen,
-}) {
+const validateForm = (Task) => {
+	const newErrors = {};
+	if (!Task.title.trim()) {
+		newErrors.title = "Task title is required";
+	} else if (compareTime(Task.start, Task.end) >= 0) {
+		newErrors.end = "End time must be after start time";
+	} else if (Task.days.every((day) => !day)) {
+		newErrors.days = "At least one day must be selected";
+	}
+	return newErrors;
+};
+
+function Schedule({ time, Tasks = [], chosenDay }) {
 	const [Hovered, setHovered] = useState(false);
 	const scrollRef = useRef(null);
 	const distanceMouseLeftedge = useMouseDistance(scrollRef);
@@ -76,10 +82,6 @@ function Schedule({
 		update: updateTaskMutation,
 		remove: deleteTaskMutation,
 	} = useData("tasks");
-
-	const checkForOverLapping = (newTask) => {
-		return checkOverlap(newTask, Tasks);
-	};
 
 	const scroll = (direction) => {
 		const amount = 500;
@@ -99,7 +101,6 @@ function Schedule({
 			config: taskFields,
 			validate: validateForm,
 			onSubmit: addTaskMutation,
-			onMount: checkForOverLapping,
 		});
 		scrollRef.current.scrollLeft = (timeToMinutes(time) * 10) / 6 - 300;
 	}, []);
@@ -109,17 +110,8 @@ function Schedule({
 		openModal();
 	};
 
-	const validateForm = () => {
-		const newErrors = {};
-		if (!activeTask.title.trim()) {
-			newErrors.title = "Task title is required";
-		} else if (compareTime(activeTask.start, activeTask.end) >= 0) {
-			newErrors.end = "End time must be after start time";
-		} else if (activeTask.days.every((day) => !day)) {
-			newErrors.days = "At least one day must be selected";
-		}
-		return newErrors;
-	};
+	const scrollLeft = useCallback(() => scroll(-1), []);
+	const scrollRight = useCallback(() => scroll(1), []);
 
 	return (
 		<>
@@ -128,7 +120,7 @@ function Schedule({
 					<Arrow
 						deg={90}
 						style={{ width: "5%", height: "10%" }}
-						onClick={useCallback(() => scroll(-1), [])}
+						onClick={scrollLeft}
 					></Arrow>
 					<div
 						className="d-flex h-100 scroller"
@@ -168,11 +160,11 @@ function Schedule({
 									start: format(minutesToTime(min)).hour24,
 									end: format(minutesToTime(end + 30)).hour24,
 								};
-								setActiveTask(newTask);
 								configModal({
 									modalObject: newTask,
 									onSubmit: addTaskMutation,
 								});
+								openModal();
 							}}
 						></div>
 						<StaticTimeBars />
@@ -216,13 +208,13 @@ function Schedule({
 							{Tasks.map((task) => (
 								<Task
 									task={task}
+									key={task.id}
 									onClick={handleClickOnTask}
 									onDelete={(selectedTask) =>
 										deleteTaskMutation.mutate(
 											selectedTask.id,
 										)
 									}
-									style={{ zIndex: 4 }}
 								></Task>
 							))}
 						</div>
@@ -230,7 +222,7 @@ function Schedule({
 					<Arrow
 						deg={-90}
 						style={{ width: "5%", height: "10%" }}
-						onClick={useCallback(() => scroll(1), [])}
+						onClick={scrollRight}
 					></Arrow>
 				</div>
 			</div>

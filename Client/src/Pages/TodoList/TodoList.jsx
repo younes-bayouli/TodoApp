@@ -110,9 +110,7 @@ function TodoList() {
 
 	const toggleTask = (taskId) => {
 		const task = tasks?.find((item) => item.id === taskId);
-		console.log("hellloooooo");
 		if (!task) return;
-		console.log(task);
 
 		updateTaskMutation.mutate({
 			Id: taskId,

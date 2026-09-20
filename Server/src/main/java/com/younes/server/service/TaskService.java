@@ -49,7 +49,9 @@ public class TaskService {
         repository.findById(id).orElseThrow(() -> new DataNotFoundException("Task with id: " + id + " does not exist"));
         List<Task> overlappingTasks = repository.findTasksOverlapping(task.getStart(), task.getEnd());
 
-        boolean conflict = overlappingTasks.stream().filter((t) -> t.getId().equals(id))
+        System.out.println(overlappingTasks.toString());
+
+        boolean conflict = overlappingTasks.stream().filter((t) -> !t.getId().equals(id))
                 .anyMatch(existing -> haveCommonDay(task, existing));
 
         if (conflict) {
