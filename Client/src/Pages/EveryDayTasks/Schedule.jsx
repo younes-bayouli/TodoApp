@@ -17,6 +17,7 @@ import StaticTimeBars from "../../Components/StaticTimeBars.jsx";
 import TimeBar from "../../Components/TimeBar.jsx";
 import useData from "../../Utils/useData.js";
 import { useAppContext } from "../../Context.jsx";
+import { data } from "react-router-dom";
 
 const nullTask = {
 	title: "",
@@ -42,15 +43,17 @@ const taskFields = {
 	},
 
 	start: {
-		type: "time",
+		type: "duelClock",
 		label: "Start",
-		size: "half",
+		size: "full",
+		with:"end",
 	},
 
 	end: {
-		type: "time",
+		type: "duelClock",
 		label: "End",
-		size: "half",
+		size: "full",
+		with:"start",
 	},
 
 	days: {

@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import TimeInputClock from "../Components/TimeInputClock";
-import { getSizeClass } from "../Utils/Utils";
+import { checkOverlap, getSizeClass } from "../Utils/Utils";
 import { DAYS } from "../Utils/dateUtilities";
+import DuelClockInput from "../Components/DuelClockInput";
+import { useMemo, useState } from "react";
 
 export default function useModal(
 	title,
@@ -10,13 +10,14 @@ export default function useModal(
 	fieldsConfig = {},
 	validateObject,
 	onSubmit,
+	data,
 ) {
 	const [visible, setVisible] = useState(false);
 	const isNewObject = !object.id;
 	const [errors, setErrors] = useState({});
 
-
 	const handleChange = (eventOrName, value) => {
+		setErrors({});
 		const name =
 			typeof eventOrName === "string"
 				? eventOrName
@@ -25,18 +26,26 @@ export default function useModal(
 		const nextValue =
 			typeof eventOrName === "string" ? value : eventOrName.target.value;
 
-		setObject((current) => ({
-			...current,
-			[name]: nextValue,
-		}));
+		console.log(data);
+		const copy = { ...object, [name]: nextValue };
+		const overl = checkOverlap(copy, data);
+		console.log(copy, overl);
+		if (overl.check) {
+			setErrors((prev) => ({
+				...prev,
+				saveWarning: overl.mesg,
+			}));
+		}
 
-		setErrors({});
+		setObject(copy);
 	};
+	let skip;
 
 	const fields = useMemo(
 		() => (
 			<div className="row g-3">
 				{Object.entries(fieldsConfig).map(([name, config]) => {
+					if (skip === name) return;
 					const {
 						type,
 						label,
@@ -46,71 +55,8 @@ export default function useModal(
 
 					const value = object?.[name] ?? "";
 
-					if (type === "time" && name === "start") {
-						const endConfig = fieldsConfig.end;
-
-						return (
-							<div className="col-12" key="time-fields">
-								<div className="d-flex gap-4">
-									<div className="flex-fill">
-										<label className="form-label">
-											{label}
-										</label>
-
-										<TimeInputClock
-											initialTime={object?.start}
-											maxTime={object?.end}
-											className="py-1 alert alert-light bg-transparent"
-											onChange={(newTime) =>
-												handleChange("start", newTime)
-											}
-										/>
-
-										{errors.start && (
-											<p className="text-danger mt-1 mb-0">
-												{errors.start}
-											</p>
-										)}
-									</div>
-
-									{endConfig && (
-										<>
-											<span className="span"></span>
-											<div className="flex-fill">
-												<label className="form-label">
-													{endConfig.label}
-												</label>
-
-												<TimeInputClock
-													initialTime={object?.end}
-													minTime={object?.start}
-													className="py-1 alert alert-light bg-transparent"
-													onChange={(newTime) =>
-														handleChange(
-															"end",
-															newTime,
-														)
-													}
-												/>
-
-												{errors.end && (
-													<p className="text-danger mt-1 mb-0">
-														{errors.end}
-													</p>
-												)}
-											</div>
-										</>
-									)}
-								</div>
-							</div>
-						);
-					}
-
-					/*
-					 * End is rendered together with start.
-					 */
-					if (type === "time" && name === "end") {
-						return null;
+					if (type === "duelClock") {
+						skip = config.with;
 					}
 
 					return (
@@ -119,7 +65,21 @@ export default function useModal(
 								{label}
 							</label>
 
-							{type === "textarea" ? (
+							{type === "duelClock" ? (
+								<div className="d-flex justify-content-center">
+									<DuelClockInput
+										left={{
+											time: object?.[name],
+											name: name,
+										}}
+										right={{
+											time: object?.[config.with],
+											name: config.with,
+										}}
+										handleChange={handleChange}
+									></DuelClockInput>
+								</div>
+							) : type === "textarea" ? (
 								<textarea
 									id={name}
 									name={name}

@@ -34,6 +34,7 @@ export default function TimeInputClock({
 					(k, i) => (k + temp[i] + [24, 60][i]) % [24, 60][i],
 				);
 				let time = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+				console.log(maxTime,minTime);
 				return (
 					compareTime(time, maxTime) <= 0 &&
 					compareTime(time, minTime) >= 0
@@ -47,7 +48,7 @@ export default function TimeInputClock({
 	return (
 		<div
 			style={{ fontSize: "1.8rem", fontWeight: "600" }}
-			className={`d-flex p-2 m-0 align-items-center justify-content-center ${className}`}
+			className={`d-flex py-1 px-5 m-0 align-items-center justify-content-center ${className}`}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
 		>

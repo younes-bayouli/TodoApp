@@ -1,5 +1,5 @@
 import Arrow from "../../Components/Arrow";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Schedule from "./Schedule.jsx";
 import TimeCard from "../../Components/Cards/TimeCard.jsx";
 import { useDate } from "../../Utils/useTime";
@@ -37,6 +37,12 @@ function Myeveryday() {
 		visibleTasks,
 		chosenDay,
 	);
+
+	useEffect(() => {
+		configModal({
+			modaldata: Tasks,
+		});
+	}, []);
 
 	return (
 		<>
