@@ -2,3 +2,4 @@ Client/node_modules/
 Client/dist/
 Client/.env
 Client/.env.local
+uploads/

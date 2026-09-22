@@ -2,13 +2,14 @@ const API_URL = import.meta.env.VITE_API_URL;
 const NOMINATIM_URL = import.meta.env.VITE_NOMINATIM_URL;
 const ALADHAN_API = import.meta.env.VITE_ALADHAN_API;
 
-async function request(endpoint, { options = {}, fullEndpoint = false } = {}) {
+async function request(
+	endpoint,
+	{ options = {}, fullEndpoint = false, json = true } = {},
+) {
 	let response;
 	try {
 		response = await fetch(`${fullEndpoint ? "" : API_URL}${endpoint}`, {
-			headers: {
-				"Content-Type": "application/json",
-			},
+			headers: json ? { "Content-Type": "application/json" } : undefined,
 			...options,
 		});
 	} catch (error) {
@@ -159,6 +160,30 @@ export const api = {
 			}),
 	},
 
+	photos: {
+		getAll: () => request("/photos"),
+
+		create: (file) => {
+			const body = new FormData();
+			body.append("image", file);
+
+			return request("/photos", {
+				json: false,
+				options: {
+					method: "POST",
+					body,
+				},
+			});
+		},
+
+		delete: (filename) =>
+			request(`/photos/${encodeURIComponent(filename)}`, {
+				options: {
+					method: "DELETE",
+				},
+			}),
+	},
+
 	prayerTimes: {
 		get: (latitude, longitude, date) => {
 			return request(
@@ -170,5 +195,17 @@ export const api = {
 
 	location: {
 		get: ({ latitude, longitude }) => getLocation(latitude, longitude),
+	},
+
+	settings: {
+		get: () => request("/settings"),
+
+		update: (settings) =>
+			request("/settings", {
+				options: {
+					method: "PUT",
+					body: JSON.stringify(settings),
+				},
+			}),
 	},
 };

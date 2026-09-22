@@ -1,5 +1,5 @@
 import Arrow from "../../Components/Arrow";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Schedule from "./Schedule.jsx";
 import TimeCard from "../../Components/Cards/TimeCard.jsx";
 import { useDate } from "../../Utils/useTime";
@@ -12,9 +12,13 @@ import {
 } from "../../Utils/timeUtilities";
 import { checkOverlap, getCurrentAndNextTask } from "../../Utils/Utils";
 import TaskStatusCard from "../../Components/Cards/TaskStatusCard.jsx";
-import { DAYS } from "../../Utils/dateUtilities";
+import { DAYS, dateToString } from "../../Utils/dateUtilities";
 import useData from "../../Utils/useData.js";
 import useModal from "../../hooks/useModal.jsx";
+import { usePosition } from "../../hooks/usePosition";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api/api";
+import { useAppContext } from "../../Context";
 
 const validateForm = (Task) => {
 	const newErrors = {};
@@ -72,13 +76,26 @@ const nullTask = {
 };
 
 const checkForOverLapping = (Task, TasksList) => {
-	const ov=checkOverlap(Task,TasksList);
+	const ov = checkOverlap(Task, TasksList);
 	return ov.mesg;
 };
 
 function Myeveryday() {
+	const { addError, settings } = useAppContext();
 	const { data: Tasks, update, remove, create } = useData("tasks");
 	const Date = useDate();
+	const dateString = dateToString(Date);
+	const [position, positionError] = usePosition();
+	const { data: prayers, error: prayersError } = useQuery({
+		queryKey: ["prayers", position, dateString],
+		queryFn: () =>
+			api.prayerTimes.get(
+				position?.latitude,
+				position?.longitude,
+				dateString,
+			),
+		enabled: !!position?.latitude && !!position?.longitude,
+	});
 	const currentDayIndex = (Date.getDay() + 6) % 7;
 	const [chosenDay, setChosenDay] = useState(() => currentDayIndex);
 	const visibleTasks = Tasks?.filter((task) => task.days[chosenDay]);
@@ -91,14 +108,21 @@ function Myeveryday() {
 		onChange: (Task) => checkForOverLapping(Task, visibleTasks),
 	});
 
+	useEffect(() => {
+		if (positionError) addError(positionError);
+		if (prayersError) addError(prayersError);
+	}, [addError, positionError, prayersError]);
+
 	const addTask = (time) => {
 		const plusOneHour = minutesToString(stringToMinutes(time) + 60);
-		const timeToNext=next?timeDifferenceInMinutes(next.start,time):Infinity;
+		const timeToNext = next
+			? timeDifferenceInMinutes(next.start, time)
+			: Infinity;
 		const newTask = {
 			...nullTask,
 			days: nullTask.days.map((_, index) => index === currentDayIndex),
 			start: time,
-			end: 0 <= timeToNext && timeToNext <= 60?next.start:plusOneHour,
+			end: 0 <= timeToNext && timeToNext <= 60 ? next.start : plusOneHour,
 		};
 		openModal({ object: newTask, mutation: create });
 	};
@@ -162,6 +186,8 @@ function Myeveryday() {
 				<div className="flex-grow-1 d-flex flex-column gap-5">
 					<Schedule
 						time={Date}
+						prayers={prayers?.data?.timings}
+						settings={settings}
 						handleClickOnTask={(task) =>
 							openModal({ object: task, mutation: update })
 						}

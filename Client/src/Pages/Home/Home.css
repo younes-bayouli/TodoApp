@@ -86,6 +86,12 @@
 	grid-row: 1 / span 2;
 	position: relative;
 	background: #f8f9fa;
+	cursor: pointer;
+}
+
+.photo-card:focus-visible {
+	outline: 2px solid #0d6efd;
+	outline-offset: 2px;
 }
 
 .photo-card img,
@@ -114,6 +120,38 @@
 
 .photo-card-caption h2 {
 	font-size: 1rem;
+}
+
+.photo-gallery {
+	display: contents;
+}
+
+.photo-gallery-empty {
+	margin: 0;
+	padding: 2rem 1rem;
+	border: 1px dashed #adb5bd;
+	text-align: center;
+}
+
+.photo-gallery-item {
+	min-height: 150px;
+	background: #f8f9fa;
+	overflow: hidden;
+}
+
+.photo-gallery-item img {
+	height: 180px;
+	object-fit: cover;
+}
+
+.photo-gallery-delete {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+}
+
+.photo-gallery-modal {
+	background: rgba(0, 0, 0, 0.5);
 }
 
 .home-card-heading {

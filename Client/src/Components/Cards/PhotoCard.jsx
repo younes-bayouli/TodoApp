@@ -1,6 +1,14 @@
-function PhotoCard({ photo, alt = "Personal profile" }) {
+function PhotoCard({ photo, alt = "Personal profile", onClick }) {
 	return (
-		<article className="home-card photo-card">
+		<article
+			className="home-card photo-card"
+			onClick={onClick}
+			onKeyDown={(event) => {
+				if (event.key === "Enter" || event.key === " ") onClick?.();
+			}}
+			role={onClick ? "button" : undefined}
+			tabIndex={onClick ? 0 : undefined}
+		>
 			{photo ? (
 				<img src={photo} alt={alt} />
 			) : (

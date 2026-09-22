@@ -7,6 +7,7 @@ import {
 	minutesToTime,
 	compareTime,
 	minutesToString,
+	stringToMinutes,
 } from "../../Utils/timeUtilities";
 import { useMouseDistance } from "../../Utils/useMouseDistance";
 import Task from "./Task";
@@ -16,6 +17,8 @@ import TimeBar from "../../Components/TimeBar.jsx";
 function Schedule({
 	time,
 	Tasks = [],
+	prayers = {},
+	settings = {},
 	onClick,
 	onDeleteTask,
 	handleClickOnTask,
@@ -41,6 +44,19 @@ function Schedule({
 
 	const scrollLeft = useCallback(() => scroll(-1), []);
 	const scrollRight = useCallback(() => scroll(1), []);
+	const prayerNames = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+	const sleepTimes = [
+		{ name: "Sleep", time: settings.sleepStart },
+		{ name: "Wake up", time: settings.sleepEnd },
+	].filter(({ time: sleepTime }) => {
+		if (!sleepTime) return false;
+		const sleepMinutes = stringToMinutes(sleepTime);
+		return (
+			!Number.isNaN(sleepMinutes) &&
+			sleepMinutes >= 0 &&
+			sleepMinutes < 1440
+		);
+	});
 
 	return (
 		<>
@@ -92,7 +108,7 @@ function Schedule({
 										scrollRef.current.scrollLeft,
 								)}
 								headStyle={
-									"alert alert-secondary text-secondary border-0 bg-white text-opacity-25 p-0 m-0"
+									"alert alert-secondary text-secondary border-0 bg-white text-opacity-25 p-0 m-0 position-relative z-3"
 								}
 								barStyle={"border-1 border-light p-0 m-0"}
 								borderStyle={"dashed"}
@@ -107,6 +123,37 @@ function Schedule({
 								)}
 							></TimeBar>
 						)}
+						{prayerNames.map((name) => {
+							const prayerTime = prayers[name];
+							if (!prayerTime) return null;
+
+							const prayerMinutes = stringToMinutes(prayerTime);
+							if (Number.isNaN(prayerMinutes)) return null;
+
+							return (
+								<div
+									className="prayer-marker"
+									key={name}
+									style={{
+										marginLeft: (prayerMinutes * 10) / 6,
+									}}
+								>
+									<span>{name}</span>
+								</div>
+							);
+						})}
+						{sleepTimes.map(({ name, time: sleepTime }) => (
+							<div
+								className="sleep-marker"
+								key={name}
+								style={{
+									marginLeft:
+										(stringToMinutes(sleepTime) * 10) / 6,
+								}}
+							>
+								<span>{name}</span>
+							</div>
+						))}
 						<div className="h-100 w-100 position-absolute d-flex align-items-center">
 							{Tasks.map((task) => (
 								<Task

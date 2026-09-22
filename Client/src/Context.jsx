@@ -1,8 +1,6 @@
-import {
-	createContext,
-	useContext,
-	useReducer,
-} from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { api } from "./api/api";
 
 const AppContext = createContext(null);
 
@@ -40,14 +38,34 @@ export function AppProvider({ children }) {
 		errors: [],
 		nbrErr: 0,
 	});
+	const addError = (error) => dispatch({ type: "ADD", payload: error });
+	const queryClient = useQueryClient();
+	const { data: settings, error: settingsError } = useQuery({
+		queryKey: ["settings"],
+		queryFn: api.settings.get,
+	});
+	const updateSettingsMutation = useMutation({
+		mutationFn: api.settings.update,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["settings"] });
+		},
+	});
+
+	useEffect(() => {
+		if (settingsError) addError(settingsError);
+		if (updateSettingsMutation.error)
+			addError(updateSettingsMutation.error);
+	}, [settingsError, updateSettingsMutation.error]);
 
 	return (
 		<AppContext.Provider
 			value={{
 				errors,
-				addError: (error) => dispatch({ type: "ADD", payload: error }),
+				addError,
 				removeError: () => dispatch({ type: "POP" }),
 				nbrErr,
+				settings,
+				updateSettings: updateSettingsMutation.mutate,
 			}}
 		>
 			{children}

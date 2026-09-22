@@ -3,9 +3,9 @@ import TodoPreviewCard from "../../Components/Cards/TodoPreviewCard";
 import TodayEventsCard from "../../Components/Cards/TodayEventsCard";
 import IslamicDateCard from "../../Components/Cards/IslamicDateCard";
 import NextPrayerCard from "../../Components/Cards/NextPrayerCard";
-import PhotoCard from "../../Components/Cards/PhotoCard";
+import PhotoGallery from "../../Components/PhotoGallery.jsx";
 import TimeCard from "../../Components/Cards/TimeCard";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { usePosition } from "../../hooks/usePosition.js";
 import { dateToString, toDateKey } from "../../Utils/dateUtilities";
 import { formatLocation, getCurrentAndNextTask } from "../../Utils/Utils";
@@ -18,15 +18,6 @@ import "./Home.css";
 import useData from "../../Utils/useData.js";
 import { useAppContext } from "../../Context.jsx";
 
-const photos = Object.values(
-	import.meta.glob("../../assets/Photos/*.{jpg,jpeg,png,webp}", {
-		eager: true,
-		query: "?url",
-		import: "default",
-	}),
-);
-let nextPhotoIndex = 0;
-
 function Home() {
 	const { addError } = useAppContext();
 	const date = useDate();
@@ -35,7 +26,7 @@ function Home() {
 	const { data: Todos } = useData("todos");
 
 	const dateString = dateToString(date);
-	const [position,error] = usePosition();
+	const [position, error] = usePosition();
 	const { data: location, error: locationError } = useQuery({
 		queryKey: ["location", position],
 		queryFn: () => api.location.get(position),
@@ -51,11 +42,6 @@ function Home() {
 			),
 		enabled: !!position?.latitude && !!position?.longitude,
 	});
-	const [photo] = useState(() => {
-		const selectedPhoto = photos[nextPhotoIndex % photos.length];
-		nextPhotoIndex += 1;
-		return selectedPhoto;
-	});
 	const todayKey = toDateKey(date);
 	const currentDayIndex = (date.getDay() + 6) % 7;
 	const { current, next } = getCurrentAndNextTask(
@@ -70,7 +56,7 @@ function Home() {
 		if (locationError) addError(locationError);
 		if (prayersError) addError(prayersError);
 		if (error) addError(error);
-	}, [locationError, prayersError,error]);
+	}, [locationError, prayersError, error]);
 
 	return (
 		<main className="home-page">
@@ -103,7 +89,7 @@ function Home() {
 					<TodayEventsCard events={todaysEvents} date={date} />
 					<TodoPreviewCard todos={Todos} />
 				</div>
-				<PhotoCard photo={photo} />
+				<PhotoGallery />
 			</section>
 		</main>
 	);
