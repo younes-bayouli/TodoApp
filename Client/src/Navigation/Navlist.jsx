@@ -25,7 +25,7 @@ const Navlist = ({ List }) => {
 						<NavLink
 							to={`/${path}`}
 							className={({ isActive }) =>
-								`text-secondary d-flex align-items-center text-decoration-none nav-item my-1 py-1 ${isActive ? "active" : ""}`
+								`d-flex align-items-center text-decoration-none nav-item my-1 py-1 ${isActive ? "active" : ""}`
 							}
 							key={index}
 							style={{ cursor: "pointer" }}

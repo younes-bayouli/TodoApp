@@ -7,7 +7,7 @@ const ErrorMessage = ({ error,className,onTransitionEnd,id }) => {
 		<div
             id={id}
             onTransitionEnd={onTransitionEnd}
-            className={`alert alert-danger bg-transparent ${className || ""}`}
+            className={`alert alert-danger ${className || ""}`}
 		>
 			<TriangleAlert className="flex-shrink-0 me-2" />
 			{error.message}

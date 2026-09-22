@@ -9,7 +9,6 @@ function ArrowH({ deg, onClick, className = "", cliCkable=true }) {
 				rotate: `${deg}deg`,
 			}}
 			className={className}
-			color="#D1D5DB"
 			alt=""
 			onClick={onClick}
 		/>

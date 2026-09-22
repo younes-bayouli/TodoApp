@@ -4,7 +4,7 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 			<div className="d-flex justify-content-between align-items-center mb-3">
 				<div>
 					<h4 className="mb-1">{day}</h4>
-					<p className="text-secondary mb-0">Events for this day</p>
+					<p className="mb-0">Events for this day</p>
 				</div>
 				<div className="d-flex gap-2">
 					<div
@@ -62,7 +62,7 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 						</div>
 					))
 				) : (
-					<div className="list-group-item text-secondary">
+					<div className="list-group-item">
 						No events scheduled for this day.
 					</div>
 				)}

@@ -108,7 +108,7 @@ function Schedule({
 										scrollRef.current.scrollLeft,
 								)}
 								headStyle={
-									"alert alert-secondary text-secondary border-0 bg-white text-opacity-25 p-0 m-0 position-relative z-3"
+									"alert alert-secondary border-0 text-opacity-25 p-0 m-0 position-relative z-3"
 								}
 								barStyle={"border-1 border-light p-0 m-0"}
 								borderStyle={"dashed"}

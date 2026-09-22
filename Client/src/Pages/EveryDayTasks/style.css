@@ -36,7 +36,6 @@
 	top: 0;
 	height: 100%;
 	width: 0.5px;
-	background-color: var(--bs-info);
 	opacity: 1;
 }
 
@@ -46,8 +45,6 @@
 	left: 0;
 	z-index: 1;
 	padding: 0.2rem 0.1rem;
-	background-color: var(--bs-body-bg);
-	color: var(--bs-info-text-emphasis);
 	font-size: 0.75rem;
 	font-weight: 600;
 	white-space: nowrap;
@@ -60,7 +57,6 @@
 	top: 0;
 	height: 100%;
 	width: 1px;
-	background-color: var(--bs-warning);
 	opacity: 1;
 }
 
@@ -70,8 +66,6 @@
 	left: 0;
 	z-index: 1;
 	padding: 0.2rem 0.1rem;
-	background-color: var(--bs-body-bg);
-	color: var(--bs-warning-text-emphasis);
 	font-size: 0.75rem;
 	font-weight: 600;
 	white-space: nowrap;

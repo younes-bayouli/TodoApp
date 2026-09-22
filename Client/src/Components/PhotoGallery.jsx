@@ -104,7 +104,7 @@ function PhotoGallery() {
 								</div>
 
 								{photos.length === 0 && !create.isPending ? (
-									<p className="photo-gallery-empty text-secondary">
+									<p className="photo-gallery-empty">
 										No photos yet. Add one to personalize
 										your space.
 									</p>

@@ -100,7 +100,7 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 						</button>
 					</div>
 					<div className="d-flex align-items-center gap-2">
-						<small className="text-secondary">
+						<small>
 							Due: {formatDate(project.deadline)}
 						</small>
 						<div
@@ -165,7 +165,6 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 				{showDeleteDialog && (
 					<div
 						className="modal fade show d-block"
-						style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
 						onClick={() => setShowDeleteDialog(false)}
 					>
 						<div
@@ -187,7 +186,7 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 									></button>
 								</div>
 								<div className="modal-body py-3">
-									<p className="mb-0 text-secondary">
+									<p className="mb-0">
 										This will permanently remove{" "}
 										<strong>{project.name}</strong> and all
 										of its todos. This action cannot be
@@ -246,7 +245,7 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 										<span
 											className={
 												todo.completed
-													? "text-decoration-line-through text-secondary"
+													? "text-decoration-line-through"
 													: ""
 											}
 										>
@@ -260,7 +259,7 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 									>
 										Delete
 									</button>
-									<span className="d-flex align-items-center gap-2 small text-secondary">
+									<span className="d-flex align-items-center gap-2 small">
 										<span
 											className="rounded-circle"
 											style={{
@@ -275,7 +274,7 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 							);
 						})
 					) : (
-						<div className="text-center text-secondary py-5">
+						<div className="text-center py-5">
 							No todos yet. Click "Add Todo" to create one.
 						</div>
 					)}

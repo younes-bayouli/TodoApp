@@ -7,7 +7,7 @@ export default function useModal({
 	name,
 	modalFields = {},
 	validate,
-	onChange,
+	onChange=()=>{},
 }) {
 	const [modalConfig, setModalConfig] = useState({
 		name: name,

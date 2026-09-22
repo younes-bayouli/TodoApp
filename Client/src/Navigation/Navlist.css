@@ -1,6 +1,5 @@
 .span {
 	width: 0.5px;
-	background-color: #21212154;
 }
 
 img {
@@ -12,17 +11,9 @@ img {
 	width: 5px;
 	height: 40px;
 	border-radius: 50px;
-	background-color: #1976d28b;
 }
 
 .theme-toggle {
 	margin: 0 0.75rem;
-	border-color: var(--app-border);
-	color: var(--app-text);
 }
 
-.theme-toggle:hover {
-	border-color: var(--app-border);
-	background-color: var(--app-hover-background);
-	color: var(--app-text);
-}

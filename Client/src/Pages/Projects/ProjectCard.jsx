@@ -27,12 +27,12 @@ function ProjectCard({ project, onClick }) {
 			</div>
 			<div className="card-body">
 				<div className="d-flex align-items-center justify-content-between mb-2">
-					<small className="text-secondary">
+					<small>
 						Due: {formatDate(project.deadline)}
 					</small>
 					{project.todos.length > 0 && (
 						<span
-							className="badge rounded-pill alert alert-danger text-dark px-3 py-2"
+							className="badge rounded-pill alert px-3 py-2"
 							title="Has todos"
 						>
 							!
@@ -41,7 +41,7 @@ function ProjectCard({ project, onClick }) {
 				</div>
 
 				<div className="mt-2">
-					<small className="text-secondary d-block mb-1">Owner</small>
+					<small className="d-block mb-1">Owner</small>
 					<span className="small">{project.owner}</span>
 				</div>
 			</div>

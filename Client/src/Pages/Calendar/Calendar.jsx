@@ -248,7 +248,6 @@ function Calendar() {
 							type="month"
 							style={{
 								border: "none",
-								background: "transparent",
 							}}
 							value={selectedMonth}
 							onChange={changeMonth}
@@ -309,7 +308,7 @@ function Calendar() {
 							))}
 						</ul>
 					) : (
-						<p className="text-secondary mb-3">No events</p>
+						<p className="mb-3">No events</p>
 					)}
 				</div>
 			)}

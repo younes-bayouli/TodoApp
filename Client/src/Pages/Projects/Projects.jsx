@@ -126,7 +126,7 @@ function Projects() {
 		<div>
 			<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
 				<h3 className="mb-0 fw-semibold">Projects</h3>
-				<span className="badge text-primary-emphasis fw-normal">
+				<span className="badge fw-normal">
 					{filteredProjects?.length} projects
 				</span>
 			</div>

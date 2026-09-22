@@ -22,7 +22,7 @@ function ProjectList({ projects, onClick,onOpenAddProject,onCloseAddProject }) {
 						onClick={onOpenAddProject}
 					>
 						<span
-							className="display-4 text-primary"
+							className="display-4"
 							aria-hidden="true"
 						>
 							+

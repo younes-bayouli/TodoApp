@@ -124,7 +124,7 @@ function TodoList() {
 		<div className="container bg-white">
 			<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
 				<h3 className="mb-0 fw-semibold">Tasks</h3>
-				<span className="badge text-primary-emphasis fw-normal">
+				<span className="badge fw-normal">
 					{openCount} open
 				</span>
 			</div>
@@ -183,7 +183,7 @@ function TodoList() {
 						/>
 					))
 				) : (
-					<div className="text-center text-secondary py-5">
+					<div className="text-center py-5">
 						Nothing here — add a task above.
 					</div>
 				)}

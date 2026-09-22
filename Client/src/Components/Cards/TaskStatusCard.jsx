@@ -1,16 +1,16 @@
 function TaskStatusCard({ currentTask, nextTask }) {
 	const renderTask = (label, task) => (
 		<div className="mb-3">
-			<div className="text-muted small">{label}</div>
+			<div className="small">{label}</div>
 			{task ? (
 				<>
 					<div className="fw-semibold">{task.title}</div>
-					<div className="text-secondary small">
+					<div className="small">
 						{task.start} - {task.end}
 					</div>
 				</>
 			) : (
-				<div className="text-secondary">No task</div>
+				<div>No task</div>
 			)}
 		</div>
 	);

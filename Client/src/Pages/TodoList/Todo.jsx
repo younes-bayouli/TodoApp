@@ -28,7 +28,7 @@ function Todo({ task, onToggle, onRemove, onEdit }) {
 				<span
 					className={
 						task.completed
-							? "text-decoration-line-through text-secondary"
+							? "text-decoration-line-through"
 							: ""
 					}
 				>
@@ -38,7 +38,7 @@ function Todo({ task, onToggle, onRemove, onEdit }) {
 			{hovered && (
 				<div>
 					<button
-						className="btn btn-sm btn-link text-secondary text-decoration-none"
+						className="btn btn-sm btn-link text-decoration-none"
 						type="button"
 						onClick={() => onRemove(task.id)}
 						aria-label={`Delete ${task.title}`}
@@ -46,7 +46,7 @@ function Todo({ task, onToggle, onRemove, onEdit }) {
 						<Trash2 color="red" size={18} />
 					</button>
 					<button
-						className="btn btn-sm btn-link text-secondary text-decoration-none"
+						className="btn btn-sm btn-link text-decoration-none"
 						type="button"
 						onClick={() => onEdit(task)}
 						aria-label={`Edit ${task.title}`}
@@ -55,13 +55,12 @@ function Todo({ task, onToggle, onRemove, onEdit }) {
 					</button>
 				</div>
 			)}
-			<span className="d-flex align-items-center gap-2 small text-secondary">
+			<span className="d-flex align-items-center gap-2 small">
 				<span
 					className="rounded-circle"
 					style={{
 						width: "8px",
 						height: "8px",
-						backgroundColor: priority.dot,
 					}}
 				/>
 				{priority.label}

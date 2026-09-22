@@ -7,7 +7,7 @@ export default function DuelClockInput({handleChange,left,right}) {
 					<TimeInputClock
 						initialTime={left.time}
 						maxTime={right.time}
-						className="py-1 alert alert-light bg-transparent"
+						className="py-1 alert alert-light"
 						onChange={(newTime) => handleChange(left.name, newTime)}
 					/>
 				</div>
@@ -16,7 +16,7 @@ export default function DuelClockInput({handleChange,left,right}) {
 					<TimeInputClock
 						initialTime={right.time}
 						minTime={left.time}
-						className="py-1 alert alert-light bg-transparent"
+						className="py-1 alert alert-light"
 						onChange={(newTime) => handleChange(right.name, newTime)}
 					/>
 				</div>

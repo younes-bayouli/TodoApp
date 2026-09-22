@@ -2,30 +2,24 @@
 	transition:
 		transform 0.2s ease,
 		box-shadow 0.2s ease;
-	border: 1px solid #e9ecef;
+	border: 1px solid var(--app-border);
 	border-radius: 0.5rem;
 	min-height: 250px;
 }
 
 .project-card:hover {
 	transform: translateY(-2px);
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 .add-project-card {
 	align-items: center;
 	justify-content: center;
-	background: transparent;
-	border: 2px dashed #adb5bd;
 }
 
-.add-project-card:hover {
-	border-color: #0d6efd;
-	background: #f8f9fa;
-}
 
 .card-header {
-	border-bottom: 1px solid #e9ecef;
+	border-bottom: 1px solid var(--app-border);
 	padding: 1rem 1.25rem;
 }
 
