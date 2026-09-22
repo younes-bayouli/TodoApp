@@ -1,18 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Todo from "./Todo.jsx";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "../../api/api.js";
-import { useAppContext } from "../../Context.jsx";
 import useData from "../../Utils/useData.js";
+import useModal from "../../hooks/useModal.jsx";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
-
-const nullTodo = {
-	title: "",
-	details: "",
-	priority: "medium",
-};
 
 const todoFields = {
 	title: {
@@ -56,20 +48,14 @@ function TodoList() {
 		update: updateTaskMutation,
 		remove: deleteTaskMutation,
 	} = useData("todos");
+	const { Modal, openModal } = useModal({
+		name: "Todo",
+		modalFields: todoFields,
+		validate: validateForm,
+	});
 	const [filter, setFilter] = useState("All");
 	const [title, setTitle] = useState("");
 	const [priority, setPriority] = useState("medium");
-	const { openModal, configModal } = useAppContext();
-
-	useEffect(() => {
-		configModal({
-			modalName: "todos",
-			modalObject: nullTodo,
-			config: todoFields,
-			validate: validateForm,
-			onSubmit: updateTaskMutation,
-		});
-	}, []);
 
 	const visibleTasks = tasks
 		?.filter((task) => {
@@ -193,7 +179,7 @@ function TodoList() {
 							task={task}
 							onToggle={toggleTask}
 							onRemove={removeTask}
-							onEdit={openEditDialog}
+							onEdit={(task)=>openModal({ object: task, mutation: updateTaskMutation })}
 						/>
 					))
 				) : (
@@ -202,6 +188,7 @@ function TodoList() {
 					</div>
 				)}
 			</div>
+			{Modal}
 		</div>
 	);
 }

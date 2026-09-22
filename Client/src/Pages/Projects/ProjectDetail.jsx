@@ -12,13 +12,10 @@ const priorityStyles = {
 
 const priorityOrder = { high: 0, medium: 1, low: 2 };
 
-function ProjectDetail({ onBack }) {
-	const { update: updateProject, remove: deleteProject } =
-		useData("projects");
+function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutation,onModifyProject }) {
 	const [newTodoTitle, setNewTodoTitle] = useState("");
 	const [newTodoPriority, setNewTodoPriority] = useState("medium");
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-	const { openModal, configModal, object: project } = useAppContext();
 
 	const toggleTodo = (todoId) => {
 		const updatedTodos = project.todos.map((todo) =>
@@ -29,11 +26,10 @@ function ProjectDetail({ onBack }) {
 			todos: updatedTodos,
 		};
 
-		updateProject.mutate({
+		updateProjectMutation.mutate({
 			Id: project.id,
 			Data: updatedProject,
 		});
-		configModal({ modalObject: updatedProject });
 	};
 
 	const deleteTodo = (todoId) => {
@@ -43,11 +39,10 @@ function ProjectDetail({ onBack }) {
 			todos: updatedTodos,
 		};
 
-		updateProject.mutate({
+		updateProjectMutation.mutate({
 			Id: project.id,
 			Data: updatedProject,
 		});
-		configModal({ modalObject: updatedProject });
 	};
 
 	const sortedTodos = [...project.todos].sort((a, b) => {
@@ -72,17 +67,16 @@ function ProjectDetail({ onBack }) {
 			todos: [...(project.todos ?? []), newTodo],
 		};
 
-		updateProject.mutate({
+		updateProjectMutation.mutate({
 			Id: project.id,
 			Data: updatedProject,
 		});
 		setNewTodoTitle("");
 		setNewTodoPriority("medium");
-		configModal({ modalObject: updatedProject });
 	};
 
 	const handleConfirmDelete = () => {
-		deleteProject.mutate(project.id);
+		deleteProjectMutation.mutate(project.id);
 		setShowDeleteDialog(false);
 		onBack();
 	};
@@ -111,7 +105,7 @@ function ProjectDetail({ onBack }) {
 						</small>
 						<div
 							className="btn alert alert-light p-2 m-0"
-							onClick={openModal}
+							onClick={onModifyProject}
 						>
 							Modify Project
 						</div>

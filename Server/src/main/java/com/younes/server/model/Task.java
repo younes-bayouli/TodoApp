@@ -3,16 +3,20 @@ package com.younes.server.model;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
-
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.younes.server.interfaces.HasStartEnd;
 import com.younes.server.validation.StartBeforeEnd;
 
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
@@ -33,11 +37,14 @@ public class Task implements HasStartEnd<LocalTime> {
     
     private String details;
 
+    
+    @JsonFormat(pattern = "HH:mm")
     @Override
     public LocalTime getStart() {
         return start;
     }
 
+    @JsonFormat(pattern = "HH:mm")
     @Override
     public LocalTime getEnd() {
         return end;

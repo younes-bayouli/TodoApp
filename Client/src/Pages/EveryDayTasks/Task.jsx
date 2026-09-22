@@ -21,8 +21,9 @@ export default function Task({ task, onClick, onDelete,style }) {
 	const handleDelete = (event) => {
 		event.stopPropagation();
 		if (onDelete) {
-			onDelete(task);
+			onDelete(task.id);
 		}
+		setTooltip(false);
 	};
 
 	return (
@@ -38,7 +39,7 @@ export default function Task({ task, onClick, onDelete,style }) {
 					: (timeDifferenceInMinutes(task.start, task.end) * 10) / 6,
 				minHeight: tooltip ? "50%" : "auto",
 				maxHeight: "80%",
-				zIndex: tooltip ? 554654355544 : 4,
+				zIndex: tooltip ? 554 : 4,
 				cursor: "default",
 				position: "relative",
 				...style,

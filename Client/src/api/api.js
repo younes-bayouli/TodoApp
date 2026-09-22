@@ -41,8 +41,7 @@ async function getLocation(latitude, longitude, error) {
 	}
 
 	const data = await response.json();
-	const address = data.address;
-	return address;
+	return data;
 }
 
 export const api = {

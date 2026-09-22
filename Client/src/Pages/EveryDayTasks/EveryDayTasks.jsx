@@ -1,19 +1,67 @@
 import Arrow from "../../Components/Arrow";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Schedule from "./Schedule.jsx";
 import TimeCard from "../../Components/Cards/TimeCard.jsx";
 import { useDate } from "../../Utils/useTime";
 import {
+	compareTime,
 	format,
 	minutesToString,
 	stringToMinutes,
 	timeDifferenceInMinutes,
 } from "../../Utils/timeUtilities";
-import { getCurrentAndNextTask } from "../../Utils/Utils";
+import { checkOverlap, getCurrentAndNextTask } from "../../Utils/Utils";
 import TaskStatusCard from "../../Components/Cards/TaskStatusCard.jsx";
 import { DAYS } from "../../Utils/dateUtilities";
 import useData from "../../Utils/useData.js";
-import { useAppContext } from "../../Context.jsx";
+import useModal from "../../hooks/useModal.jsx";
+
+const validateForm = (Task) => {
+	const newErrors = {};
+	if (!Task.title.trim()) {
+		newErrors.title = "Task title is required";
+	} else if (compareTime(Task.start, Task.end) >= 0) {
+		newErrors.end = "End time must be after start time";
+	} else if (Task.days.every((day) => !day)) {
+		newErrors.days = "At least one day must be selected";
+	}
+	return newErrors;
+};
+
+const taskFields = {
+	title: {
+		type: "text",
+		label: "Title",
+		placeholder: "Enter task title",
+		size: "full",
+	},
+
+	details: {
+		type: "textarea",
+		label: "Details",
+		placeholder: "Enter task details...",
+		size: "full",
+	},
+
+	start: {
+		type: "duelClock",
+		label: "Start",
+		size: "full",
+		with: "end",
+	},
+
+	end: {
+		type: "duelClock",
+		label: "End",
+		size: "full",
+		with: "start",
+	},
+
+	days: {
+		type: "days",
+		size: "full",
+	},
+};
 
 const nullTask = {
 	title: "",
@@ -23,26 +71,37 @@ const nullTask = {
 	details: "",
 };
 
+const checkForOverLapping = (Task, TasksList) => {
+	const ov=checkOverlap(Task,TasksList);
+	return ov.mesg;
+};
+
 function Myeveryday() {
-	const { data: Tasks, update } = useData("tasks");
-	const { openModal, configModal, object } = useAppContext();
+	const { data: Tasks, update, remove, create } = useData("tasks");
 	const Date = useDate();
-	const scheduleControlsRef = useRef(null);
 	const currentDayIndex = (Date.getDay() + 6) % 7;
 	const [chosenDay, setChosenDay] = useState(() => currentDayIndex);
 	const visibleTasks = Tasks?.filter((task) => task.days[chosenDay]);
 	const currentTime = format(Date).hour24;
-	const { current, next } = getCurrentAndNextTask(
-		currentTime,
-		visibleTasks,
-		chosenDay,
-	);
+	const { current, next } = getCurrentAndNextTask(currentTime, visibleTasks);
+	const { Modal, openModal } = useModal({
+		name: "Task",
+		modalFields: taskFields,
+		validate: validateForm,
+		onChange: (Task) => checkForOverLapping(Task, visibleTasks),
+	});
 
-	useEffect(() => {
-		configModal({
-			modaldata: Tasks,
-		});
-	}, []);
+	const addTask = (time) => {
+		const plusOneHour = minutesToString(stringToMinutes(time) + 60);
+		const timeToNext=next?timeDifferenceInMinutes(next.start,time):Infinity;
+		const newTask = {
+			...nullTask,
+			days: nullTask.days.map((_, index) => index === currentDayIndex),
+			start: time,
+			end: 0 <= timeToNext && timeToNext <= 60?next.start:plusOneHour,
+		};
+		openModal({ object: newTask, mutation: create });
+	};
 
 	return (
 		<>
@@ -90,30 +149,9 @@ function Myeveryday() {
 							<div
 								className="btn alert alert-light p-1 m-0"
 								onClick={() => {
-									const newTask = {
-										...nullTask,
-										days: nullTask.days.map(
-											(_, index) =>
-												index === currentDayIndex,
-										),
-										start: current
-											? current.end
-											: currentTime,
-										end: next
-											? next.start
-											: minutesToString(
-													stringToMinutes(
-														current
-															? current.end
-															: currentTime,
-													) + 60,
-												),
-									};
-									configModal({
-										modalObject: newTask,
-										onSubmit: update,
-									});
-									openModal();
+									addTask(
+										current ? current.end : currentTime,
+									);
 								}}
 							>
 								Add Task
@@ -123,10 +161,13 @@ function Myeveryday() {
 				</div>
 				<div className="flex-grow-1 d-flex flex-column gap-5">
 					<Schedule
-						chosenDay={chosenDay}
 						time={Date}
+						handleClickOnTask={(task) =>
+							openModal({ object: task, mutation: update })
+						}
 						Tasks={visibleTasks}
-						controlsTargetRef={scheduleControlsRef}
+						onDeleteTask={remove.mutate}
+						onClick={addTask}
 					></Schedule>
 					<div className="d-flex flex-fill gap-4 align-items-stretch">
 						<div className="flex-fill">
@@ -141,6 +182,7 @@ function Myeveryday() {
 					</div>
 				</div>
 			</div>
+			{Modal}
 		</>
 	);
 }

@@ -3,7 +3,7 @@ import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
 import "./Projects.css";
 import useData from "../../Utils/useData";
-import { useAppContext } from "../../Context";
+import useModal from "../../hooks/useModal.jsx";
 
 const normalise = (project) => {
 	return {
@@ -70,32 +70,21 @@ const validateForm = (project) => {
 };
 
 function Projects() {
-	const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+	const [selectedProject, setSelectedProject] = useState(null);
 	const [filter, setFilter] = useState("all");
-	const { data: projects, create, update } = useData("projects");
-	const { configModal,openModal } = useAppContext();
-	useEffect(() => {
-		configModal({
-			modalName: "projects",
-			modalObject: nullProject,
-			config: projectFields,
-			validate: validateForm,
-			onSubmit: create,
-		});
-	}, []);
+	const { data: projects, create, update, remove } = useData("projects");
+	const { Modal, openModal } = useModal({
+		name: "Project",
+		modalFields: projectFields,
+		validate: validateForm,
+	});
+
 	const openDetails = (project) => {
-		configModal({ modalObject: project, onSubmit: update });
-		setIsDetailsOpen(true);
+		setSelectedProject(project);
 	};
 	const closeDetails = () => {
-		configModal({ modalObject: nullProject, onSubmit: create });
-		setIsDetailsOpen(false);
+		setSelectedProject(null);
 	};
-
-	const openAddProject=()=>{
-		configModal({ modalObject: nullProject, onSubmit: create });
-		openModal();
-	}
 
 	const filteredProjects = projects?.filter((project) => {
 		if (filter === "all") return true;
@@ -108,46 +97,70 @@ function Projects() {
 		return true;
 	});
 
-	if (!isDetailsOpen) {
+	useEffect(() => {
+		setSelectedProject((prev) => {
+			if (!prev) return prev;
+
+			return projects?.find((project) => project.id === prev.id) ?? prev;
+		});
+	}, [projects]);
+
+	if (selectedProject) {
 		return (
-			<div>
-				<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
-					<h3 className="mb-0 fw-semibold">Projects</h3>
-					<span className="badge text-primary-emphasis fw-normal">
-						{filteredProjects?.length} projects
-					</span>
-				</div>
-
-				<div className="w-100 d-flex justify-content-end mb-4">
-					<ul className="nav nav-pills gap-2">
-						{["all", "active", "completed"].map((filterOption) => (
-							<li className="nav-item" key={filterOption}>
-								<button
-									type="button"
-									className={`nav-link alert p-1 m-0 text-capitalize ${
-										filter === filterOption
-											? "alert-primary"
-											: "alert-light"
-									}`}
-									onClick={() => setFilter(filterOption)}
-								>
-									{filterOption}
-								</button>
-							</li>
-						))}
-					</ul>
-				</div>
-
-				<ProjectList
-					onClick={openDetails}
-					onOpenAddProject={openAddProject}
-					projects={filteredProjects}
-				></ProjectList>
-			</div>
+			<>
+				<ProjectDetail
+					project={selectedProject}
+					updateProjectMutation={update}
+					deleteProjectMutation={remove}
+					onBack={closeDetails}
+					onModifyProject={() =>
+						openModal({ mutation: update, object: selectedProject })
+					}
+				/>
+				{Modal}
+			</>
 		);
 	}
 
-	return <ProjectDetail onBack={closeDetails}/>;
+	return (
+		<div>
+			<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
+				<h3 className="mb-0 fw-semibold">Projects</h3>
+				<span className="badge text-primary-emphasis fw-normal">
+					{filteredProjects?.length} projects
+				</span>
+			</div>
+
+			<div className="w-100 d-flex justify-content-end mb-4">
+				<ul className="nav nav-pills gap-2">
+					{["all", "active", "completed"].map((filterOption) => (
+						<li className="nav-item" key={filterOption}>
+							<button
+								type="button"
+								className={`nav-link alert p-1 m-0 text-capitalize ${
+									filter === filterOption
+										? "alert-primary"
+										: "alert-light"
+								}`}
+								onClick={() => setFilter(filterOption)}
+							>
+								{filterOption}
+							</button>
+						</li>
+					))}
+				</ul>
+			</div>
+
+			<ProjectList
+				onClick={openDetails}
+				onOpenAddProject={() =>
+					openModal({ mutation: create, object: nullProject })
+				}
+				projects={filteredProjects}
+			></ProjectList>
+			{Modal}
+		</div>
+	);
 }
 
 export default Projects;

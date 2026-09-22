@@ -14,9 +14,11 @@ const queryClient = new QueryClient({
 });
 
 createRoot(document.getElementById("root")).render(
-	<QueryClientProvider client={queryClient}>
-		<AppProvider>
-			<App />
-		</AppProvider>
-	</QueryClientProvider>,
+	<StrictMode>
+		<QueryClientProvider client={queryClient}>
+			<AppProvider>
+				<App />
+			</AppProvider>
+		</QueryClientProvider>
+	</StrictMode>,
 );

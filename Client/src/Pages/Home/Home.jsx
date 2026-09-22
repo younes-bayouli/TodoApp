@@ -8,14 +8,14 @@ import TimeCard from "../../Components/Cards/TimeCard";
 import { useEffect, useState } from "react";
 import { usePosition } from "../../hooks/usePosition.js";
 import { dateToString, toDateKey } from "../../Utils/dateUtilities";
-import { getCurrentAndNextTask } from "../../Utils/Utils";
+import { formatLocation, getCurrentAndNextTask } from "../../Utils/Utils";
 import { format } from "../../Utils/timeUtilities";
 import { useDate } from "../../Utils/useTime";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
 import pinLocation from "../../assets/icons/location-pin.png";
 import "./Home.css";
-import ErrorMessage from "../../Components/error.jsx";
+import useData from "../../Utils/useData.js";
 import { useAppContext } from "../../Context.jsx";
 
 const photos = Object.values(
@@ -28,25 +28,17 @@ const photos = Object.values(
 let nextPhotoIndex = 0;
 
 function Home() {
-	const { addError, removeError } = useAppContext();
+	const { addError } = useAppContext();
 	const date = useDate();
-	const { data: Tasks, error: tasksError } = useQuery({
-		queryKey: ["tasks"],
-		queryFn: api.tasks.getAll,
-	});
-	const { data: events, error: eventsError } = useQuery({
-		queryKey: ["events"],
-		queryFn: api.events.getAll,
-	});
-	const { data: Todos, error: todosError } = useQuery({
-		queryKey: ["todos"],
-		queryFn: api.todos.getAll,
-	});
+	const { data: Tasks } = useData("tasks");
+	const { data: events } = useData("events");
+	const { data: Todos } = useData("todos");
+
 	const dateString = dateToString(date);
-	const [position, error] = usePosition();
+	const [position,error] = usePosition();
 	const { data: location, error: locationError } = useQuery({
-		queryKey: ["location", position, error],
-		queryFn: () => api.location.get(position, error),
+		queryKey: ["location", position],
+		queryFn: () => api.location.get(position),
 		enabled: !!position?.latitude && !!position?.longitude,
 	});
 	const { data: prayers, error: prayersError } = useQuery({
@@ -68,36 +60,17 @@ function Home() {
 	const currentDayIndex = (date.getDay() + 6) % 7;
 	const { current, next } = getCurrentAndNextTask(
 		format(date).hour24,
-		Tasks,
-		currentDayIndex,
+		Tasks?.filter((task) => task.days[currentDayIndex]),
 	);
 	const todaysEvents = events?.filter((event) =>
 		event.start.startsWith(todayKey),
 	);
 
 	useEffect(() => {
-		addError(eventsError);
-	}, [eventsError]);
-	
-	useEffect(() => {
-		addError(tasksError);
-	}, [tasksError]);
-
-	useEffect(() => {
-		addError(todosError);
-	}, [todosError]);
-
-	useEffect(() => {
-		addError(locationError);
-	}, [locationError]);
-
-	useEffect(() => {
-		addError(prayersError);
-	}, [prayersError]);
-
-	useEffect(() => {
-		addError(error);
-	}, [error]);
+		if (locationError) addError(locationError);
+		if (prayersError) addError(prayersError);
+		if (error) addError(error);
+	}, [locationError, prayersError,error]);
 
 	return (
 		<main className="home-page">
@@ -108,7 +81,7 @@ function Home() {
 				{location && (
 					<span className="prayer-page-location">
 						<img src={pinLocation} alt="" />
-						{`${location?.country}, ${location?.county}, ${location?.state_district}`}
+						{formatLocation(location)}
 					</span>
 				)}
 			</header>

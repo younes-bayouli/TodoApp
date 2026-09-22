@@ -1,10 +1,6 @@
 import { checkOverLapTime } from "./timeUtilities";
 
-export const checkOverlap = (
-	activeTask,
-	tasks,
-) => {
-
+export const checkOverlap = (activeTask, tasks) => {
 	let hasOverlap = false;
 	let overlapMessage = "";
 
@@ -15,8 +11,8 @@ export const checkOverlap = (
 		if (!dayOverlap) continue;
 
 		const overlap = checkOverLapTime(
-			activeTask.newStart,
-			activeTask.newEnd,
+			activeTask.start,
+			activeTask.end,
 			task.start,
 			task.end,
 		);
@@ -31,13 +27,12 @@ export const checkOverlap = (
 	return { check: hasOverlap, mesg: overlapMessage };
 };
 
-export function getCurrentAndNextTask(time, tasks=[], dayIndex = 0) {
+export function getCurrentAndNextTask(time, tasks = []) {
 	const [givenHours, givenMinutes] = time.split(":").map(Number);
 	const givenMinutesTotal = givenHours * 60 + givenMinutes;
 
 	let currentTask = null;
 	let nextTask = null;
-	let nextTaskIndex = tasks.length;
 	let nextTaskStartTotal = Infinity;
 
 	tasks.forEach((task) => {
@@ -60,7 +55,7 @@ export function getCurrentAndNextTask(time, tasks=[], dayIndex = 0) {
 		if (isAfter) {
 			if (startTotal < nextTaskStartTotal) {
 				nextTask = task;
-				nextTaskStartTotal=startTotal;
+				nextTaskStartTotal = startTotal;
 			}
 		}
 	});
@@ -68,8 +63,7 @@ export function getCurrentAndNextTask(time, tasks=[], dayIndex = 0) {
 	return { current: currentTask, next: nextTask };
 }
 
-
-export function getSizeClass(size){
+export function getSizeClass(size) {
 	switch (size) {
 		case "full":
 			return "col-12";
@@ -83,4 +77,58 @@ export function getSizeClass(size){
 		default:
 			return "col-12";
 	}
+}
+
+export const formatLocation = (location) => {
+	const address = location?.address;
+	if (!address) return "";
+
+	const area =
+		address.county ||
+		address.city_district ||
+		address.neighbourhood ||
+		address.suburb ||
+		address.city;
+
+	const district =
+		address.state_district ||
+		address.city ||
+		address.county ||
+		address.state;
+
+	return [address.country, area, district !== area ? district : null]
+		.filter(Boolean)
+		.join(", ");
 };
+
+// export const formatLocation = (location) => {
+// 	const address = location?.address;
+// 	if (!address) return "";
+
+// 	const country = address.country;
+// 	const area =
+// 		address.neighbourhood ||
+// 		address.suburb ||
+// 		address.city_district ||
+// 		address.village;
+
+// 	const governorate = address.state;
+
+// 	return [country, area, governorate].filter(Boolean).join(", ");
+// };
+
+// const formatLocation = (location) => {
+// 	const address = location?.address;
+// 	if (!address) return "Location unavailable";
+
+// 	const area =
+// 		address.neighbourhood ||
+// 		address.suburb ||
+// 		address.city_district;
+
+// 	const city = address.city || address.town || address.village;
+
+// 	return [area, city, address.country]
+// 		.filter(Boolean)
+// 		.join(", ");
+// };

@@ -11,6 +11,7 @@ import "./PrayerTimes.css";
 import { usePosition } from "../../hooks/usePosition";
 import { useAppContext } from "../../Context";
 import { useEffect } from "react";
+import { formatLocation } from "../../Utils/Utils";
 
 function PrayerTimes() {
 	const { addError } = useAppContext();
@@ -55,7 +56,7 @@ function PrayerTimes() {
 				{location && (
 					<span className="prayer-page-location">
 						<img src={pinLocation} alt="" />
-						{`${location?.country}, ${location?.county}, ${location?.state_district}`}
+						{formatLocation(location)}
 					</span>
 				)}
 			</header>

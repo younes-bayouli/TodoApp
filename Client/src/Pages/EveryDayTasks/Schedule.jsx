@@ -5,86 +5,24 @@ import {
 	format,
 	timeToMinutes,
 	minutesToTime,
-	stringToMinutes,
 	compareTime,
+	minutesToString,
 } from "../../Utils/timeUtilities";
-import { checkOverlap, getCurrentAndNextTask } from "../../Utils/Utils.js";
 import { useMouseDistance } from "../../Utils/useMouseDistance";
 import Task from "./Task";
-import { DAYS } from "../../Utils/dateUtilities";
-import TimeInputClock from "../../Components/TimeInputClock.jsx";
 import StaticTimeBars from "../../Components/StaticTimeBars.jsx";
 import TimeBar from "../../Components/TimeBar.jsx";
-import useData from "../../Utils/useData.js";
-import { useAppContext } from "../../Context.jsx";
-import { data } from "react-router-dom";
 
-const nullTask = {
-	title: "",
-	start: "00:00",
-	end: "00:30",
-	days: [false, false, false, false, false, false, false],
-	details: "",
-};
-
-const taskFields = {
-	title: {
-		type: "text",
-		label: "Title",
-		placeholder: "Enter task title",
-		size: "full",
-	},
-
-	details: {
-		type: "textarea",
-		label: "Details",
-		placeholder: "Enter task details...",
-		size: "full",
-	},
-
-	start: {
-		type: "duelClock",
-		label: "Start",
-		size: "full",
-		with:"end",
-	},
-
-	end: {
-		type: "duelClock",
-		label: "End",
-		size: "full",
-		with:"start",
-	},
-
-	days: {
-		type: "days",
-		label: "Days",
-		size: "full",
-	},
-};
-
-const validateForm = (Task) => {
-	const newErrors = {};
-	if (!Task.title.trim()) {
-		newErrors.title = "Task title is required";
-	} else if (compareTime(Task.start, Task.end) >= 0) {
-		newErrors.end = "End time must be after start time";
-	} else if (Task.days.every((day) => !day)) {
-		newErrors.days = "At least one day must be selected";
-	}
-	return newErrors;
-};
-
-function Schedule({ time, Tasks = [], chosenDay }) {
+function Schedule({
+	time,
+	Tasks = [],
+	onClick,
+	onDeleteTask,
+	handleClickOnTask,
+}) {
 	const [Hovered, setHovered] = useState(false);
 	const scrollRef = useRef(null);
 	const distanceMouseLeftedge = useMouseDistance(scrollRef);
-	const { openModal, configModal } = useAppContext();
-	const {
-		create: addTaskMutation,
-		update: updateTaskMutation,
-		remove: deleteTaskMutation,
-	} = useData("tasks");
 
 	const scroll = (direction) => {
 		const amount = 500;
@@ -98,20 +36,8 @@ function Schedule({ time, Tasks = [], chosenDay }) {
 	};
 
 	useEffect(() => {
-		configModal({
-			modalName: "task",
-			modalObject: nullTask,
-			config: taskFields,
-			validate: validateForm,
-			onSubmit: addTaskMutation,
-		});
 		scrollRef.current.scrollLeft = (timeToMinutes(time) * 10) / 6 - 300;
 	}, []);
-
-	const handleClickOnTask = (task) => {
-		configModal({ modalObject: task, onSubmit: updateTaskMutation });
-		openModal();
-	};
 
 	const scrollLeft = useCallback(() => scroll(-1), []);
 	const scrollRight = useCallback(() => scroll(1), []);
@@ -146,28 +72,7 @@ function Schedule({ time, Tasks = [], chosenDay }) {
 										6) /
 										10,
 								);
-								let nextTask = getCurrentAndNextTask(
-									format(minutesToTime(min)).hour24,
-									Tasks,
-									chosenDay,
-								).next;
-								let end = min;
-								if (
-									nextTask &&
-									stringToMinutes(nextTask.start) < min + 30
-								) {
-									end = stringToMinutes(nextTask.start) - 30;
-								}
-								const newTask = {
-									...nullTask,
-									start: format(minutesToTime(min)).hour24,
-									end: format(minutesToTime(end + 30)).hour24,
-								};
-								configModal({
-									modalObject: newTask,
-									onSubmit: addTaskMutation,
-								});
-								openModal();
+								onClick(format(minutesToTime(min)).hour24);
 							}}
 						></div>
 						<StaticTimeBars />
@@ -191,20 +96,15 @@ function Schedule({ time, Tasks = [], chosenDay }) {
 								}
 								barStyle={"border-1 border-light p-0 m-0"}
 								borderStyle={"dashed"}
-								time={
-									format(
-										minutesToTime(
-											Math.ceil(
-												((distanceMouseLeftedge -
-													20 +
-													scrollRef.current
-														.scrollLeft) *
-													6) /
-													10,
-											),
-										),
-									).hour24
-								}
+								time={minutesToString(
+									Math.ceil(
+										((distanceMouseLeftedge -
+											20 +
+											scrollRef.current.scrollLeft) *
+											6) /
+											10,
+									),
+								)}
 							></TimeBar>
 						)}
 						<div className="h-100 w-100 position-absolute d-flex align-items-center">
@@ -213,11 +113,7 @@ function Schedule({ time, Tasks = [], chosenDay }) {
 									task={task}
 									key={task.id}
 									onClick={handleClickOnTask}
-									onDelete={(selectedTask) =>
-										deleteTaskMutation.mutate(
-											selectedTask.id,
-										)
-									}
+									onDelete={onDeleteTask}
 								></Task>
 							))}
 						</div>

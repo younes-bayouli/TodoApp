@@ -4,7 +4,7 @@ import { api } from "../api/api";
 import { useEffect } from "react";
 
 export default function useData(target) {
-	const { addError,closeModal } = useAppContext();
+	const { addError } = useAppContext();
 	const queryClient = useQueryClient();
 	const { data, error } = useQuery({
 		queryKey: [target],
@@ -17,21 +17,18 @@ export default function useData(target) {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: [target] });
-			closeModal();
 		},
 	});
 	const update = useMutation({
 		mutationFn: ({ Id, Data }) => api[target].update(Id, Data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: [target] });
-			closeModal();
 		},
 	});
 	const remove = useMutation({
 		mutationFn: (Id) => api[target].delete(Id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: [target] });
-			closeModal();
 		},
 	});
 

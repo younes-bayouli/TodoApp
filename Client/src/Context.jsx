@@ -1,11 +1,8 @@
 import {
 	createContext,
 	useContext,
-	useEffect,
 	useReducer,
-	useState,
 } from "react";
-import useModal from "./hooks/useModal";
 
 const AppContext = createContext(null);
 
@@ -43,38 +40,7 @@ export function AppProvider({ children }) {
 		errors: [],
 		nbrErr: 0,
 	});
-	const [name, setName] = useState("todos");
-	const [object, setObject] = useState({});
-	const [fieldsConfig, setFieldsConfig] = useState({});
-	const [validateObject, setValidateObject] = useState(() => true);
-	const [onSubmit, setOnSubmit] = useState({});
-	const [data, setData] = useState([]);
 
-	const configModal = ({
-		modalName,
-		modalObject,
-		config,
-		validate,
-		onSubmit,
-		modaldata,
-	}) => {
-		setName((prev) => modalName ?? prev);
-		setObject((prev) => modalObject ?? prev);
-		setFieldsConfig((prev) => config ?? prev);
-		setValidateObject((prev) => validate ?? prev);
-		setOnSubmit((prev) => onSubmit ?? prev);
-		setData((prev) => modaldata ?? prev);
-	};
-
-	const { Modal, openModal, closeModal } = useModal(
-		name,
-		object,
-		setObject,
-		fieldsConfig,
-		validateObject,
-		onSubmit,
-		data,
-	);
 	return (
 		<AppContext.Provider
 			value={{
@@ -82,13 +48,8 @@ export function AppProvider({ children }) {
 				addError: (error) => dispatch({ type: "ADD", payload: error }),
 				removeError: () => dispatch({ type: "POP" }),
 				nbrErr,
-				object,
-				openModal,
-				closeModal,
-				configModal,
 			}}
 		>
-			{Modal}
 			{children}
 		</AppContext.Provider>
 	);

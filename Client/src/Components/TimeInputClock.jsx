@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Arrow from "./Arrow";
 import { compareTime } from "../Utils/timeUtilities";
 
@@ -15,6 +15,25 @@ export default function TimeInputClock({
 	const [hovered, setHovered] = useState(false);
 	const [activeButtons, setActiveButtons] = useState([1, 1, 1, 1]);
 
+	const checkActiveButtons = (now) => {
+		let t = [
+			[1, 0],
+			[-1, 0],
+			[0, 1],
+			[0, -1],
+		].map((vect) => {
+			let [h, m] = vect.map(
+				(k, i) => (k + now[i] + [24, 60][i]) % [24, 60][i],
+			);
+			let time = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+			return (
+				compareTime(time, maxTime) <= 0 &&
+				compareTime(time, minTime) >= 0
+			);
+		});
+		return t;
+	};
+
 	const updateTime = (delta) => {
 		let temp = [hours, minutes].map(
 			(h, i) => (h + delta[i] + [24, 60][i]) % [24, 60][i],
@@ -23,27 +42,13 @@ export default function TimeInputClock({
 		setHM(temp);
 
 		const newTime = `${String(temp[0]).padStart(2, "0")}:${String(temp[1]).padStart(2, "0")}`;
-		setActiveButtons(() => {
-			let t = [
-				[1, 0],
-				[-1, 0],
-				[0, 1],
-				[0, -1],
-			].map((vect) => {
-				let [h, m] = vect.map(
-					(k, i) => (k + temp[i] + [24, 60][i]) % [24, 60][i],
-				);
-				let time = `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-				console.log(maxTime,minTime);
-				return (
-					compareTime(time, maxTime) <= 0 &&
-					compareTime(time, minTime) >= 0
-				);
-			});
-			return t;
-		});
+		setActiveButtons(()=>checkActiveButtons(temp));
 		onChange(newTime);
 	};
+
+	useEffect(() => {
+		setActiveButtons(()=>checkActiveButtons([hours,minutes]));
+	}, [maxTime, minTime]);
 
 	return (
 		<div
