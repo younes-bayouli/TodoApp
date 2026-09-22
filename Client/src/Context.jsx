@@ -1,8 +1,15 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useReducer,
+	useState,
+} from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "./api/api";
 
 const AppContext = createContext(null);
+const isTheme = (value) => value === "light" || value === "dark";
 
 const filter = (errors = [], errorToAdd) => {
 	if (errorToAdd === null || errorToAdd === undefined) return false;
@@ -38,6 +45,13 @@ export function AppProvider({ children }) {
 		errors: [],
 		nbrErr: 0,
 	});
+	const [theme, setThemeState] = useState(() => {
+		const savedTheme = localStorage.getItem("theme");
+		return isTheme(savedTheme) ? savedTheme : "light";
+	});
+	const setTheme = (nextTheme) => {
+		if (isTheme(nextTheme)) setThemeState(nextTheme);
+	};
 	const addError = (error) => dispatch({ type: "ADD", payload: error });
 	const queryClient = useQueryClient();
 	const { data: settings, error: settingsError } = useQuery({
@@ -52,6 +66,11 @@ export function AppProvider({ children }) {
 	});
 
 	useEffect(() => {
+		localStorage.setItem("theme", theme);
+		document.documentElement.dataset.theme = theme;
+	}, [theme]);
+
+	useEffect(() => {
 		if (settingsError) addError(settingsError);
 		if (updateSettingsMutation.error)
 			addError(updateSettingsMutation.error);
@@ -64,6 +83,12 @@ export function AppProvider({ children }) {
 				addError,
 				removeError: () => dispatch({ type: "POP" }),
 				nbrErr,
+				theme,
+				setTheme,
+				toggleTheme: () =>
+					setThemeState((currentTheme) =>
+						currentTheme === "light" ? "dark" : "light",
+					),
 				settings,
 				updateSettings: updateSettingsMutation.mutate,
 			}}

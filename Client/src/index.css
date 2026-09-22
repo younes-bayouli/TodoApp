@@ -1,3 +1,191 @@
-.btn *{
-    cursor: pointer;
+:root {
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+}
+
+[data-theme="light"] {
+	--app-background: white;
+	--app-surface: #ffffff;
+	--app-text: #212529;
+	--app-text-muted: #6c757d;
+	--app-border: #dee2e6;
+	--app-input-background: #ffffff;
+	--app-input-text: #212529;
+	--app-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+	--app-navbar-background: #ffffff;
+	--app-hover-background: #f1f3f5;
+}
+
+[data-theme="dark"] {
+	--app-background: #17191c;
+	--app-surface: #22262b;
+	--app-text: #f1f3f5;
+	--app-text-muted: #adb5bd;
+	--app-border: #3d444c;
+	--app-input-background: #2b3035;
+	--app-input-text: #f1f3f5;
+	--app-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.35);
+	--app-navbar-background: #1d2125;
+	--app-hover-background: #30363d;
+}
+
+[data-theme] {
+	--bs-body-bg: var(--app-background);
+	--bs-body-color: var(--app-text);
+	--bs-secondary-color: var(--app-text-muted);
+	--bs-border-color: var(--app-border);
+	--bs-tertiary-bg: var(--app-surface);
+}
+
+.btn * {
+	cursor: pointer;
+}
+
+html,
+body,
+#root {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	background-color: var(--app-background);
+	color: var(--app-text);
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease;
+}
+
+[data-theme] .app-shell,
+[data-theme] .app-content {
+	background-color: var(--app-background);
+	color: var(--app-text);
+}
+
+[data-theme] .navbar {
+	background-color: var(--app-navbar-background);
+	color: var(--app-text);
+}
+
+[data-theme] .card,
+[data-theme] .home-card,
+[data-theme] .modal-content,
+[data-theme] .list-group,
+[data-theme] .list-group-item,
+[data-theme] .dropdown-menu,
+[data-theme] .table {
+	border-color: var(--app-border);
+	background-color: var(--app-surface);
+	color: var(--app-text);
+}
+
+[data-theme] .bg-white,
+[data-theme] .bg-light,
+[data-theme] .alert-light {
+	background-color: var(--app-surface) !important;
+	color: var(--app-text);
+}
+
+[data-theme] .bg-dark {
+	background-color: var(--app-navbar-background) !important;
+	color: var(--app-text);
+}
+
+[data-theme] .text-dark {
+	color: var(--app-text) !important;
+}
+
+[data-theme] .text-light {
+	color: var(--app-text) !important;
+}
+
+[data-theme] .text-secondary,
+[data-theme] .text-muted {
+	color: var(--app-text-muted) !important;
+}
+
+[data-theme] .border,
+[data-theme] .border-bottom,
+[data-theme] .border-top,
+[data-theme] .border-start,
+[data-theme] .border-end {
+	border-color: var(--app-border) !important;
+}
+
+[data-theme] .form-control,
+[data-theme] .form-select,
+[data-theme] .dropdown-menu {
+	border-color: var(--app-border);
+	background-color: var(--app-input-background);
+	color: var(--app-input-text);
+}
+
+[data-theme] .form-control::placeholder {
+	color: var(--app-text-muted);
+}
+
+[data-theme] .form-control:focus,
+[data-theme] .form-select:focus {
+	border-color: var(--bs-primary);
+	background-color: var(--app-input-background);
+	color: var(--app-input-text);
+	box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+}
+
+[data-theme] .dropdown-item {
+	color: var(--app-text);
+}
+
+[data-theme] .dropdown-item:hover,
+[data-theme] .dropdown-item:focus {
+	background-color: var(--app-hover-background);
+	color: var(--app-text);
+}
+
+[data-theme] .table {
+	--bs-table-color: var(--app-text);
+	--bs-table-bg: var(--app-surface);
+	--bs-table-border-color: var(--app-border);
+}
+
+[data-theme] .btn-light,
+[data-theme] .btn-outline-secondary {
+	border-color: var(--app-border);
+	background-color: var(--app-surface);
+	color: var(--app-text);
+}
+
+[data-theme] .btn-light:hover,
+[data-theme] .btn-outline-secondary:hover {
+	background-color: var(--app-hover-background);
+	color: var(--app-text);
+}
+
+[data-theme] .modal.show.bg-light,
+[data-theme] .modal.photo-gallery-modal {
+	background-color: rgb(0 0 0 / 50%) !important;
+}
+
+[data-theme] .btn-close {
+	filter: var(--app-btn-close-filter, none);
+}
+
+[data-theme="dark"] .btn-close {
+	--app-btn-close-filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+[data-theme] .span {
+	background-color: var(--app-border);
+}
+
+[data-theme] .photo-card-caption,
+[data-theme] .photo-card-placeholder,
+[data-theme] .photo-gallery-item,
+[data-theme] .project-card,
+[data-theme] .add-project-card,
+[data-theme] .time-display,
+[data-theme] .calendar-day-tooltip {
+	border-color: var(--app-border);
+	background-color: var(--app-surface);
+	color: var(--app-text);
 }

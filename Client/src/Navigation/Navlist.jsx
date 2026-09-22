@@ -1,7 +1,12 @@
 import "./Navlist.css";
 import { NavLink } from "react-router-dom";
+import { Moon, Sun } from "lucide-react";
+import { useAppContext } from "../Context.jsx";
 
 const Navlist = ({ List }) => {
+	const { theme, toggleTheme } = useAppContext();
+	const isLightTheme = theme === "light";
+
 	return (
 		<>
 			<NavLink
@@ -38,6 +43,19 @@ const Navlist = ({ List }) => {
 					);
 				})}
 			</div>
+			<button
+				type="button"
+				className="theme-toggle btn btn-outline-secondary align-self-start"
+				onClick={toggleTheme}
+				aria-label={
+					isLightTheme
+						? "Switch to dark theme"
+						: "Switch to light theme"
+				}
+				title={isLightTheme ? "Dark theme" : "Light theme"}
+			>
+				{isLightTheme ? <Moon size={18} /> : <Sun size={18} />}
+			</button>
 		</>
 	);
 };
