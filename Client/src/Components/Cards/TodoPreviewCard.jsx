@@ -10,22 +10,21 @@ function TodoPreviewCard({ todos = [], limit = 3 }) {
 		.slice(0, limit);
 
 	return (
-		<article className="home-card todo-preview-card flex-fill">
-			<div className="home-card-heading">
+		<article>
+			<div>
 				<div>
-					<p className="home-card-kicker">Focus list</p>
+					<p>Focus list</p>
 					<h2>Open todos</h2>
 				</div>
-				<span className="home-card-count">
+				<span>
 					{todos.filter((todo) => !todo.completed).length}
 				</span>
 			</div>
-			<ul className="home-todo-list mt-2">
+			<ul>
 				{visibleTodos.length > 0 ? (
 					visibleTodos.map((todo) => (
 						<li key={todo.id}>
 							<span
-								className="home-todo-priority"
 								style={{
 									backgroundColor:
 										priorityColors[todo.priority],
@@ -35,12 +34,12 @@ function TodoPreviewCard({ todos = [], limit = 3 }) {
 						</li>
 					))
 				) : (
-					<li className="home-card-empty">All clear for now.</li>
+					<li>All clear for now.</li>
 				)}
 			</ul>
 			{visibleTodos.length <
 				todos.filter((todo) => !todo.completed).length && (
-				<p className="home-card-footnote">
+				<p>
 					+ more waiting in your list
 				</p>
 			)}

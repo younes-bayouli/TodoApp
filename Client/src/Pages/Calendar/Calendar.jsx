@@ -202,21 +202,19 @@ function Calendar() {
 	}
 
 	return (
-		<section className="d-flex flex-column h-100">
-			<header className="d-flex justify-content-between align-items-center flex-shrink-0 mb-3">
+		<section>
+			<header>
 				<div>
-					<h3 className="mb-0">Calendar</h3>
+					<h3>Calendar</h3>
 				</div>
-				<div className="d-flex align-items-center gap-2">
-					<div className="d-flex gap-1" role="group">
+				<div>
+					<div role="group">
 						<div
-							className="alert alert-light p-1 m-0"
 							onClick={() => calendarRef.current?.getApi().prev()}
 						>
 							<Arrow deg={90} />
 						</div>
 						<div
-							className="alert alert-light p-1 m-0"
 							onClick={() => calendarRef.current?.getApi().next()}
 						>
 							<Arrow deg={-90} />
@@ -226,13 +224,11 @@ function Calendar() {
 							onClick={() =>
 								calendarRef.current?.getApi().today()
 							}
-							className="btn alert alert-light p-1 m-0"
 						>
 							Today
 						</div>
 						<div
 							type="button"
-							className="btn alert alert-light p-1 m-0"
 							onClick={() =>
 								planModal.openModal({
 									object: { ...nullPlan },
@@ -243,7 +239,7 @@ function Calendar() {
 							Make a Plan
 						</div>
 					</div>
-					<div className="alert alert-light p-1 m-0">
+					<div>
 						<input
 							type="month"
 							style={{
@@ -257,7 +253,7 @@ function Calendar() {
 			</header>
 
 			{!dayEvents && (
-				<div className="flex-grow-1" style={{ minHeight: 0 }}>
+				<div>
 					<FullCalendar
 						ref={calendarRef}
 						plugins={[dayGridPlugin, interactionPlugin]}
@@ -289,26 +285,24 @@ function Calendar() {
 
 			{dayTooltip && (
 				<div
-					className="calendar-day-tooltip"
 					style={dayTooltip.position}
 					onMouseLeave={hideDayTooltip}
 				>
-					<div className="fw-semibold mb-2">
+					<div>
 						{formatDay(dayTooltip.date)}
 					</div>
 					{dayTooltip.events?.length > 0 ? (
-						<ul className="list-unstyled mb-3">
+						<ul>
 							{dayTooltip.events.map((event) => (
 								<li
 									key={`${event.title}-${event.start}`}
-									className="mb-1"
 								>
 									{event.title}
 								</li>
 							))}
 						</ul>
 					) : (
-						<p className="mb-3">No events</p>
+						<p>No events</p>
 					)}
 				</div>
 			)}

@@ -50,18 +50,17 @@ function PrayerTimes() {
 	}, [prayersError]);
 
 	return (
-		<main className="prayer-page h-100 w-100 min-vh-0 d-flex flex-column">
-			<header className="prayer-page-header d-flex align-items-center justify-content-between gap-3 mb-3 flex-shrink-0">
-				<h1 className="mb-0 fw-semibold">Prayer Times</h1>
+		<main>
+			<header>
+				<h1>Prayer Times</h1>
 				{location && (
-					<span className="prayer-page-location">
+					<span>
 						<img src={pinLocation} alt="" />
 						{formatLocation(location)}
 					</span>
 				)}
 			</header>
 			<section
-				className="prayer-card-grid"
 				aria-label="Prayer information"
 			>
 				<PrayerTimesCard prayers={prayers?.data.timings} />

@@ -13,18 +13,16 @@ function Todo({ task, onToggle, onRemove, onEdit }) {
 
 	return (
 		<div
-			className="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
 		>
 			<input
-				className="form-check-input mt-0"
 				type="checkbox"
 				checked={task.completed}
 				aria-label={`Complete ${task.title}`}
 				onChange={() => onToggle(task.id)}
 			/>
-			<div className="flex-grow-1">
+			<div>
 				<span
 					className={
 						task.completed
@@ -38,7 +36,6 @@ function Todo({ task, onToggle, onRemove, onEdit }) {
 			{hovered && (
 				<div>
 					<button
-						className="btn btn-sm btn-link text-decoration-none"
 						type="button"
 						onClick={() => onRemove(task.id)}
 						aria-label={`Delete ${task.title}`}
@@ -46,7 +43,6 @@ function Todo({ task, onToggle, onRemove, onEdit }) {
 						<Trash2 color="red" size={18} />
 					</button>
 					<button
-						className="btn btn-sm btn-link text-decoration-none"
 						type="button"
 						onClick={() => onEdit(task)}
 						aria-label={`Edit ${task.title}`}
@@ -55,9 +51,8 @@ function Todo({ task, onToggle, onRemove, onEdit }) {
 					</button>
 				</div>
 			)}
-			<span className="d-flex align-items-center gap-2 small">
+			<span>
 				<span
-					className="rounded-circle"
 					style={{
 						width: "8px",
 						height: "8px",

@@ -2,21 +2,20 @@ import { formatDate } from "../../Utils/dateUtilities";
 
 function TodayEventsCard({ events = [], date }) {
 	return (
-		<article className="home-card today-events-card">
-			<div className="home-card-heading">
+		<article>
+			<div>
 				<div>
-					<p className="home-card-kicker">Schedule</p>
+					<p>Schedule</p>
 					<h2>Today&apos;s events</h2>
 				</div>
-				<span className="home-card-count">{events.length}</span>
+				<span>{events.length}</span>
 			</div>
-			<p className="home-card-date">{formatDate(date.toISOString())}</p>
+			<p>{formatDate(date.toISOString())}</p>
 			{events.length > 0 ? (
-				<ul className="home-event-list">
+				<ul>
 					{events.map((event) => (
 						<li key={event.id}>
 							<span
-								className="home-event-dot"
 								style={{
 									backgroundColor: event.backgroundColor,
 								}}
@@ -26,7 +25,7 @@ function TodayEventsCard({ events = [], date }) {
 					))}
 				</ul>
 			) : (
-				<p className="home-card-empty">
+				<p>
 					Nothing scheduled. Keep the day open.
 				</p>
 			)}

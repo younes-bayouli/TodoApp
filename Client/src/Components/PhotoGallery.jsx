@@ -51,39 +51,33 @@ function PhotoGallery() {
 
 			{isOpen && (
 				<div
-					className="modal show d-block photo-gallery-modal"
 					role="presentation"
 					onClick={() => setIsOpen(false)}
 				>
 					<div
-						className="modal-dialog modal-dialog-centered modal-lg"
 						onClick={(event) => event.stopPropagation()}
 					>
 						<section
-							className="modal-content"
 							role="dialog"
 							aria-modal="true"
 							aria-labelledby="photo-gallery-title"
 						>
-							<div className="modal-header">
+							<div>
 								<h2
 									id="photo-gallery-title"
-									className="modal-title h5"
 								>
 									Photos
 								</h2>
 								<button
 									type="button"
-									className="btn-close"
 									aria-label="Close photo gallery"
 									onClick={() => setIsOpen(false)}
 								/>
 							</div>
-							<div className="modal-body">
-								<div className="d-flex justify-content-end mb-3">
+							<div>
+								<div>
 									<button
 										type="button"
-										className="btn btn-primary d-inline-flex align-items-center gap-2"
 										onClick={() =>
 											inputRef.current?.click()
 										}
@@ -98,32 +92,28 @@ function PhotoGallery() {
 										ref={inputRef}
 										type="file"
 										accept="image/*"
-										className="d-none"
 										onChange={handleFileChange}
 									/>
 								</div>
 
 								{photos.length === 0 && !create.isPending ? (
-									<p className="photo-gallery-empty">
+									<p>
 										No photos yet. Add one to personalize
 										your space.
 									</p>
 								) : (
-									<div className="row g-3">
+									<div>
 										{photos.map((filename) => (
 											<div
-												className="col-12 col-sm-6 col-lg-4"
 												key={filename}
 											>
-												<article className="photo-gallery-item position-relative">
+												<article>
 													<img
 														src={`${PHOTO_URL}/photos/${encodeURIComponent(filename)}`}
 														alt={filename}
-														className="w-100"
 													/>
 													<button
 														type="button"
-														className="btn btn-light photo-gallery-delete"
 														onClick={() =>
 															remove.mutate(
 																filename,
@@ -145,10 +135,9 @@ function PhotoGallery() {
 									</div>
 								)}
 							</div>
-							<div className="modal-footer">
+							<div>
 								<button
 									type="button"
-									className="btn btn-secondary d-inline-flex align-items-center gap-2"
 									onClick={() => setIsOpen(false)}
 								>
 									<X size={16} aria-hidden="true" />

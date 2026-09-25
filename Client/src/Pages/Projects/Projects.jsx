@@ -124,20 +124,20 @@ function Projects() {
 
 	return (
 		<div>
-			<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
-				<h3 className="mb-0 fw-semibold">Projects</h3>
-				<span className="badge fw-normal">
+			<div>
+				<h3>Projects</h3>
+				<span>
 					{filteredProjects?.length} projects
 				</span>
 			</div>
 
-			<div className="w-100 d-flex justify-content-end mb-4">
-				<ul className="nav nav-pills gap-2">
+			<div>
+				<ul>
 					{["all", "active", "completed"].map((filterOption) => (
-						<li className="nav-item" key={filterOption}>
+						<li key={filterOption}>
 							<button
 								type="button"
-								className={`nav-link alert p-1 m-0 text-capitalize ${
+								className={`${
 									filter === filterOption
 										? "alert-primary"
 										: "alert-light"

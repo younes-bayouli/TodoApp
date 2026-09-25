@@ -60,22 +60,20 @@ function Schedule({
 
 	return (
 		<>
-			<div className="container w-100 h-100 p-0 d-flex flex-column overflow-hidden">
-				<div className="d-flex flex-grow-1 align-items-center overflow-hidden">
+			<div>
+				<div>
 					<Arrow
 						deg={90}
 						style={{ width: "5%", height: "10%" }}
 						onClick={scrollLeft}
 					></Arrow>
 					<div
-						className="d-flex h-100 scroller"
 						style={{ paddingLeft: 20, position: "relative" }}
 						ref={scrollRef}
 						onMouseEnter={() => setHovered(true)}
 						onMouseLeave={() => setHovered(false)}
 					>
 						<div
-							className="h-100 w-100 position-absolute"
 							style={{
 								zIndex: 3,
 								marginLeft: scrollRef.current?.scrollLeft - 20,
@@ -132,7 +130,6 @@ function Schedule({
 
 							return (
 								<div
-									className="prayer-marker"
 									key={name}
 									style={{
 										marginLeft: (prayerMinutes * 10) / 6,
@@ -144,7 +141,6 @@ function Schedule({
 						})}
 						{sleepTimes.map(({ name, time: sleepTime }) => (
 							<div
-								className="sleep-marker"
 								key={name}
 								style={{
 									marginLeft:
@@ -154,7 +150,7 @@ function Schedule({
 								<span>{name}</span>
 							</div>
 						))}
-						<div className="h-100 w-100 position-absolute d-flex align-items-center">
+						<div>
 							{Tasks.map((task) => (
 								<Task
 									task={task}

@@ -4,11 +4,11 @@ export default function TimeDisplay({ date }) {
 	const { hour24, hour12 } = format(date);
 
 	return (
-		<div className="time-display prayer-time-card d-flex flex-column align-items-center justify-content-center p-3 border rounded h-100">
-			<div className="time-12h" style={{ fontSize: "3rem" }}>
+		<div>
+			<div style={{ fontSize: "3rem" }}>
 				{hour12}
 			</div>
-			<div className="time-date small mt-2">
+			<div>
 				{date.toLocaleDateString("en-US", {
 					weekday: "long",
 					year: "numeric",

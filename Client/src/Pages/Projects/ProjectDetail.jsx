@@ -12,7 +12,13 @@ const priorityStyles = {
 
 const priorityOrder = { high: 0, medium: 1, low: 2 };
 
-function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutation,onModifyProject }) {
+function ProjectDetail({
+	onBack,
+	project,
+	updateProjectMutation,
+	deleteProjectMutation,
+	onModifyProject,
+}) {
 	const [newTodoTitle, setNewTodoTitle] = useState("");
 	const [newTodoPriority, setNewTodoPriority] = useState("medium");
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -83,51 +89,35 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 
 	return (
 		<>
-			<div className="container bg-white">
-				<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
-					<div className="d-flex align-items-center gap-3">
+			<div>
+				<div>
+					<div>
 						<div>
-							<h3 className="mb-0 fw-semibold">
-								project: {project.name}
-							</h3>
+							<h3>project: {project.name}</h3>
 						</div>
 						<button
 							type="button"
-							className="btn btn-outline-danger m-0 p-2"
 							onClick={() => setShowDeleteDialog(true)}
 						>
 							Delete Project
 						</button>
 					</div>
-					<div className="d-flex align-items-center gap-2">
-						<small>
-							Due: {formatDate(project.deadline)}
-						</small>
-						<div
-							className="btn alert alert-light p-2 m-0"
-							onClick={onModifyProject}
-						>
-							Modify Project
-						</div>
+					<div>
+						<small>Due: {formatDate(project.deadline)}</small>
+						<div onClick={onModifyProject}>Modify Project</div>
 
-						<div
-							className="btn alert alert-light m-0 p-2"
-							onClick={onBack}
-						>
-							Back to Projects
-						</div>
+						<div onClick={onBack}>Back to Projects</div>
 					</div>
 				</div>
 
-				<div className="card mb-4">
-					<div className="card-body">
-						<h6 className="mb-3">Add New Todo</h6>
+				<div>
+					<div>
+						<h6>Add New Todo</h6>
 						<form onSubmit={handleAddTodo}>
-							<div className="row g-3">
-								<div className="col-md-8">
+							<div>
+								<div>
 									<input
 										type="text"
-										className="form-control"
 										placeholder="What needs to be done?"
 										value={newTodoTitle}
 										onChange={(e) =>
@@ -136,9 +126,8 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 									/>
 								</div>
 
-								<div className="col-md-3">
+								<div>
 									<select
-										className="form-select"
 										value={newTodoPriority}
 										onChange={(e) =>
 											setNewTodoPriority(e.target.value)
@@ -149,13 +138,8 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 										<option value="low">Low</option>
 									</select>
 								</div>
-								<div className="col-md-1">
-									<button
-										type="submit"
-										className="btn btn-primary w-100"
-									>
-										Add
-									</button>
+								<div>
+									<button type="submit">Add</button>
 								</div>
 							</div>
 						</form>
@@ -163,40 +147,30 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 				</div>
 
 				{showDeleteDialog && (
-					<div
-						className="modal fade show d-block"
-						onClick={() => setShowDeleteDialog(false)}
-					>
-						<div
-							className="modal-dialog modal-dialog-centered"
-							onClick={(e) => e.stopPropagation()}
-						>
-							<div className="modal-content border-0 shadow-lg rounded-4">
-								<div className="modal-header border-0 pb-2">
-									<h5 className="modal-title fw-bold text-danger">
-										Delete project?
-									</h5>
+					<div onClick={() => setShowDeleteDialog(false)}>
+						<div onClick={(e) => e.stopPropagation()}>
+							<div>
+								<div>
+									<h5>Delete project?</h5>
 									<button
 										type="button"
-										className="btn-close"
 										onClick={() =>
 											setShowDeleteDialog(false)
 										}
 										aria-label="Close"
 									></button>
 								</div>
-								<div className="modal-body py-3">
-									<p className="mb-0">
+								<div>
+									<p>
 										This will permanently remove{" "}
 										<strong>{project.name}</strong> and all
 										of its todos. This action cannot be
 										undone.
 									</p>
 								</div>
-								<div className="modal-footer border-0 pt-2">
+								<div>
 									<button
 										type="button"
-										className="btn btn-outline-secondary"
 										onClick={() =>
 											setShowDeleteDialog(false)
 										}
@@ -216,8 +190,8 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 					</div>
 				)}
 
-				<div className="mb-3">
-					<h5 className="fw-semibold">Todos</h5>
+				<div>
+					<h5>Todos</h5>
 				</div>
 
 				<div className="list-group list-group-flush border rounded">
@@ -225,23 +199,18 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 						sortedTodos.map((todo) => {
 							const priority = priorityStyles[todo.priority];
 							return (
-								<div
-									key={todo.id}
-									className="list-group-item d-flex align-items-center gap-3 py-3"
-								>
+								<div key={todo.id}>
 									<div
-										className="form-check mb-0"
 										onClick={() => toggleTodo(todo.id)}
 										style={{ cursor: "pointer" }}
 									>
 										<input
-											className="form-check-input"
 											type="checkbox"
 											checked={todo.completed}
 											onChange={() => toggleTodo(todo.id)}
 										/>
 									</div>
-									<div className="flex-grow-1">
+									<div>
 										<span
 											className={
 												todo.completed
@@ -254,29 +223,19 @@ function ProjectDetail({ onBack,project,updateProjectMutation,deleteProjectMutat
 									</div>
 									<button
 										type="button"
-										className="btn btn-sm text-danger"
 										onClick={() => deleteTodo(todo.id)}
 									>
 										Delete
 									</button>
-									<span className="d-flex align-items-center gap-2 small">
-										<span
-											className="rounded-circle"
-											style={{
-												width: "8px",
-												height: "8px",
-												backgroundColor: priority.dot,
-											}}
-										/>
+									<span>
+										<span />
 										{priority.label}
 									</span>
 								</div>
 							);
 						})
 					) : (
-						<div className="text-center py-5">
-							No todos yet. Click "Add Todo" to create one.
-						</div>
+						<div>No todos yet. Click "Add Todo" to create one.</div>
 					)}
 				</div>
 			</div>

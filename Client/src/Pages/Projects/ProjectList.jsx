@@ -1,13 +1,12 @@
 import { useAppContext } from "../../Context";
 import ProjectCard from "./ProjectCard";
 
-function ProjectList({ projects, onClick,onOpenAddProject,onCloseAddProject }) {
-	const { openModal } = useAppContext();
+function ProjectList({ projects, onClick,onOpenAddProject }) {
 	return (
 		<div>
-			<div className="row g-4">
+			<div>
 				{projects?.map((project) => (
-					<div className="col-12 col-md-6 col-lg-4" key={project.id}>
+					<div key={project.id}>
 						<ProjectCard
 							project={project}
 							onClick={onClick}
@@ -15,14 +14,12 @@ function ProjectList({ projects, onClick,onOpenAddProject,onCloseAddProject }) {
 						/>
 					</div>
 				))}
-				<div className="col-12 col-md-6 col-lg-4">
+				<div>
 					<button
 						type="button"
-						className="card h-100 w-100 project-card add-project-card"
 						onClick={onOpenAddProject}
 					>
 						<span
-							className="display-4"
 							aria-hidden="true"
 						>
 							+

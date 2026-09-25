@@ -107,37 +107,26 @@ function TodoList() {
 		});
 	};
 
-	const openEditDialog = (task) => {
-		configModal({ modalObject: task });
-		openModal();
-	};
-
-	const closeEditDialog = () => {
-		setEditingTask(null);
-	};
-
 	const removeTask = (taskId) => {
 		deleteTaskMutation.mutate(taskId);
 	};
 
 	return (
-		<div className="container bg-white">
-			<div className="d-flex align-items-center justify-content-between border-bottom pb-3 mb-4">
-				<h3 className="mb-0 fw-semibold">Tasks</h3>
-				<span className="badge fw-normal">
+		<div>
+			<div>
+				<h3>Tasks</h3>
+				<span>
 					{openCount} open
 				</span>
 			</div>
 
-			<form className="input-group mb-4" onSubmit={addTask}>
+			<form onSubmit={addTask}>
 				<input
-					className="form-control"
 					value={title}
 					placeholder="What needs to be done?"
 					onChange={(event) => setTitle(event.target.value)}
 				/>
 				<select
-					className="form-select"
 					style={{ maxWidth: "140px" }}
 					value={priority}
 					aria-label="Task priority"
@@ -148,20 +137,18 @@ function TodoList() {
 					<option value="low">Low</option>
 				</select>
 				<button
-					className="btn alert alert-primary p-2 m-0 btn-outline-primary"
 					type="submit"
 				>
 					Add
 				</button>
 			</form>
 
-			<div className="w-100 d-flex justify-content-end">
-				<ul className="nav nav-pills gap-2 mb-3">
+			<div>
+				<ul>
 					{filters.map((filterName) => (
-						<li className="nav-item" key={filterName}>
+						<li key={filterName}>
 							<button
 								type="button"
-								className={`nav-link alert p-1 m-0 ${filter === filterName ? "alert-primary" : "alert-light"}`}
 								onClick={() => setFilter(filterName)}
 							>
 								{filterName}
@@ -171,7 +158,7 @@ function TodoList() {
 				</ul>
 			</div>
 
-			<div className="list-group list-group-flush border rounded">
+			<div>
 				{visibleTasks?.length ? (
 					visibleTasks.map((task) => (
 						<Todo
@@ -183,7 +170,7 @@ function TodoList() {
 						/>
 					))
 				) : (
-					<div className="text-center py-5">
+					<div>
 						Nothing here — add a task above.
 					</div>
 				)}

@@ -44,7 +44,6 @@ export default function Task({ task, onClick, onDelete,style }) {
 				position: "relative",
 				...style,
 			}}
-			className="alert alert-primary p-2 overflow-hidden position-absolute"
 			onClick={handleClick}
 		>
 			{!tooltip && <>{task.title}</>}
@@ -52,23 +51,13 @@ export default function Task({ task, onClick, onDelete,style }) {
 				<>
 					<button
 						type="button"
-						className="btn btn-sm d-flex align-items-center justify-content-center"
 						onClick={handleDelete}
 						aria-label={`Delete ${task.title}`}
 						title="Delete task"
-						style={{
-							position: "absolute",
-							top: "8px",
-							right: "8px",
-							width: "28px",
-							height: "28px",
-							padding: 0,
-							lineHeight: 1,
-						}}
 					>
 						<img src={trash} alt="Delete" />
 					</button>
-					<h4 style={{ paddingRight: "32px" }}>{task.title}</h4>
+					<h4>{task.title}</h4>
 					<p>{task.details}</p>
 				</>
 			)}

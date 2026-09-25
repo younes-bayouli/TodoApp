@@ -59,33 +59,32 @@ function Home() {
 	}, [locationError, prayersError, error]);
 
 	return (
-		<main className="home-page">
-			<header className="home-intro">
+		<main>
+			<header>
 				<div>
 					<h1>Good morning, Younes.</h1>
 				</div>
 				{location && (
-					<span className="prayer-page-location">
+					<span>
 						<img src={pinLocation} alt="" />
 						{formatLocation(location)}
 					</span>
 				)}
 			</header>
-			<section className="home-gallery" aria-label="Daily overview">
-				<div className="home-card home-time-card">
+			<section>
+				<div>
 					<TimeCard date={date} />
 				</div>
-				<div className="d-flex gap-3">
+				<div>
 					<IslamicDateCard date={date} />
 					<NextPrayerCard
 						prayers={prayers?.data.timings}
-						className="flex-fill"
 						date={date}
 						small={true}
 					/>
 				</div>
 				<TaskStatusCard currentTask={current} nextTask={next} />
-				<div className="d-flex gap-3">
+				<div>
 					<TodayEventsCard events={todaysEvents} date={date} />
 					<TodoPreviewCard todos={Todos} />
 				</div>

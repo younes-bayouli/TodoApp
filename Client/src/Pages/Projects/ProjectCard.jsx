@@ -11,28 +11,24 @@ function ProjectCard({ project, onClick }) {
 
 	return (
 		<div
-			className="card h-100 project-card"
 			onClick={()=>onClick(project)}
-			style={{ cursor: "pointer" }}
 		>
 			<div
-				className="card-header d-flex align-items-center gap-2"
 				style={{
 					borderLeftColor: project.color,
 					borderLeftWidth: "4px",
 					borderLeftStyle: "solid",
 				}}
 			>
-				<h5 className="mb-0">{project.name}</h5>
+				<h5>{project.name}</h5>
 			</div>
-			<div className="card-body">
-				<div className="d-flex align-items-center justify-content-between mb-2">
+			<div>
+				<div>
 					<small>
 						Due: {formatDate(project.deadline)}
 					</small>
 					{project.todos.length > 0 && (
 						<span
-							className="badge rounded-pill alert px-3 py-2"
 							title="Has todos"
 						>
 							!
@@ -40,9 +36,9 @@ function ProjectCard({ project, onClick }) {
 					)}
 				</div>
 
-				<div className="mt-2">
-					<small className="d-block mb-1">Owner</small>
-					<span className="small">{project.owner}</span>
+				<div>
+					<small>Owner</small>
+					<span>{project.owner}</span>
 				</div>
 			</div>
 		</div>

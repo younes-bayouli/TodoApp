@@ -129,24 +129,22 @@ function Myeveryday() {
 
 	return (
 		<>
-			<div className="d-flex flex-column h-100 gap-5">
-				<div className="d-flex align-items-center justify-content-between">
-					<h3 className="mb-0">My Every Day</h3>
+			<div>
+				<div>
+					<h3>My Every Day</h3>
 					<div>
-						<div className="d-flex align-items-center gap-2">
+						<div>
 							<div
-								className="d-flex gap-1"
 								role="group"
 								aria-label="Day navigation"
 							>
-								<div className="btn alert alert-light d-flex align-items-center justify-content-center p-1 m-0">
+								<div>
 									For{" "}
 									{chosenDay === currentDayIndex && "Today ("}
 									{DAYS[chosenDay]}
 									{chosenDay === currentDayIndex && ")"}
 								</div>
 								<div
-									className="btn alert alert-light d-flex align-items-center justify-content-center p-1 m-0"
 									aria-label="Previous day"
 									onClick={() =>
 										setChosenDay(
@@ -159,7 +157,6 @@ function Myeveryday() {
 									<Arrow deg={90} />
 								</div>
 								<div
-									className="btn alert alert-light d-flex align-items-center justify-content-center p-1 m-0"
 									aria-label="Next day"
 									onClick={() =>
 										setChosenDay(
@@ -171,7 +168,6 @@ function Myeveryday() {
 								</div>
 							</div>
 							<div
-								className="btn alert alert-light p-1 m-0"
 								onClick={() => {
 									addTask(
 										current ? current.end : currentTime,
@@ -183,7 +179,7 @@ function Myeveryday() {
 						</div>
 					</div>
 				</div>
-				<div className="flex-grow-1 d-flex flex-column gap-5">
+				<div>
 					<Schedule
 						time={Date}
 						prayers={prayers?.data?.timings}
@@ -195,11 +191,11 @@ function Myeveryday() {
 						onDeleteTask={remove.mutate}
 						onClick={addTask}
 					></Schedule>
-					<div className="d-flex flex-fill gap-4 align-items-stretch">
-						<div className="flex-fill">
+					<div>
+						<div>
 							<TimeCard date={Date}></TimeCard>
 						</div>
-						<div className="flex-fill">
+						<div>
 							<TaskStatusCard
 								currentTask={current}
 								nextTask={next}

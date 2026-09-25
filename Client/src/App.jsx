@@ -9,9 +9,9 @@ import Calendar from "./Pages/Calendar/Calendar.jsx";
 import Projects from "./Pages/Projects/Projects.jsx";
 import Home from "./Pages/Home/Home.jsx";
 import PrayerTimes from "./Pages/PrayerTimes/PrayerTimes.jsx";
-import ErrorMessage from "./Components/error.jsx";
+import ErrorMessage from "./Components/Error.jsx";
 import { useAppContext } from "./Context.jsx";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 function First() {
 	return (
@@ -49,12 +49,11 @@ function App() {
 	return (
 		<>
 			<BrowserRouter>
-				<div className="d-flex p-0 app-shell">
-					<nav className="navbar vh-100 p-4 d-flex flex-column">
+				<div>
+					<nav>
 						<Navlist List={pagesList}></Navlist>
 						{errors?.length > 0 && (
 							<div
-								className="m-3"
 								style={{
 									position: "fixed",
 									bottom: 0,
@@ -78,8 +77,7 @@ function App() {
 							</div>
 						)}
 					</nav>
-					<div className="span"></div>
-					<div className="flex-grow-1 app-content p-4 overflow-auto">
+					<div>
 						<Routes>
 							<Route path="/" element={<First />} />
 							<Route path="/home" element={<Home />} />

@@ -39,20 +39,11 @@ function NextPrayerCard({ prayers, date, small = false, className = "" }) {
 	const label = nextPrayer.name[0].toUpperCase() + nextPrayer.name.slice(1);
 
 	return (
-		<div
-			className={`shadow-sm border rounded p-4 justify-content-center next-prayer-card d-flex flex-column ${className}`}
-		>
-			<p className="small fw-semibold text-uppercase mb-1">Up next</p>
+		<div>
+			<p>Up next</p>
 			<h2>{label}</h2>
 			{small && <h4 aria-label="Time remaining">{countdown}</h4>}
-			{!small && (
-				<h1
-					className="display-2 fw-light lh-1"
-					aria-label="Time remaining"
-				>
-					{countdown}
-				</h1>
-			)}
+			{!small && <h1 aria-label="Time remaining">{countdown}</h1>}
 		</div>
 	);
 }

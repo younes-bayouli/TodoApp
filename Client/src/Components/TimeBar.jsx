@@ -11,12 +11,11 @@ function TimeBar({
 	return (
 		<div
 			onClick={onClick}
-			className="d-flex flex-column align-items-center align-self-stretch p-0 h-100"
 			style={{ width: "0px", marginLeft: LeftMargin, position: position }}
 		>
-			<div className={`${theme} ${headStyle} m-0`}>{time}</div>
+			<div className={`${theme} ${headStyle}`}>{time}</div>
 			<div
-				className={`${theme} ${barStyle} span flex-grow-1 m-0`}
+				className={`${theme} ${barStyle}`}
 				style={{ border: borderStyle }}
 			></div>
 		</div>
