@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
-import "./Projects.css";
 import useData from "../../Utils/useData";
 import useModal from "../../hooks/useModal.jsx";
 

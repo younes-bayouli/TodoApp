@@ -1,6 +1,5 @@
 import Arrow from "../../Components/Arrow";
 import { useRef, useCallback, useState, useEffect } from "react";
-import "./style.css";
 import {
 	format,
 	timeToMinutes,

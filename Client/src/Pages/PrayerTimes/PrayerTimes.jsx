@@ -7,7 +7,6 @@ import { dateToString } from "../../Utils/dateUtilities";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api";
 import pinLocation from "../../assets/icons/location-pin.png"
-import "./PrayerTimes.css";
 import { usePosition } from "../../hooks/usePosition";
 import { useAppContext } from "../../Context";
 import { useEffect } from "react";

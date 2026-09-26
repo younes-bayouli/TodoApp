@@ -14,7 +14,6 @@ import { useDate } from "../../Utils/useTime";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
 import pinLocation from "../../assets/icons/location-pin.png";
-import "./Home.css";
 import useData from "../../Utils/useData.js";
 import { useAppContext } from "../../Context.jsx";
 
