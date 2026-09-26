@@ -1,10 +1,10 @@
-import "./Navlist.css";
 import { NavLink } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
 import { useAppContext } from "../Context.jsx";
 
 const Navlist = ({ List }) => {
-	const {toggleTheme}=useAppContext();
+	const {toggleTheme,theme}=useAppContext();
+	const isLightTheme=theme==="light"
 
 	return (
 		<>

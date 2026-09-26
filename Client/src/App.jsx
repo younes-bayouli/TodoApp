@@ -1,7 +1,5 @@
 import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import { Routes, Route, BrowserRouter, NavLink } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Navlist from "./Navigation/Navlist";
 import EveryDayTasks from "./Pages/EveryDayTasks/EveryDayTasks.jsx";
 import TodoList from "./Pages/TodoList/TodoList.jsx";

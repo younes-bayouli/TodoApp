@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatDate } from "../../Utils/dateUtilities";
-import "./Projects.css";
-import useData from "../../Utils/useData";
-import { useAppContext } from "../../Context";
 
 const priorityStyles = {
 	high: { label: "High", dot: "#B54545" },
