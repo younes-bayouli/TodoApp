@@ -138,8 +138,7 @@ function Myeveryday() {
 					aria-label="Day navigation"
 				>
 					<span className="me-2 text-muted">
-						For{" "}
-						{chosenDay === currentDayIndex && "Today ("}
+						For {chosenDay === currentDayIndex && "Today ("}
 						{DAYS[chosenDay]}
 						{chosenDay === currentDayIndex && ")"}
 					</span>
@@ -147,9 +146,7 @@ function Myeveryday() {
 						aria-label="Previous day"
 						onClick={() =>
 							setChosenDay(
-								(day) =>
-									(day - 1 + DAYS.length) %
-									DAYS.length,
+								(day) => (day - 1 + DAYS.length) % DAYS.length,
 							)
 						}
 						variant="secondary"
@@ -159,9 +156,7 @@ function Myeveryday() {
 					<Button
 						aria-label="Next day"
 						onClick={() =>
-							setChosenDay(
-								(day) => (day + 1) % DAYS.length,
-							)
+							setChosenDay((day) => (day + 1) % DAYS.length)
 						}
 						variant="secondary"
 					>
@@ -170,9 +165,7 @@ function Myeveryday() {
 				</div>
 				<Button
 					onClick={() => {
-						addTask(
-							current ? current.end : currentTime,
-						);
+						addTask(current ? current.end : currentTime);
 					}}
 					variant="primary"
 				>
@@ -180,27 +173,23 @@ function Myeveryday() {
 				</Button>
 			</PageHeader>
 			<div>
-					<Schedule
-						time={Date}
-						prayers={prayers?.data?.timings}
-						settings={settings}
-						handleClickOnTask={(task) =>
-							openModal({ object: task, mutation: update })
-						}
-						Tasks={visibleTasks}
-						onDeleteTask={remove.mutate}
-						onClick={addTask}
-					></Schedule>
+				<Schedule
+					time={Date}
+					prayers={prayers?.data?.timings}
+					settings={settings}
+					handleClickOnTask={(task) =>
+						openModal({ object: task, mutation: update })
+					}
+					Tasks={visibleTasks}
+					onDeleteTask={remove.mutate}
+					onClick={addTask}
+				></Schedule>
+				<div>
 					<div>
-						<div>
-							<TimeCard date={Date}></TimeCard>
-						</div>
-						<div>
-							<TaskStatusCard
-								currentTask={current}
-								nextTask={next}
-							/>
-						</div>
+						<TimeCard date={Date}></TimeCard>
+					</div>
+					<div>
+						<TaskStatusCard currentTask={current} nextTask={next} />
 					</div>
 				</div>
 			</div>
