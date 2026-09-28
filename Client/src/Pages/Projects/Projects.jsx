@@ -3,6 +3,7 @@ import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
 import useData from "../../Utils/useData";
 import useModal from "../../hooks/useModal.jsx";
+import PageHeader from "../../Components/PageHeader.jsx";
 
 const normalise = (project) => {
 	return {
@@ -123,12 +124,10 @@ function Projects() {
 
 	return (
 		<div>
-			<div>
-				<h3>Projects</h3>
-				<span>
-					{filteredProjects?.length} projects
-				</span>
-			</div>
+			<PageHeader
+				title="Projects"
+				description={`${filteredProjects?.length || 0} projects`}
+			/>
 
 			<div>
 				<ul>

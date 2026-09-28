@@ -1,4 +1,5 @@
 import PrayerTimesCard from "../../Components/Cards/PrayerTimesCard";
+import PageHeader from "../../Components/PageHeader";
 import IslamicDateCard from "../../Components/Cards/IslamicDateCard";
 import NextPrayerCard from "../../Components/Cards/NextPrayerCard";
 import TimeCard from "../../Components/Cards/TimeCard";
@@ -50,15 +51,17 @@ function PrayerTimes() {
 
 	return (
 		<main>
-			<header>
-				<h1>Prayer Times</h1>
-				{location && (
-					<span>
-						<img src={pinLocation} alt="" />
-						{formatLocation(location)}
-					</span>
-				)}
-			</header>
+			<PageHeader
+				title="Prayer Times"
+				description={
+					location ? (
+						<span className="d-flex align-items-center gap-1">
+							<img src={pinLocation} alt="" style={{ width: '16px', height: '16px' }} />
+							{formatLocation(location)}
+						</span>
+					) : null
+				}
+			/>
 			<section
 				aria-label="Prayer information"
 			>

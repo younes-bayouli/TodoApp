@@ -1,4 +1,5 @@
 import TaskStatusCard from "../../Components/Cards/TaskStatusCard";
+import PageHeader from "../../Components/PageHeader";
 import TodoPreviewCard from "../../Components/Cards/TodoPreviewCard";
 import TodayEventsCard from "../../Components/Cards/TodayEventsCard";
 import IslamicDateCard from "../../Components/Cards/IslamicDateCard";
@@ -59,17 +60,17 @@ function Home() {
 
 	return (
 		<main>
-			<header>
-				<div>
-					<h1>Good morning, Younes.</h1>
-				</div>
-				{location && (
-					<span>
-						<img src={pinLocation} alt="" />
-						{formatLocation(location)}
-					</span>
-				)}
-			</header>
+			<PageHeader
+				title="Good morning, Younes."
+				description={
+					location ? (
+						<span className="d-flex align-items-center gap-1">
+							<img src={pinLocation} alt="" style={{ width: '16px', height: '16px' }} />
+							{formatLocation(location)}
+						</span>
+					) : null
+				}
+			/>
 			<section>
 				<div>
 					<TimeCard date={date} />

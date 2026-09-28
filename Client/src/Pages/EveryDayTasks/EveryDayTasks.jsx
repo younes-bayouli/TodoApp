@@ -1,4 +1,5 @@
 import Arrow from "../../Components/Arrow";
+import PageHeader from "../../Components/PageHeader";
 import { useEffect, useRef, useState } from "react";
 import Schedule from "./Schedule.jsx";
 import TimeCard from "../../Components/Cards/TimeCard.jsx";
@@ -130,60 +131,55 @@ function Myeveryday() {
 
 	return (
 		<>
-			<div>
-				<div>
-					<h3>My Every Day</h3>
-					<div>
-						<div>
-							<div
-								role="group"
-								aria-label="Day navigation"
-							>
-								<div>
-									For{" "}
-									{chosenDay === currentDayIndex && "Today ("}
-									{DAYS[chosenDay]}
-									{chosenDay === currentDayIndex && ")"}
-								</div>
-								<Button
-									aria-label="Previous day"
-									onClick={() =>
-										setChosenDay(
-											(day) =>
-												(day - 1 + DAYS.length) %
-												DAYS.length,
-										)
-									}
-									variant="secondary"
-								>
-									<Arrow deg={90} />
-								</Button>
-								<Button
-									aria-label="Next day"
-									onClick={() =>
-										setChosenDay(
-											(day) => (day + 1) % DAYS.length,
-										)
-									}
-									variant="secondary"
-								>
-									<Arrow deg={-90} />
-								</Button>
-							</div>
-							<Button
-								onClick={() => {
-									addTask(
-										current ? current.end : currentTime,
-									);
-								}}
-								variant="secondary"
-							>
-								Add Task
-							</Button>
-						</div>
-					</div>
+			<PageHeader title="My Every Day">
+				<div
+					className="d-flex align-items-center gap-2"
+					role="group"
+					aria-label="Day navigation"
+				>
+					<span className="me-2 text-muted">
+						For{" "}
+						{chosenDay === currentDayIndex && "Today ("}
+						{DAYS[chosenDay]}
+						{chosenDay === currentDayIndex && ")"}
+					</span>
+					<Button
+						aria-label="Previous day"
+						onClick={() =>
+							setChosenDay(
+								(day) =>
+									(day - 1 + DAYS.length) %
+									DAYS.length,
+							)
+						}
+						variant="secondary"
+					>
+						<Arrow deg={90} />
+					</Button>
+					<Button
+						aria-label="Next day"
+						onClick={() =>
+							setChosenDay(
+								(day) => (day + 1) % DAYS.length,
+							)
+						}
+						variant="secondary"
+					>
+						<Arrow deg={-90} />
+					</Button>
 				</div>
-				<div>
+				<Button
+					onClick={() => {
+						addTask(
+							current ? current.end : currentTime,
+						);
+					}}
+					variant="primary"
+				>
+					Add Task
+				</Button>
+			</PageHeader>
+			<div>
 					<Schedule
 						time={Date}
 						prayers={prayers?.data?.timings}

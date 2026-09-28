@@ -3,6 +3,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import Arrow from "../../Components/Arrow.jsx";
+import PageHeader from "../../Components/PageHeader.jsx";
 import {
 	toMonthValue,
 	formatDay,
@@ -203,12 +204,9 @@ function Calendar() {
 
 	return (
 		<section>
-			<header>
-				<div>
-					<h3>Calendar</h3>
-				</div>
-				<div>
-					<div role="group">
+			<PageHeader title="Calendar">
+				<div className="d-flex flex-wrap gap-2 align-items-center">
+					<div className="d-flex gap-1" role="group">
 						<Button
 							onClick={() => calendarRef.current?.getApi().prev()}
 							variant="secondary"
@@ -243,18 +241,21 @@ function Calendar() {
 							Make a Plan
 						</Button>
 					</div>
-					<Button variant="secondary">
+					<Button variant="secondary" className="p-0 overflow-hidden">
 						<input
 							type="month"
 							style={{
 								border: "none",
+								background: "transparent",
+								padding: "0.375rem 0.75rem",
+								color: "inherit"
 							}}
 							value={selectedMonth}
 							onChange={changeMonth}
 						/>
 					</Button>
 				</div>
-			</header>
+			</PageHeader>
 
 			{!dayEvents && (
 				<div>

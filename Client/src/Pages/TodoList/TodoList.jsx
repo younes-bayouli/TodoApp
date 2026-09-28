@@ -2,6 +2,7 @@ import { useState } from "react";
 import Todo from "./Todo.jsx";
 import useData from "../../Utils/useData.js";
 import useModal from "../../hooks/useModal.jsx";
+import PageHeader from "../../Components/PageHeader.jsx";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
@@ -113,12 +114,10 @@ function TodoList() {
 
 	return (
 		<div>
-			<div>
-				<h3>Tasks</h3>
-				<span>
-					{openCount} open
-				</span>
-			</div>
+			<PageHeader
+				title="Tasks"
+				description={`${openCount} open`}
+			/>
 
 			<form onSubmit={addTask}>
 				<input
