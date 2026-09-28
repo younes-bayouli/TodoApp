@@ -3,6 +3,7 @@ import { Trash2, Upload, X } from "lucide-react";
 import useData from "../Utils/useData.js";
 import PhotoCard from "./Cards/PhotoCard.jsx";
 import Button from "./Button.jsx";
+import EmptyState from "./EmptyState.jsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const PHOTO_URL = API_URL.replace(/\/api\/?$/, "");
@@ -94,10 +95,10 @@ function PhotoGallery() {
 								</div>
 
 								{photos.length === 0 && !create.isPending ? (
-									<p>
-										No photos yet. Add one to personalize
-										your space.
-									</p>
+									<EmptyState 
+										title="No photos yet" 
+										description="Add one to personalize your space."
+									/>
 								) : (
 									<div>
 										{photos.map((filename) => (

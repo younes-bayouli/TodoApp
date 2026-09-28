@@ -1,4 +1,5 @@
 import Button from "../../Components/Button";
+import EmptyState from "../../Components/EmptyState";
 
 export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEventMutation}) {
 	return (
@@ -61,9 +62,10 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 						</div>
 					))
 				) : (
-					<div>
-						No events scheduled for this day.
-					</div>
+					<EmptyState 
+						title="No events today" 
+						description="No events scheduled for this day."
+					/>
 				)}
 			</div>
 		</div>

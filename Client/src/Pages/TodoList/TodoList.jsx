@@ -3,6 +3,7 @@ import Todo from "./Todo.jsx";
 import useData from "../../Utils/useData.js";
 import useModal from "../../hooks/useModal.jsx";
 import PageHeader from "../../Components/PageHeader.jsx";
+import EmptyState from "../../Components/EmptyState.jsx";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
@@ -169,9 +170,10 @@ function TodoList() {
 						/>
 					))
 				) : (
-					<div>
-						Nothing here — add a task above.
-					</div>
+					<EmptyState 
+						title="No tasks yet" 
+						description="Nothing here — add a task above."
+					/>
 				)}
 			</div>
 			{Modal}

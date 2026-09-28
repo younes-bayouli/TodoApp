@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { formatDate } from "../../Utils/dateUtilities";
 import Button from "../../Components/Button";
+import EmptyState from "../../Components/EmptyState";
 import { X } from "lucide-react";
 
 const priorityStyles = {
@@ -238,7 +239,10 @@ function ProjectDetail({
 							);
 						})
 					) : (
-						<div>No todos yet. Click "Add Todo" to create one.</div>
+						<EmptyState 
+							title="No tasks yet" 
+							description="Click 'Add Todo' to create one."
+						/>
 					)}
 				</div>
 			</div>
