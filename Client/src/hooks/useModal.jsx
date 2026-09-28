@@ -4,7 +4,7 @@ import DuelClockInput from "../Components/DuelClockInput";
 import { useEffect, useState } from "react";
 import Button from "../Components/Button";
 import AppModal from "../Components/Modal";
-
+import FormField from "../Components/FormField";
 
 export default function useModal({
 	name,
@@ -52,11 +52,13 @@ export default function useModal({
 				}
 
 				return (
-					<div className={getSizeClass(size)} key={name}>
-						<label htmlFor={name} className="form-label">
-							{label}
-						</label>
-
+					<FormField
+						key={name}
+						className={getSizeClass(size)}
+						label={label}
+						htmlFor={name}
+						error={errors[name]}
+					>
 						{type === "duelClock" ? (
 							<div className="d-flex justify-content-center">
 								<DuelClockInput
@@ -181,13 +183,7 @@ export default function useModal({
 								}
 							/>
 						)}
-
-						{errors[name] && (
-							<p className="text-danger mt-1 mb-0">
-								{errors[name]}
-							</p>
-						)}
-					</div>
+					</FormField>
 				);
 			})}
 		</div>
