@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Trash2, Upload, X } from "lucide-react";
 import useData from "../Utils/useData.js";
 import PhotoCard from "./Cards/PhotoCard.jsx";
+import Button from "./Button.jsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const PHOTO_URL = API_URL.replace(/\/api\/?$/, "");
@@ -50,25 +51,16 @@ function PhotoGallery() {
 			/>
 
 			{isOpen && (
-				<div
-					role="presentation"
-					onClick={() => setIsOpen(false)}
-				>
-					<div
-						onClick={(event) => event.stopPropagation()}
-					>
+				<div role="presentation" onClick={() => setIsOpen(false)}>
+					<div onClick={(event) => event.stopPropagation()}>
 						<section
 							role="dialog"
 							aria-modal="true"
 							aria-labelledby="photo-gallery-title"
 						>
 							<div>
-								<h2
-									id="photo-gallery-title"
-								>
-									Photos
-								</h2>
-								<button
+								<h2 id="photo-gallery-title">Photos</h2>
+								<Button
 									type="button"
 									aria-label="Close photo gallery"
 									onClick={() => setIsOpen(false)}
@@ -76,18 +68,23 @@ function PhotoGallery() {
 							</div>
 							<div>
 								<div>
-									<button
+									<Button
 										type="button"
 										onClick={() =>
 											inputRef.current?.click()
 										}
 										disabled={create.isPending}
+										icon={
+											<Upload
+												size={16}
+												aria-hidden="true"
+											/>
+										}
 									>
-										<Upload size={16} aria-hidden="true" />
 										{create.isPending
 											? "Uploading..."
 											: "Add Photo"}
-									</button>
+									</Button>
 									<input
 										ref={inputRef}
 										type="file"
@@ -104,15 +101,13 @@ function PhotoGallery() {
 								) : (
 									<div>
 										{photos.map((filename) => (
-											<div
-												key={filename}
-											>
+											<div key={filename}>
 												<article>
 													<img
 														src={`${PHOTO_URL}/photos/${encodeURIComponent(filename)}`}
 														alt={filename}
 													/>
-													<button
+													<Button
 														type="button"
 														onClick={() =>
 															remove.mutate(
@@ -123,12 +118,13 @@ function PhotoGallery() {
 															remove.isPending
 														}
 														aria-label={`Delete ${filename}`}
-													>
-														<Trash2
-															size={16}
-															aria-hidden="true"
-														/>
-													</button>
+														icon={
+															<Trash2
+																size={16}
+																aria-hidden="true"
+															/>
+														}
+													></Button>
 												</article>
 											</div>
 										))}
@@ -136,13 +132,14 @@ function PhotoGallery() {
 								)}
 							</div>
 							<div>
-								<button
+								<Button
 									type="button"
+									variant="secondary"
 									onClick={() => setIsOpen(false)}
+									icon={<X size={16} aria-hidden="true" />}
 								>
-									<X size={16} aria-hidden="true" />
 									Close
-								</button>
+								</Button>
 							</div>
 						</section>
 					</div>

@@ -2,12 +2,14 @@ import { getSizeClass } from "../Utils/Utils";
 import { DAYS } from "../Utils/dateUtilities";
 import DuelClockInput from "../Components/DuelClockInput";
 import { useEffect, useState } from "react";
+import Button from "../Components/Button";
+import { X } from "lucide-react";
 
 export default function useModal({
 	name,
 	modalFields = {},
 	validate,
-	onChange=()=>{},
+	onChange = () => {},
 }) {
 	const [modalConfig, setModalConfig] = useState({
 		name: name,
@@ -247,11 +249,13 @@ export default function useModal({
 							{isNewObject ? "Add" : "Edit"} {modalConfig.name}
 						</h5>
 
-						<button
+						<Button
 							type="button"
-							className="btn-close m-0"
 							onClick={closeModal}
-						/>
+							variant="normal"
+						>
+							<X></X>
+						</Button>
 					</div>
 
 					<div className="modal-body">
@@ -263,18 +267,17 @@ export default function useModal({
 									{errors.saveWarning}
 								</p>
 							)}
-							<button
+							<Button
 								type="button"
-								className="btn btn-secondary"
+								variant="secondary"
 								onClick={closeModal}
 								disabled={modalConfig.mutation?.isPending}
 							>
 								Cancel
-							</button>
+							</Button>
 
-							<button
+							<Button
 								type="button"
-								className="btn btn-primary"
 								onClick={submit}
 								disabled={
 									modalConfig.mutation?.isPending ||
@@ -286,7 +289,7 @@ export default function useModal({
 									: isNewObject
 										? "Add"
 										: "Edit"}
-							</button>
+							</Button>
 						</div>
 					</div>
 				</div>

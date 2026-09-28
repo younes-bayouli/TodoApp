@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { formatDate } from "../../Utils/dateUtilities";
+import Button from "../../Components/Button";
+import { X } from "lucide-react";
 
 const priorityStyles = {
 	high: { label: "High", dot: "#B54545" },
@@ -92,18 +94,19 @@ function ProjectDetail({
 						<div>
 							<h3>project: {project.name}</h3>
 						</div>
-						<button
+						<Button
 							type="button"
 							onClick={() => setShowDeleteDialog(true)}
+							variant="danger-secondary"
 						>
 							Delete Project
-						</button>
+						</Button>
 					</div>
 					<div>
 						<small>Due: {formatDate(project.deadline)}</small>
-						<div onClick={onModifyProject}>Modify Project</div>
+						<Button variant="secondary" onClick={onModifyProject}>Modify Project</Button>
 
-						<div onClick={onBack}>Back to Projects</div>
+						<Button variant="secondary" onClick={onBack}>Back to Projects</Button>
 					</div>
 				</div>
 
@@ -149,13 +152,14 @@ function ProjectDetail({
 							<div>
 								<div>
 									<h5>Delete project?</h5>
-									<button
+									<Button
 										type="button"
+										variant="ghost"
 										onClick={() =>
 											setShowDeleteDialog(false)
 										}
 										aria-label="Close"
-									></button>
+									><X></X></Button>
 								</div>
 								<div>
 									<p>
@@ -166,21 +170,22 @@ function ProjectDetail({
 									</p>
 								</div>
 								<div>
-									<button
+									<Button
 										type="button"
 										onClick={() =>
 											setShowDeleteDialog(false)
 										}
+										variant="secondary"
 									>
 										Cancel
-									</button>
-									<button
+									</Button>
+									<Button
 										type="button"
-										className="btn btn-danger"
+										variant="danger"
 										onClick={handleConfirmDelete}
 									>
 										Delete Project
-									</button>
+									</Button>
 								</div>
 							</div>
 						</div>
@@ -218,12 +223,13 @@ function ProjectDetail({
 											{todo.title}
 										</span>
 									</div>
-									<button
+									<Button
 										type="button"
+										variant="danger-ghost"
 										onClick={() => deleteTodo(todo.id)}
 									>
 										Delete
-									</button>
+									</Button>
 									<span>
 										<span />
 										{priority.label}

@@ -19,6 +19,7 @@ import { usePosition } from "../../hooks/usePosition";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api";
 import { useAppContext } from "../../Context";
+import Button from "../../Components/Button.jsx";
 
 const validateForm = (Task) => {
 	const newErrors = {};
@@ -144,7 +145,7 @@ function Myeveryday() {
 									{DAYS[chosenDay]}
 									{chosenDay === currentDayIndex && ")"}
 								</div>
-								<div
+								<Button
 									aria-label="Previous day"
 									onClick={() =>
 										setChosenDay(
@@ -153,29 +154,32 @@ function Myeveryday() {
 												DAYS.length,
 										)
 									}
+									variant="secondary"
 								>
 									<Arrow deg={90} />
-								</div>
-								<div
+								</Button>
+								<Button
 									aria-label="Next day"
 									onClick={() =>
 										setChosenDay(
 											(day) => (day + 1) % DAYS.length,
 										)
 									}
+									variant="secondary"
 								>
 									<Arrow deg={-90} />
-								</div>
+								</Button>
 							</div>
-							<div
+							<Button
 								onClick={() => {
 									addTask(
 										current ? current.end : currentTime,
 									);
 								}}
+								variant="secondary"
 							>
 								Add Task
-							</div>
+							</Button>
 						</div>
 					</div>
 				</div>

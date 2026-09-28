@@ -13,6 +13,7 @@ import { useDate } from "../../Utils/useTime.js";
 import useData from "../../Utils/useData.js";
 import useModal from "../../hooks/useModal.jsx";
 import DayEvents from "./DayEvents.jsx";
+import Button from "../../Components/Button.jsx";
 
 const nullPlan = {
 	title: "",
@@ -208,25 +209,28 @@ function Calendar() {
 				</div>
 				<div>
 					<div role="group">
-						<div
+						<Button
 							onClick={() => calendarRef.current?.getApi().prev()}
+							variant="secondary"
 						>
 							<Arrow deg={90} />
-						</div>
-						<div
+						</Button>
+						<Button
 							onClick={() => calendarRef.current?.getApi().next()}
+							variant="secondary"
 						>
 							<Arrow deg={-90} />
-						</div>
-						<div
+						</Button>
+						<Button
 							type="button"
 							onClick={() =>
 								calendarRef.current?.getApi().today()
 							}
+							variant="secondary"
 						>
 							Today
-						</div>
-						<div
+						</Button>
+						<Button
 							type="button"
 							onClick={() =>
 								planModal.openModal({
@@ -234,11 +238,12 @@ function Calendar() {
 									mutation: createEventMutation,
 								})
 							}
+							variant="secondary"
 						>
 							Make a Plan
-						</div>
+						</Button>
 					</div>
-					<div>
+					<Button variant="secondary">
 						<input
 							type="month"
 							style={{
@@ -247,7 +252,7 @@ function Calendar() {
 							value={selectedMonth}
 							onChange={changeMonth}
 						/>
-					</div>
+					</Button>
 				</div>
 			</header>
 

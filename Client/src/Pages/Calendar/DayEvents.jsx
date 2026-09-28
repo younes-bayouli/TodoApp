@@ -1,3 +1,5 @@
+import Button from "../../Components/Button";
+
 export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEventMutation}) {
 	return (
 		<div>
@@ -7,16 +9,17 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 					<p>Events for this day</p>
 				</div>
 				<div>
-					<div
+					<Button
 						onClick={addEvent}
 					>
 						Add event
-					</div>
-					<div
+					</Button>
+					<Button
 						onClick={onBack}
+						variant="secondary"
 					>
 						Back to calendar
-					</div>
+					</Button>
 				</div>
 			</div>
 			<div>
@@ -35,23 +38,25 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 								<span>{calendarEvent.title}</span>
 							</div>
 							<div>
-								<button
+								<Button
 									type="button"
 									onClick={()=>editEvent(calendarEvent)}
+									variant="secondary"
 								>
 									Edit
-								</button>
-								<button
+								</Button>
+								<Button
 									type="button"
 									onClick={() =>
 										deleteEventMutation.mutate(calendarEvent.id)
 									}
+									variant="secondary"
 									disabled={deleteEventMutation.isPending}
 								>
 									{deleteEventMutation.isPending
 										? "Deleting..."
 										: "Delete"}
-								</button>
+								</Button>
 							</div>
 						</div>
 					))

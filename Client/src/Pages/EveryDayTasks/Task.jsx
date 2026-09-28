@@ -4,6 +4,7 @@ import {
 	timeDifferenceInMinutes,
 } from "../../Utils/timeUtilities";
 import trash from "../../assets/icons/trash.png";
+import Button from "../../Components/Button";
 
 export default function Task({ task, onClick, onDelete,style }) {
 	const [tooltip, setTooltip] = useState(false);
@@ -49,14 +50,15 @@ export default function Task({ task, onClick, onDelete,style }) {
 			{!tooltip && <>{task.title}</>}
 			{tooltip && (
 				<>
-					<button
+					<Button
 						type="button"
 						onClick={handleDelete}
 						aria-label={`Delete ${task.title}`}
 						title="Delete task"
+						variant="ghost"
 					>
 						<img src={trash} alt="Delete" />
-					</button>
+					</Button>
 					<h4>{task.title}</h4>
 					<p>{task.details}</p>
 				</>
