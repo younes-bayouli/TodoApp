@@ -3,7 +3,8 @@ import { DAYS } from "../Utils/dateUtilities";
 import DuelClockInput from "../Components/DuelClockInput";
 import { useEffect, useState } from "react";
 import Button from "../Components/Button";
-import { X } from "lucide-react";
+import AppModal from "../Components/Modal";
+
 
 export default function useModal({
 	name,
@@ -234,67 +235,46 @@ export default function useModal({
 		setVisible(true);
 	};
 
-	const Modal = visible && (
-		<div
-			className="modal show d-block bg-light bg-opacity-50 position-fixed d-flex align-items-center justify-content-center"
-			onClick={closeModal}
-		>
-			<div
-				className="modal-dialog w-50"
-				onClick={(e) => e.stopPropagation()}
-			>
-				<div className="modal-content">
-					<div className="modal-header p-3 justify-content-between">
-						<h5 className="modal-title">
-							{isNewObject ? "Add" : "Edit"} {modalConfig.name}
-						</h5>
+	const Modal = (
+		<AppModal
+			isOpen={visible}
+			onClose={closeModal}
+			title={`${isNewObject ? "Add" : "Edit"} ${modalConfig.name}`}
+			footer={
+				<div className="w-100 d-flex gap-2 justify-content-end">
+					{errors.saveWarning && (
+						<p className="text-danger mt-1 mb-0 me-auto">
+							{errors.saveWarning}
+						</p>
+					)}
+					<Button
+						type="button"
+						variant="secondary"
+						onClick={closeModal}
+						disabled={modalConfig.mutation?.isPending}
+					>
+						Cancel
+					</Button>
 
-						<Button
-							type="button"
-							onClick={closeModal}
-							variant="normal"
-						>
-							<X></X>
-						</Button>
-					</div>
-
-					<div className="modal-body">
-						{fields}
-
-						<div className="mt-4 d-flex gap-2 justify-content-end">
-							{errors.saveWarning && (
-								<p className="text-danger mt-1 mb-0">
-									{errors.saveWarning}
-								</p>
-							)}
-							<Button
-								type="button"
-								variant="secondary"
-								onClick={closeModal}
-								disabled={modalConfig.mutation?.isPending}
-							>
-								Cancel
-							</Button>
-
-							<Button
-								type="button"
-								onClick={submit}
-								disabled={
-									modalConfig.mutation?.isPending ||
-									errors.saveWarning
-								}
-							>
-								{modalConfig.mutation?.isPending
-									? "Saving..."
-									: isNewObject
-										? "Add"
-										: "Edit"}
-							</Button>
-						</div>
-					</div>
+					<Button
+						type="button"
+						onClick={submit}
+						disabled={
+							modalConfig.mutation?.isPending ||
+							errors.saveWarning
+						}
+					>
+						{modalConfig.mutation?.isPending
+							? "Saving..."
+							: isNewObject
+								? "Add"
+								: "Edit"}
+					</Button>
 				</div>
-			</div>
-		</div>
+			}
+		>
+			{fields}
+		</AppModal>
 	);
 
 	return {
