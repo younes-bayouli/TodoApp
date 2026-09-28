@@ -210,3 +210,53 @@ body {
 	align-items: center;
 	margin-right: var(--space-2);
 }
+
+/* =========================
+   Card
+   ========================= */
+
+.app-card {
+	border: 1px solid transparent;
+	border-radius: var(--radius-md);
+	background-color: var(--color-surface);
+	transition:
+		background-color var(--transition-fast),
+		border-color var(--transition-fast),
+		box-shadow var(--transition-fast);
+}
+
+/* Sizes (padding) */
+
+.app-card-small {
+	padding: var(--space-2);
+}
+
+.app-card-medium {
+	padding: var(--space-4);
+}
+
+.app-card-large {
+	padding: var(--space-6);
+}
+
+/* Variants */
+
+.app-card-default {
+	border-color: var(--color-border);
+	box-shadow: var(--shadow-sm);
+}
+
+.app-card-elevated {
+	border-color: transparent;
+	box-shadow: var(--shadow-md);
+}
+
+.app-card-outline {
+	background-color: transparent;
+	border-color: var(--color-border);
+}
+
+.app-card-subtle {
+	background-color: var(--color-surface-subtle);
+	border-color: var(--color-border-subtle);
+}
