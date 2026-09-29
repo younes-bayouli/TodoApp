@@ -2,6 +2,7 @@ import { useState } from "react";
 import { formatDate } from "../../Utils/dateUtilities";
 import Button from "../../Components/Button";
 import EmptyState from "../../Components/EmptyState";
+import QuickAddForm from "../../Components/QuickAddForm";
 import { X } from "lucide-react";
 
 const priorityStyles = {
@@ -19,8 +20,6 @@ function ProjectDetail({
 	deleteProjectMutation,
 	onModifyProject,
 }) {
-	const [newTodoTitle, setNewTodoTitle] = useState("");
-	const [newTodoPriority, setNewTodoPriority] = useState("medium");
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
 	const toggleTodo = (todoId) => {
@@ -58,15 +57,12 @@ function ProjectDetail({
 		return priorityOrder[a.priority] - priorityOrder[b.priority];
 	});
 
-	const handleAddTodo = (e) => {
-		e.preventDefault();
-		if (!newTodoTitle.trim()) return;
-		const id = new Date().getMilliseconds();
+	const handleAddTodo = ({ title, priority }) => {
 		const newTodo = {
-			id: id,
-			title: newTodoTitle.trim(),
+			id: new Date().getMilliseconds(),
+			title,
 			completed: false,
-			priority: newTodoPriority,
+			priority,
 		};
 		const updatedProject = {
 			...project,
@@ -77,8 +73,6 @@ function ProjectDetail({
 			Id: project.id,
 			Data: updatedProject,
 		});
-		setNewTodoTitle("");
-		setNewTodoPriority("medium");
 	};
 
 	const handleConfirmDelete = () => {
@@ -114,36 +108,11 @@ function ProjectDetail({
 				<div>
 					<div>
 						<h6>Add New Todo</h6>
-						<form onSubmit={handleAddTodo}>
-							<div>
-								<div>
-									<input
-										type="text"
-										placeholder="What needs to be done?"
-										value={newTodoTitle}
-										onChange={(e) =>
-											setNewTodoTitle(e.target.value)
-										}
-									/>
-								</div>
-
-								<div>
-									<select
-										value={newTodoPriority}
-										onChange={(e) =>
-											setNewTodoPriority(e.target.value)
-										}
-									>
-										<option value="high">High</option>
-										<option value="medium">Medium</option>
-										<option value="low">Low</option>
-									</select>
-								</div>
-								<div>
-									<button type="submit">Add</button>
-								</div>
-							</div>
-						</form>
+						<QuickAddForm
+							onSubmit={({ title, priority }) =>
+								handleAddTodo({ title, priority })
+							}
+						/>
 					</div>
 				</div>
 

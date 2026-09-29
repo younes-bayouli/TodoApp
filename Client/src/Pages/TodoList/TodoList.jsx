@@ -4,6 +4,8 @@ import useModal from "../../hooks/useModal.jsx";
 import PageHeader from "../../Components/PageHeader.jsx";
 import EmptyState from "../../Components/EmptyState.jsx";
 import Todo from "../../Components/Todo.jsx";
+import QuickAddForm from "../../Components/QuickAddForm.jsx";
+import FilterTabs from "../../Components/FilterTabs.jsx";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
@@ -56,8 +58,6 @@ function TodoList() {
 		validate: validateForm,
 	});
 	const [filter, setFilter] = useState("All");
-	const [title, setTitle] = useState("");
-	const [priority, setPriority] = useState("medium");
 
 	const visibleTasks = tasks
 		?.filter((task) => {
@@ -80,20 +80,15 @@ function TodoList() {
 
 	const openCount = tasks?.filter((task) => !task.completed).length;
 
-	const addTask = (event) => {
-		event.preventDefault();
-		const trimmedTitle = title.trim();
-		if (!trimmedTitle) return;
-
+	const addTask = ({ title, priority }) => {
 		addTaskMutation.mutate({
 			Data: {
-				title: trimmedTitle,
+				title,
 				details: "",
-				priority: priority,
+				priority,
 				completed: false,
 			},
 		});
-		setTitle("");
 	};
 
 	const toggleTask = (taskId) => {
@@ -120,43 +115,13 @@ function TodoList() {
 				description={`${openCount} open`}
 			/>
 
-			<form onSubmit={addTask}>
-				<input
-					value={title}
-					placeholder="What needs to be done?"
-					onChange={(event) => setTitle(event.target.value)}
-				/>
-				<select
-					className="app-priority-select"
-					value={priority}
-					aria-label="Task priority"
-					onChange={(event) => setPriority(event.target.value)}
-				>
-					<option value="high">High</option>
-					<option value="medium">Medium</option>
-					<option value="low">Low</option>
-				</select>
-				<button
-					type="submit"
-				>
-					Add
-				</button>
-			</form>
+			<QuickAddForm onSubmit={({ title, priority }) => addTask({ title, priority })} />
 
-			<div>
-				<ul>
-					{filters.map((filterName) => (
-						<li key={filterName}>
-							<button
-								type="button"
-								onClick={() => setFilter(filterName)}
-							>
-								{filterName}
-							</button>
-						</li>
-					))}
-				</ul>
-			</div>
+			<FilterTabs
+				options={filters}
+				value={filter}
+				onChange={setFilter}
+			/>
 
 			<div>
 				{visibleTasks?.length ? (

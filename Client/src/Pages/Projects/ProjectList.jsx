@@ -1,7 +1,4 @@
-import { useAppContext } from "../../Context";
 import ProjectCard from "./ProjectCard";
-import EmptyState from "../../Components/EmptyState";
-import Button from "../../Components/Button";
 
 function ProjectList({ projects, onClick, onOpenAddProject }) {
 	return (

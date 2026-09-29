@@ -621,6 +621,59 @@ body {
 }
 
 /* =========================
+   FilterTabs
+   ========================= */
+
+.app-filter-tabs {
+    display: flex;
+    gap: var(--space-1);
+    flex-wrap: wrap;
+}
+
+.app-filter-tabs button {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    text-transform: capitalize;
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.app-filter-tabs button:hover {
+    background-color: var(--color-surface-subtle);
+    color: var(--color-text);
+}
+
+.app-filter-tabs button.active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+    font-weight: var(--font-weight-medium);
+}
+
+/* =========================
+   QuickAddForm
+   ========================= */
+
+.app-quick-add {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.app-quick-add .app-input {
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+/* =========================
    TodoList
    ========================= */
 

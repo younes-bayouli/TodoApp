@@ -4,6 +4,7 @@ import ProjectDetail from "./ProjectDetail";
 import useData from "../../Utils/useData";
 import useModal from "../../hooks/useModal.jsx";
 import PageHeader from "../../Components/PageHeader.jsx";
+import FilterTabs from "../../Components/FilterTabs.jsx";
 
 const normalise = (project) => {
 	return {
@@ -129,25 +130,11 @@ function Projects() {
 				description={`${filteredProjects?.length || 0} projects`}
 			/>
 
-			<div>
-				<ul>
-					{["all", "active", "completed"].map((filterOption) => (
-						<li key={filterOption}>
-							<button
-								type="button"
-								className={`${
-									filter === filterOption
-										? "alert-primary"
-										: "alert-light"
-								}`}
-								onClick={() => setFilter(filterOption)}
-							>
-								{filterOption}
-							</button>
-						</li>
-					))}
-				</ul>
-			</div>
+			<FilterTabs
+				options={["all", "active", "completed"]}
+				value={filter}
+				onChange={setFilter}
+			/>
 
 			<ProjectList
 				onClick={openDetails}
