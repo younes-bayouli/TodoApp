@@ -4,6 +4,7 @@ import dhuhrIcon from "../../assets/icons/prayerIcons/dhuhr.png";
 import asrIcon from "../../assets/icons/prayerIcons/asr.png";
 import maghribIcon from "../../assets/icons/prayerIcons/ma8rib.png";
 import ishaIcon from "../../assets/icons/prayerIcons/isha.png";
+import Card from "../Card";
 
 const prayerLabels = {
 	fajr: "Fajr",
@@ -25,28 +26,30 @@ const prayerIcons = {
 
 function PrayerTimesCard({ prayers = [] }) {
 	return (
-		<article>
-			<div>
+		<Card>
+			<article>
 				<div>
-					<p>Today</p>
-					<h2>Prayer times</h2>
+					<div>
+						<p>Today</p>
+						<h2>Prayer times</h2>
+					</div>
 				</div>
-			</div>
-			<div>
-				{Object.entries(prayers)
-					.slice(0, 7)
-					.filter((prayer) => prayer[0] !== "Sunset")
-					.map(([key, time]) => (
-						<div key={key}>
-							<div>
-								<img src={prayerIcons[key]} alt="" />
-								{prayerLabels[key] ?? key}
+				<div>
+					{Object.entries(prayers)
+						.slice(0, 7)
+						.filter((prayer) => prayer[0] !== "Sunset")
+						.map(([key, time]) => (
+							<div key={key}>
+								<div>
+									<img src={prayerIcons[key]} alt="" />
+									{prayerLabels[key] ?? key}
+								</div>
+								<time>{time}</time>
 							</div>
-							<time>{time}</time>
-						</div>
-					))}
-			</div>
-		</article>
+						))}
+				</div>
+			</article>
+		</Card>
 	);
 }
 

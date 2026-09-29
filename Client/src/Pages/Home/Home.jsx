@@ -71,24 +71,32 @@ function Home() {
 					) : null
 				}
 			/>
-			<section>
-				<div>
+			<section className="row g-3">
+				<div className="col-12 col-lg-4">
 					<TimeCard date={date} />
 				</div>
-				<div>
+				<div className="col-12 col-md-6 col-lg-4">
 					<IslamicDateCard date={date} />
+				</div>
+				<div className="col-12 col-md-6 col-lg-4">
 					<NextPrayerCard
 						prayers={prayers?.data.timings}
 						date={date}
 						small={true}
 					/>
 				</div>
-				<TaskStatusCard currentTask={current} nextTask={next} />
-				<div>
+				<div className="col-12 col-lg-4">
+					<TaskStatusCard currentTask={current} nextTask={next} />
+				</div>
+				<div className="col-12 col-lg-4">
 					<TodayEventsCard events={todaysEvents} date={date} />
+				</div>
+				<div className="col-12 col-lg-4">
 					<TodoPreviewCard todos={Todos} />
 				</div>
-				<PhotoGallery />
+				<div className="col-12">
+					<PhotoGallery />
+				</div>
 			</section>
 		</main>
 	);

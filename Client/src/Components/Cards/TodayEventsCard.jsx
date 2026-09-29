@@ -1,35 +1,36 @@
 import { formatDate } from "../../Utils/dateUtilities";
+import Card from "../Card";
 
 function TodayEventsCard({ events = [], date }) {
 	return (
-		<article>
-			<div>
+		<Card>
+			<article>
 				<div>
-					<p>Schedule</p>
-					<h2>Today&apos;s events</h2>
+					<div>
+						<p>Schedule</p>
+						<h2>Today&apos;s events</h2>
+					</div>
+					<span>{events.length}</span>
 				</div>
-				<span>{events.length}</span>
-			</div>
-			<p>{formatDate(date.toISOString())}</p>
-			{events.length > 0 ? (
-				<ul>
-					{events.map((event) => (
-						<li key={event.id}>
-							<span
-								style={{
-									backgroundColor: event.backgroundColor,
-								}}
-							/>
-							<span>{event.title}</span>
-						</li>
-					))}
-				</ul>
-			) : (
-				<p>
-					Nothing scheduled. Keep the day open.
-				</p>
-			)}
-		</article>
+				<p>{formatDate(date.toISOString())}</p>
+				{events.length > 0 ? (
+					<ul>
+						{events.map((event) => (
+							<li key={event.id}>
+								<span
+									style={{
+										backgroundColor: event.backgroundColor,
+									}}
+								/>
+								<span>{event.title}</span>
+							</li>
+						))}
+					</ul>
+				) : (
+					<p>Nothing scheduled. Keep the day open.</p>
+				)}
+			</article>
+		</Card>
 	);
 }
 

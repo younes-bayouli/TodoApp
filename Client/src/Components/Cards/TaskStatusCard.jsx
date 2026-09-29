@@ -1,3 +1,5 @@
+import Card from "../Card";
+
 function TaskStatusCard({ currentTask, nextTask }) {
 	const renderTask = (label, task) => (
 		<div>
@@ -16,13 +18,13 @@ function TaskStatusCard({ currentTask, nextTask }) {
 	);
 
 	return (
-		<div>
+		<Card>
 			<div>
 				<h5>Tasks</h5>
 				{renderTask("Current task", currentTask)}
 				{renderTask("Next task", nextTask)}
 			</div>
-		</div>
+		</Card>
 	);
 }
 

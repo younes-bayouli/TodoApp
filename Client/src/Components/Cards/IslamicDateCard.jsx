@@ -1,11 +1,13 @@
-export const islamicDateToParts =(date)=>{
+import Card from "../Card";
+
+export const islamicDateToParts = (date) => {
 	return new Intl.DateTimeFormat("en", {
 		calendar: "islamic",
 		day: "numeric",
 		month: "long",
 		year: "numeric",
-	}).formatToParts(date)
-}
+	}).formatToParts(date);
+};
 
 function IslamicDateCard({ date }) {
 	const parts = islamicDateToParts(date);
@@ -14,11 +16,13 @@ function IslamicDateCard({ date }) {
 	const year = parts.find((part) => part.type === "year")?.value;
 
 	return (
-		<div>
-			<div>{day}</div>
-			<h2>{month}</h2>
-			<p>{year} AH</p>
-		</div>
+		<Card>
+			<div>
+				<div>{day}</div>
+				<h2>{month}</h2>
+				<p>{year} AH</p>
+			</div>
+		</Card>
 	);
 }
 

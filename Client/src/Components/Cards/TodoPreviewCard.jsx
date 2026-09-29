@@ -1,3 +1,5 @@
+import Card from "../Card";
+
 const priorityColors = {
 	high: "#b54545",
 	medium: "#b08a3e",
@@ -5,45 +7,43 @@ const priorityColors = {
 };
 
 function TodoPreviewCard({ todos = [], limit = 3 }) {
+	const openCount = todos.filter((todo) => !todo.completed).length;
 	const visibleTodos = todos
-		.filter((todo) => !todo.completed && todo.priority==="high")
+		.filter((todo) => !todo.completed && todo.priority === "high")
 		.slice(0, limit);
 
 	return (
-		<article>
-			<div>
+		<Card>
+			<article>
 				<div>
-					<p>Focus list</p>
-					<h2>Open todos</h2>
+					<div>
+						<p>Focus list</p>
+						<h2>Open todos</h2>
+					</div>
+					<span>{openCount}</span>
 				</div>
-				<span>
-					{todos.filter((todo) => !todo.completed).length}
-				</span>
-			</div>
-			<ul>
-				{visibleTodos.length > 0 ? (
-					visibleTodos.map((todo) => (
-						<li key={todo.id}>
-							<span
-								style={{
-									backgroundColor:
-										priorityColors[todo.priority],
-								}}
-							/>
-							<span>{todo.title}</span>
-						</li>
-					))
-				) : (
-					<li>All clear for now.</li>
+				<ul>
+					{visibleTodos.length > 0 ? (
+						visibleTodos.map((todo) => (
+							<li key={todo.id}>
+								<span
+									style={{
+										backgroundColor:
+											priorityColors[todo.priority],
+									}}
+								/>
+								<span>{todo.title}</span>
+							</li>
+						))
+					) : (
+						<li>All clear for now.</li>
+					)}
+				</ul>
+				{visibleTodos.length < openCount && (
+					<p>+ more waiting in your list</p>
 				)}
-			</ul>
-			{visibleTodos.length <
-				todos.filter((todo) => !todo.completed).length && (
-				<p>
-					+ more waiting in your list
-				</p>
-			)}
-		</article>
+			</article>
+		</Card>
 	);
 }
 

@@ -1,21 +1,24 @@
 import { format } from "../../Utils/timeUtilities";
+import Card from "../Card";
 
 export default function TimeDisplay({ date }) {
-	const { hour24, hour12 } = format(date);
+	const { hour12 } = format(date);
 
 	return (
-		<div>
-			<div style={{ fontSize: "3rem" }}>
-				{hour12}
-			</div>
+		<Card>
 			<div>
-				{date.toLocaleDateString("en-US", {
-					weekday: "long",
-					year: "numeric",
-					month: "long",
-					day: "numeric",
-				})}
+				<div className="app-time-display">
+					{hour12}
+				</div>
+				<div>
+					{date.toLocaleDateString("en-US", {
+						weekday: "long",
+						year: "numeric",
+						month: "long",
+						day: "numeric",
+					})}
+				</div>
 			</div>
-		</div>
+		</Card>
 	);
 }

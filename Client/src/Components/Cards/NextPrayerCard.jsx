@@ -1,3 +1,5 @@
+import Card from "../Card";
+
 function getPrayerDate(time, date, addDay = false) {
 	if (!time) {
 		return null;
@@ -39,12 +41,14 @@ function NextPrayerCard({ prayers, date, small = false, className = "" }) {
 	const label = nextPrayer.name[0].toUpperCase() + nextPrayer.name.slice(1);
 
 	return (
-		<div>
-			<p>Up next</p>
-			<h2>{label}</h2>
-			{small && <h4 aria-label="Time remaining">{countdown}</h4>}
-			{!small && <h1 aria-label="Time remaining">{countdown}</h1>}
-		</div>
+		<Card padding={small ? "small" : "medium"} className={className}>
+			<div>
+				<p>Up next</p>
+				<h2>{label}</h2>
+				{small && <h4 aria-label="Time remaining">{countdown}</h4>}
+				{!small && <h1 aria-label="Time remaining">{countdown}</h1>}
+			</div>
+		</Card>
 	);
 }
 

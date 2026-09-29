@@ -239,6 +239,12 @@ body {
 	padding: var(--space-6);
 }
 
+/* PhotoCard-style cards: the image should reach the card edge, so the
+   card contributes surface only and the child owns the padding. */
+.app-card-none {
+	padding: 0;
+}
+
 /* Variants */
 
 .app-card-default {
@@ -259,6 +265,19 @@ body {
 .app-card-subtle {
 	background-color: var(--color-surface-subtle);
 	border-color: var(--color-border-subtle);
+}
+
+/* =========================
+   TimeCard
+   ========================= */
+
+/* The one place a display size above --font-size-xl is needed. A token
+   for it would be a value with a single consumer, so it stays literal
+   until something else needs the same size. */
+.app-time-display {
+    font-size: 3rem;
+    line-height: 1.1;
+    font-weight: var(--font-weight-semibold);
 }
 
 /* =========================
