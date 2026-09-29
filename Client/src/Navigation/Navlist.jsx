@@ -1,59 +1,59 @@
 import { NavLink } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
 import { useAppContext } from "../Context.jsx";
-import Button from "../Components/Button.jsx";
+import IconButton from "../Components/IconButton.jsx";
 
-const Navlist = ({ List }) => {
-	const {toggleTheme,theme}=useAppContext();
-	const isLightTheme=theme==="light"
+// Routes are written out, not derived from the label. The old
+// `label.toLowerCase().replace(/\s+/g, "")` coupling meant renaming a
+// label silently changed the URL it points at.
+const NAV_ITEMS = [
+	{ to: "/home", label: "Home", icon: "/Pages/home.png" },
+	{ to: "/todolist", label: "TODO list", icon: "/Pages/todolist.png" },
+	{ to: "/prayertimes", label: "Prayer Times", icon: "/Pages/prayertimes.png" },
+	{ to: "/projects", label: "Projects", icon: "/Pages/projects.png" },
+	{ to: "/myeveryday", label: "MyEveryday", icon: "/Pages/myeveryday.png" },
+	{ to: "/calender", label: "Calender", icon: "/Pages/calender.png" },
+];
+
+const Navlist = () => {
+	const { toggleTheme, theme } = useAppContext();
+	const nextTheme = theme === "light" ? "dark" : "light";
 
 	return (
-		<>
-			<NavLink
-				to="/"
-				style={{ cursor: "pointer" }}
-				end
-			>
-				<img src="logo.png" alt="" />
-				MyTODO
-			</NavLink>
-			<div>
-				{List.map((item, index) => {
-					const path = item.toLowerCase().replace(/\s+/g, "");
-					return (
+		<nav className="app-nav" aria-label="Main">
+			<div className="app-nav-inner">
+				<NavLink to="/" end className="app-nav-brand">
+					<img src="/logo.png" alt="" className="app-nav-brand-logo" />
+					MyTODO
+				</NavLink>
+
+				<div className="app-nav-links">
+					{NAV_ITEMS.map((item) => (
 						<NavLink
-							to={`/${path}`}
+							key={item.to}
+							to={item.to}
 							className={({ isActive }) =>
-								`${isActive ? "active" : ""}`
+								isActive ? "app-nav-link active" : "app-nav-link"
 							}
-							key={index}
 						>
-							<div></div>
-							<img
-								src={`./Pages/${item
-									.toLowerCase()
-									.replace(/\s+/g, "")}.png`}
-								alt=""
-							/>
-							{item}
+							<img src={item.icon} alt="" className="app-nav-link-icon" />
+							{item.label}
 						</NavLink>
-					);
-				})}
+					))}
+				</div>
+
+				<div className="app-nav-actions">
+					<IconButton
+						variant="secondary"
+						ariaLabel={`Switch to ${nextTheme} theme`}
+						title={`Switch to ${nextTheme} theme`}
+						onClick={toggleTheme}
+					>
+						{theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+					</IconButton>
+				</div>
 			</div>
-			<Button
-				type="button"
-				onClick={toggleTheme}
-				aria-label={
-					isLightTheme
-						? "Switch to dark theme"
-						: "Switch to light theme"
-				}
-				title={isLightTheme ? "Dark theme" : "Light theme"}
-				variant="secondary"
-			>
-				{isLightTheme ? <Moon size={18} /> : <Sun size={18} />}
-			</Button>
-		</>
+		</nav>
 	);
 };
 

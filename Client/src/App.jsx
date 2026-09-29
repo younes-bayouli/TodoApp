@@ -36,21 +36,12 @@ function App() {
 		return () => clearTimeout(timer);
 	}, [errors]);
 
-	const pagesList = [
-		"Home",
-		"TODO list",
-		"Prayer Times",
-		"Projects",
-		"MyEveryday",
-		"Calender",
-	];
 	return (
 		<>
 			<BrowserRouter>
-				<div>
-					<nav>
-						<Navlist List={pagesList}></Navlist>
-						{errors?.length > 0 && (
+				<div className="app-shell">
+					<Navlist />
+					{errors?.length > 0 && (
 							<div
 								style={{
 									position: "fixed",
@@ -74,8 +65,7 @@ function App() {
 								})}
 							</div>
 						)}
-					</nav>
-					<div>
+					<div className="app-content">
 						<Routes>
 							<Route path="/" element={<First />} />
 							<Route path="/home" element={<Home />} />
@@ -86,7 +76,7 @@ function App() {
 							<Route path="/todolist" element={<TodoList />} />
 							<Route path="/projects" element={<Projects />} />
 							<Route
-								path="/Myeveryday"
+								path="/myeveryday"
 								element={<EveryDayTasks />}
 							/>
 							<Route path="/calender" element={<Calendar />} />

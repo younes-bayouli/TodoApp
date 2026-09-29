@@ -375,3 +375,95 @@ body {
     color: var(--color-danger);
     border-color: var(--color-danger);
 }
+
+/* =========================
+   App shell
+   ========================= */
+
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.app-content {
+    flex-grow: 1;
+    min-width: 0;
+    padding: var(--space-4);
+}
+
+/* =========================
+   Navigation
+   ========================= */
+
+.app-nav {
+    width: 240px;
+    flex-shrink: 0;
+    background-color: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+}
+
+.app-nav-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+    height: 100%;
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-4);
+}
+
+.app-nav-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 var(--space-3);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.app-nav-brand-logo {
+    width: 28px;
+    height: 28px;
+}
+
+.app-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.app-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.app-nav-link:hover {
+    background-color: var(--color-surface-subtle);
+    color: var(--color-text);
+}
+
+.app-nav-link.active {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    font-weight: var(--font-weight-medium);
+}
+
+.app-nav-link-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.app-nav-actions {
+    margin-top: auto;
+    padding: 0 var(--space-3);
+}
+
