@@ -3,15 +3,8 @@ import { formatDate } from "../../Utils/dateUtilities";
 import Button from "../../Components/Button";
 import EmptyState from "../../Components/EmptyState";
 import QuickAddForm from "../../Components/QuickAddForm";
+import { getPriority, priorityOrder } from "../../Utils/priorities";
 import { X } from "lucide-react";
-
-const priorityStyles = {
-	high: { label: "High", dot: "#B54545" },
-	medium: { label: "Medium", dot: "#B08A3E" },
-	low: { label: "Low", dot: "#4B7A5A" },
-};
-
-const priorityOrder = { high: 0, medium: 1, low: 2 };
 
 function ProjectDetail({
 	onBack,
@@ -169,7 +162,7 @@ function ProjectDetail({
 				<div className="list-group list-group-flush border rounded">
 					{sortedTodos.length > 0 ? (
 						sortedTodos.map((todo) => {
-							const priority = priorityStyles[todo.priority];
+							const priority = getPriority(todo.priority);
 							return (
 								<div key={todo.id}>
 									<div
@@ -200,8 +193,11 @@ function ProjectDetail({
 									>
 										Delete
 									</Button>
-									<span>
-										<span />
+									<span className="d-flex align-items-center gap-2">
+										<span
+											className="app-list-dot"
+											style={{ backgroundColor: priority.color }}
+										/>
 										{priority.label}
 									</span>
 								</div>

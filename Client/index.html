@@ -10,10 +10,15 @@
 		<div id="root"></div>
 		<script>
 			const savedTheme = localStorage.getItem("theme");
-			document.documentElement.dataset.theme =
+			const theme =
 				savedTheme === "dark" || savedTheme === "light"
 					? savedTheme
 					: "light";
+			// Both attributes are needed: ours (data-theme) drives the
+			// design tokens, Bootstrap's (data-bs-theme) drives its own
+			// components. Set before first paint to avoid a flash.
+			document.documentElement.dataset.theme = theme;
+			document.documentElement.dataset.bsTheme = theme;
 		</script>
 		<script type="module" src="/src/main.jsx"></script>
 	</body>

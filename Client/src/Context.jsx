@@ -50,8 +50,14 @@ export function AppProvider({ children }) {
 		return isTheme(savedTheme) ? savedTheme : "light";
 	});
 	const setTheme = (nextTheme) => {
-		if (isTheme(nextTheme)) setThemeState(nextTheme);
+		if (!isTheme(nextTheme) || nextTheme === theme) return;
+		// Transitions are enabled only for the swap, never on first
+		// paint, so the page does not fade in from white on load.
+		const root = document.documentElement;
+		root.classList.add("theme-transition");
+		setThemeState(nextTheme);
 	};
+	const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
 	const addError = (error) => dispatch({ type: "ADD", payload: error });
 	const queryClient = useQueryClient();
 	const { data: settings, error: settingsError } = useQuery({
@@ -68,6 +74,21 @@ export function AppProvider({ children }) {
 	useEffect(() => {
 		localStorage.setItem("theme", theme);
 		document.documentElement.dataset.theme = theme;
+		// Bootstrap 5.3 keys its own theming off data-bs-theme. Setting
+		// both here keeps Bootstrap's components in step with ours.
+		document.documentElement.dataset.bsTheme = theme;
+	}, [theme]);
+
+	useEffect(() => {
+		if (!theme) return undefined;
+		// Drop the transition class once the fade finishes, so normal
+		// hover transitions are not overridden for the rest of the
+		// session.
+		const timer = setTimeout(
+			() => document.documentElement.classList.remove("theme-transition"),
+			300,
+		);
+		return () => clearTimeout(timer);
 	}, [theme]);
 
 	useEffect(() => {
@@ -85,10 +106,7 @@ export function AppProvider({ children }) {
 				nbrErr,
 				theme,
 				setTheme,
-				toggleTheme: () =>
-					setThemeState((currentTheme) =>
-						currentTheme === "light" ? "dark" : "light",
-					),
+				toggleTheme,
 				settings,
 				updateSettings: updateSettingsMutation.mutate,
 			}}

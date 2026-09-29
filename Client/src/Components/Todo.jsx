@@ -3,15 +3,10 @@ import { Trash2, Pencil } from "lucide-react";
 import Card from "./Card";
 import Badge from "./Badge";
 import IconButton from "./IconButton";
-
-const priorityStyles = {
-    high: { label: "High", variant: "danger" },
-    medium: { label: "Medium", variant: "warning" },
-    low: { label: "Low", variant: "success" },
-};
+import { getPriority } from "../Utils/priorities";
 
 function Todo({ todo, onToggle, onRemove, onEdit }) {
-    const priority = priorityStyles[todo.priority] || { label: todo.priority, variant: "default" };
+    const priority = getPriority(todo.priority);
 
     return (
         <Card

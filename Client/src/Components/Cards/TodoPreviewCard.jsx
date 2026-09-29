@@ -1,10 +1,5 @@
 import Card from "../Card";
-
-const priorityColors = {
-	high: "#b54545",
-	medium: "#b08a3e",
-	low: "#4b7a5a",
-};
+import { getPriority } from "../../Utils/priorities";
 
 function TodoPreviewCard({ todos = [], limit = 3 }) {
 	const openCount = todos.filter((todo) => !todo.completed).length;
@@ -28,7 +23,9 @@ function TodoPreviewCard({ todos = [], limit = 3 }) {
 							<li key={todo.id}>
 								<span
 									className="app-list-dot"
-									style={{ backgroundColor: priorityColors[todo.priority] }}
+									style={{
+										backgroundColor: getPriority(todo.priority).color,
+									}}
 								/>
 								<span>{todo.title}</span>
 							</li>
