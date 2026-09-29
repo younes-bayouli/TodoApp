@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Todo from "./Todo.jsx";
 import useData from "../../Utils/useData.js";
 import useModal from "../../hooks/useModal.jsx";
 import PageHeader from "../../Components/PageHeader.jsx";
 import EmptyState from "../../Components/EmptyState.jsx";
+import Todo from "../../Components/Todo.jsx";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
@@ -163,7 +163,7 @@ function TodoList() {
 					visibleTasks.map((task) => (
 						<Todo
 							key={task.id}
-							task={task}
+							todo={task}
 							onToggle={toggleTask}
 							onRemove={removeTask}
 							onEdit={(task)=>openModal({ object: task, mutation: updateTaskMutation })}
