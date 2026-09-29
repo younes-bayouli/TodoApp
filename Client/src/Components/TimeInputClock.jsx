@@ -52,8 +52,7 @@ export default function TimeInputClock({
 
 	return (
 		<div
-			style={{ fontSize: "1.8rem", fontWeight: "600" }}
-			className={`d-flex py-1 px-5 m-0 align-items-center justify-content-center ${className}`}
+			className={`app-clock d-flex py-1 px-5 m-0 align-items-center justify-content-center ${className}`}
 			onMouseEnter={() => setHovered(true)}
 			onMouseLeave={() => setHovered(false)}
 		>
@@ -66,8 +65,7 @@ export default function TimeInputClock({
 					cliCkable={activeButtons[0]}
 				></Arrow>
 				<span
-					className="h-50 d-flex align-items-center justify-content-center"
-					style={{ lineHeight: "1.8rem" }}
+					className="app-clock-value h-50 d-flex align-items-center justify-content-center"
 				>
 					{String(hours).padStart(2, "0")}
 				</span>
@@ -89,8 +87,7 @@ export default function TimeInputClock({
 				></Arrow>
 
 				<span
-					className="h-50 d-flex align-items-center justify-content-center"
-					style={{ lineHeight: "1.8rem" }}
+					className="app-clock-value h-50 d-flex align-items-center justify-content-center"
 				>
 					{String(minutes).padStart(2, "0")}
 				</span>

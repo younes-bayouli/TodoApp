@@ -63,18 +63,17 @@ function Schedule({
 				<div>
 					<Arrow
 						deg={90}
-						style={{ width: "5%", height: "10%" }}
 						onClick={scrollLeft}
 					></Arrow>
 					<div
-						style={{ paddingLeft: 20, position: "relative" }}
+						className="app-schedule-scroll"
 						ref={scrollRef}
 						onMouseEnter={() => setHovered(true)}
 						onMouseLeave={() => setHovered(false)}
 					>
 						<div
+							className="app-schedule-cursor"
 							style={{
-								zIndex: 3,
 								marginLeft: scrollRef.current?.scrollLeft - 20,
 							}}
 							onClick={() => {
@@ -162,7 +161,6 @@ function Schedule({
 					</div>
 					<Arrow
 						deg={-90}
-						style={{ width: "5%", height: "10%" }}
 						onClick={scrollRight}
 					></Arrow>
 				</div>

@@ -31,6 +31,7 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 						>
 							<div>
 								<span
+									className="app-list-dot"
 									style={{
 										backgroundColor:
 											calendarEvent.backgroundColor,
@@ -62,8 +63,8 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 						</div>
 					))
 				) : (
-					<EmptyState 
-						title="No events today" 
+					<EmptyState
+						title="No events today"
 						description="No events scheduled for this day."
 					/>
 				)}

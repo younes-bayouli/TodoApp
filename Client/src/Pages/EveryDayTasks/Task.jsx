@@ -31,18 +31,14 @@ export default function Task({ task, onClick, onDelete,style }) {
 		<div
 			onMouseEnter={() => openTooltip()}
 			onMouseLeave={() => closeTooltip()}
-
+			className={`app-schedule-task ${tooltip ? "app-schedule-task-open" : ""}`}
+			// marginLeft and width come from the task's times; the open
+			// variant's fixed width/height/z-index is in the class.
 			style={{
-				marginTop: 50,
 				marginLeft: (stringToMinutes(task.start) * 10) / 6,
 				width: tooltip
-					? 200
+					? undefined
 					: (timeDifferenceInMinutes(task.start, task.end) * 10) / 6,
-				minHeight: tooltip ? "50%" : "auto",
-				maxHeight: "80%",
-				zIndex: tooltip ? 554 : 4,
-				cursor: "default",
-				position: "relative",
 				...style,
 			}}
 			onClick={handleClick}

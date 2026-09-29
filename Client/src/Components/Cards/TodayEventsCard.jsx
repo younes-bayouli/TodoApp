@@ -18,9 +18,8 @@ function TodayEventsCard({ events = [], date }) {
 						{events.map((event) => (
 							<li key={event.id}>
 								<span
-									style={{
-										backgroundColor: event.backgroundColor,
-									}}
+									className="app-list-dot"
+									style={{ backgroundColor: event.backgroundColor }}
 								/>
 								<span>{event.title}</span>
 							</li>

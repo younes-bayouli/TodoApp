@@ -65,7 +65,7 @@ function Home() {
 				description={
 					location ? (
 						<span className="d-flex align-items-center gap-1">
-							<img src={pinLocation} alt="" style={{ width: '16px', height: '16px' }} />
+							<img src={pinLocation} alt="" className="app-icon-inline" />
 							{formatLocation(location)}
 						</span>
 					) : null

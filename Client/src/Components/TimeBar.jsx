@@ -11,12 +11,14 @@ function TimeBar({
 	return (
 		<div
 			onClick={onClick}
-			style={{ width: "0px", marginLeft: LeftMargin, position: position }}
+			// marginLeft and position come from the caller's time
+			// calculation; width is always 0 and is in the class.
+			style={{ marginLeft: LeftMargin, position }}
+			className="app-time-bar"
 		>
 			<div className={`${theme} ${headStyle}`}>{time}</div>
 			<div
-				className={`${theme} ${barStyle}`}
-				style={{ border: borderStyle }}
+				className={`${theme} ${barStyle} app-time-bar-${borderStyle}`}
 			></div>
 		</div>
 	);

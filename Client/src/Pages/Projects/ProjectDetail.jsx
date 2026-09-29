@@ -205,7 +205,7 @@ function ProjectDetail({
 								<div key={todo.id}>
 									<div
 										onClick={() => toggleTodo(todo.id)}
-										style={{ cursor: "pointer" }}
+										className="app-clickable"
 									>
 										<input
 											type="checkbox"

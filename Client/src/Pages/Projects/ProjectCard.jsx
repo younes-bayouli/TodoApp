@@ -1,24 +1,16 @@
-import { useState } from "react";
 import { formatDate } from "../../Utils/dateUtilities";
 
-const PRIORITY_BADGES = {
-	high: "bg-danger",
-	medium: "bg-warning",
-	low: "bg-secondary",
-};
-
 function ProjectCard({ project, onClick }) {
-
 	return (
 		<div
+			className="app-clickable"
 			onClick={()=>onClick(project)}
 		>
+			{/* The accent color is per-project data; the border geometry
+			    is the same for every card, so only that lives in CSS. */}
 			<div
-				style={{
-					borderLeftColor: project.color,
-					borderLeftWidth: "4px",
-					borderLeftStyle: "solid",
-				}}
+				className="app-accent-left"
+				style={{ borderLeftColor: project.color }}
 			>
 				<h5>{project.name}</h5>
 			</div>

@@ -244,12 +244,7 @@ function Calendar() {
 					<Button variant="secondary" className="p-0 overflow-hidden">
 						<input
 							type="month"
-							style={{
-								border: "none",
-								background: "transparent",
-								padding: "0.375rem 0.75rem",
-								color: "inherit"
-							}}
+							className="app-month-input"
 							value={selectedMonth}
 							onChange={changeMonth}
 						/>

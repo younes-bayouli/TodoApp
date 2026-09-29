@@ -42,29 +42,20 @@ function App() {
 				<div className="app-shell">
 					<Navlist />
 					{errors?.length > 0 && (
-							<div
-								style={{
-									position: "fixed",
-									bottom: 0,
-									left: 0,
-									zIndex: 1000,
-								}}
-							>
-								{errors.map((error, index) => {
-									return (
-										<ErrorMessage
-											id={`error-${nbrErr-index}`}
-											className={`slide-left`}
-											key={index}
-											error={error}
-											onTransitionEnd={
-												removeError
-											}
-										/>
-									);
-								})}
-							</div>
-						)}
+						<div className="app-error-stack">
+							{errors.map((error, index) => {
+								return (
+									<ErrorMessage
+										id={`error-${nbrErr-index}`}
+										className={`slide-left`}
+										key={index}
+										error={error}
+										onTransitionEnd={removeError}
+									/>
+								);
+							})}
+						</div>
+					)}
 					<div className="app-content">
 						<Routes>
 							<Route path="/" element={<First />} />

@@ -1,20 +1,18 @@
 import React from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
-function ArrowH({ deg, onClick, className = "", cliCkable=true }) {
+function ArrowH({ deg, onClick, className = "", cliCkable = true }) {
 	return (
 		<ChevronDown
-			style={{
-				cursor: cliCkable?"pointer":"not-allowed",
-				rotate: `${deg}deg`,
-			}}
-			className={className}
+			// deg drives the rotation at runtime, so it stays inline;
+			// the cursor is a two-state prop and maps to a class.
+			style={{ rotate: `${deg}deg` }}
+			className={`${cliCkable ? "app-clickable" : ""} ${className}`}
 			alt=""
 			onClick={onClick}
 		/>
 	);
 }
-
 
 const Arrow = React.memo(ArrowH);
 

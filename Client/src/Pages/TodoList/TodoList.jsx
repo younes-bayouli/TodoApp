@@ -127,7 +127,7 @@ function TodoList() {
 					onChange={(event) => setTitle(event.target.value)}
 				/>
 				<select
-					style={{ maxWidth: "140px" }}
+					className="app-priority-select"
 					value={priority}
 					aria-label="Task priority"
 					onChange={(event) => setPriority(event.target.value)}

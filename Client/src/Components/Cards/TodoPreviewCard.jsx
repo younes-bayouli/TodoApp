@@ -27,10 +27,8 @@ function TodoPreviewCard({ todos = [], limit = 3 }) {
 						visibleTodos.map((todo) => (
 							<li key={todo.id}>
 								<span
-									style={{
-										backgroundColor:
-											priorityColors[todo.priority],
-									}}
+									className="app-list-dot"
+									style={{ backgroundColor: priorityColors[todo.priority] }}
 								/>
 								<span>{todo.title}</span>
 							</li>

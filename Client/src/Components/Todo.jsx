@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Trash2, Pencil } from "lucide-react";
 import Card from "./Card";
 import Badge from "./Badge";
@@ -12,24 +12,20 @@ const priorityStyles = {
 
 function Todo({ todo, onToggle, onRemove, onEdit }) {
     const priority = priorityStyles[todo.priority] || { label: todo.priority, variant: "default" };
-    const [hovered, setHovered] = useState(false);
 
     return (
-        <Card 
-            padding="small" 
-            className="mb-2 d-flex align-items-center gap-3"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+        <Card
+            padding="small"
+            className="app-row mb-2 d-flex align-items-center gap-3"
         >
             <input
                 type="checkbox"
-                className="form-check-input m-0"
+                className="form-check-input m-0 app-clickable"
                 checked={todo.completed}
                 aria-label={`Complete ${todo.title}`}
                 onChange={() => onToggle(todo.id)}
-                style={{ cursor: 'pointer' }}
             />
-            
+
             <div className="flex-grow-1 text-truncate">
                 <span className={todo.completed ? "text-decoration-line-through text-muted" : ""}>
                     {todo.title}
@@ -40,10 +36,9 @@ function Todo({ todo, onToggle, onRemove, onEdit }) {
                 {priority.label}
             </Badge>
 
-            <div 
-                className="d-flex gap-1 ms-2"
-                style={{ opacity: hovered ? 1 : 0, transition: "opacity 0.2s ease-in-out" }}
-            >
+            {/* Opacity is driven by .app-row:hover / :focus-within, so the
+                actions stay reachable by keyboard without a state flag. */}
+            <div className="app-row-actions">
                 <IconButton
                     size="small"
                     onClick={() => onEdit(todo)}
