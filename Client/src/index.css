@@ -33,6 +33,19 @@
 	--color-priority-medium: #b08a3e;
 	--color-priority-low: #4b7a5a;
 
+	/* Text that sits on --color-primary-light. Bootstrap's alert-primary
+	   uses pure black; a dark navy keeps the blue cast and clears AA. */
+	--color-primary-contrast: #08427e;
+
+	/* Timeline markers. Teal for prayer, indigo for sleep: both read as
+	   information rather than urgency, so neither competes with the red
+	   "now" bar or the primary task blocks. */
+	--color-marker-prayer: #0d9488;
+	--color-marker-sleep: #6366f1;
+	/* Text on the prayer fill. Separate from --color-white, which is
+	   redefined per theme and would be dark-on-teal in dark mode. */
+	--color-marker-contrast: #ffffff;
+
 	/* =========================
        Spacing
        ========================= */
@@ -136,6 +149,10 @@ body {
 	--color-priority-high: #e0685f;
 	--color-priority-medium: #d6a54a;
 	--color-priority-low: #6aa583;
+
+	--color-primary-contrast: #cfe2ff;
+	--color-marker-prayer: #2dd4bf;
+	--color-marker-sleep: #a5b4fc;
 
 	/* Shadows need more opacity to read against a dark surface. */
 	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -498,20 +515,23 @@ body {
    ========================= */
 
 .app-shell {
-    display: flex;
     min-height: 100vh;
 }
 
 .app-content {
     flex-grow: 1;
+    /* min-width: 0 lets wide pages (calendar, schedule) scroll rather
+       than forcing the whole shell wider than the viewport. */
     min-width: 0;
-    padding: var(--space-4);
+    padding: var(--space-3) var(--space-4) var(--space-6);
 }
 
 /* =========================
    Navigation
    ========================= */
 
+/* Desktop sidebar. Below lg this element is hidden by d-lg-flex and
+   the offcanvas takes over, so the width here needs no media query. */
 .app-nav {
     width: 240px;
     flex-shrink: 0;
@@ -527,6 +547,30 @@ body {
     height: 100%;
     padding-top: var(--space-4);
     padding-bottom: var(--space-4);
+}
+
+/* Mobile top bar */
+.app-mobile-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+.app-mobile-bar-title {
+    font-weight: var(--font-weight-semibold);
+}
+
+/* The offcanvas body already has Bootstrap's own padding; ours
+   supplies the height so the theme toggle can sit at the bottom. */
+.app-offcanvas .app-nav-inner {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .app-nav-brand {
@@ -655,10 +699,84 @@ body {
 .app-schedule-scroll {
     position: relative;
     padding-left: 20px;
+    /* Tasks are absolutely positioned inside the band, so the band
+       needs an explicit height or they collapse to zero. */
+    min-height: 64px;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* The band the task blocks sit in, below the hour grid and the
+   prayer/sleep markers. */
+.app-schedule-tasks {
+    position: relative;
+    margin-top: var(--space-5);
+    min-height: 44px;
 }
 
 .app-schedule-cursor {
     z-index: 3;
+}
+
+/* =========================
+   Timeline markers
+   ========================= */
+
+/* Prayer and sleep markers share a shape: a vertical rule through the
+   timeline with a label sitting on top of it. Position along the
+   timeline comes from marginLeft, which is computed from the time. */
+.app-schedule-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.app-schedule-marker::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    transform: translateX(-1px);
+}
+
+.app-schedule-marker span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-50%);
+    padding: 1px var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.app-schedule-marker-prayer::before {
+    background-color: var(--color-marker-prayer);
+}
+
+.app-schedule-marker-prayer span {
+    background-color: var(--color-marker-prayer);
+    color: var(--color-marker-contrast);
+}
+
+/* Sleep reuses the existing dark surface rather than a saturated fill,
+   so a long sleep window does not dominate the timeline. */
+.app-schedule-marker-sleep::before {
+    background-color: var(--color-marker-sleep);
+    opacity: 0.5;
+}
+
+.app-schedule-marker-sleep span {
+    background-color: var(--color-surface);
+    color: var(--color-marker-sleep);
+    border: 1px solid var(--color-marker-sleep);
 }
 
 /* =========================
@@ -678,22 +796,125 @@ body {
     border-style: solid;
 }
 
+/* The "now" indicator. Its label is the only fixed text on the
+   timeline, so it uses a token rather than Bootstrap's alert-danger. */
+.app-time-bar-now div {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1px var(--space-2);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background-color: var(--color-danger);
+    color: var(--color-marker-contrast);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.5;
+    white-space: nowrap;
+    z-index: 6;
+}
+
+/* The time under the cursor while dragging. Muted so it reads as
+   transient and does not compete with the "now" indicator. */
+.app-schedule-hover-time {
+    padding: 1px var(--space-2);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    color: var(--color-text-secondary);
+    border: 1px dashed var(--color-border);
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
 /* =========================
    Task (schedule block)
+
+   Follows Bootstrap's alert-primary: tinted background, matching
+   border, dark tinted text. Built from tokens so it follows the
+   theme rather than hardcoding Bootstrap's light-theme blue.
    ========================= */
 
 .app-schedule-task {
-    position: relative;
-    margin-top: 50px;
+    position: absolute;
+    top: 0;
+    margin-top: 0;
     max-height: 80%;
     cursor: default;
     z-index: 4;
+
+    display: flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-primary-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-contrast);
+
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.3;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition:
+        box-shadow var(--transition-fast),
+        transform var(--transition-fast);
 }
 
+.app-schedule-task:hover {
+    box-shadow: var(--shadow-md);
+    z-index: 5;
+}
+
+/* The expanded popover. Fixed width so it is readable regardless of
+   how long or short the task is. */
 .app-schedule-task-open {
-    width: 200px;
-    min-height: 50%;
+    width: 240px;
+    max-width: 80vw;
+    min-height: auto;
+    height: auto;
+    display: block;
+    padding: var(--space-3);
+    white-space: normal;
+    overflow: visible;
+    cursor: pointer;
     z-index: 554;
+    box-shadow: var(--shadow-md);
+}
+
+.app-schedule-task-open h4 {
+    margin: 0 0 var(--space-2);
+    padding-right: var(--space-5);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+}
+
+.app-schedule-task-open p {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-primary-contrast);
+    opacity: 0.85;
+}
+
+/* Delete button sits over the title, top-right. */
+.app-schedule-task-open .app-task-delete {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+}
+
+.app-schedule-task-time {
+    margin-bottom: var(--space-2) !important;
+    font-variant-numeric: tabular-nums;
+}
+
+.app-schedule-task-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /* =========================
@@ -712,6 +933,8 @@ body {
 .app-clock {
     font-size: 1.8rem;
     font-weight: var(--font-weight-semibold);
+    /* px-5 is 3rem a side, which overflows a narrow modal. */
+    max-width: 100%;
 }
 
 .app-clock-value {
@@ -775,8 +998,11 @@ body {
    TodoList
    ========================= */
 
+/* max-width caps it next to the title input; min-width: 0 lets it
+   shrink inside the wrapping flex row on a narrow screen. */
 .app-priority-select {
     max-width: 140px;
+    min-width: 0;
 }
 
 /* =========================

@@ -43,20 +43,27 @@ export default function Task({ task, onClick, onDelete,style }) {
 			}}
 			onClick={handleClick}
 		>
-			{!tooltip && <>{task.title}</>}
+			{!tooltip && (
+				<span className="app-schedule-task-label">{task.title}</span>
+			)}
 			{tooltip && (
 				<>
 					<Button
 						type="button"
+						className="app-task-delete"
 						onClick={handleDelete}
 						aria-label={`Delete ${task.title}`}
 						title="Delete task"
 						variant="ghost"
+						size="small"
 					>
-						<img src={trash} alt="Delete" />
+						<img src={trash} alt="" />
 					</Button>
 					<h4>{task.title}</h4>
-					<p>{task.details}</p>
+					<p className="app-schedule-task-time">
+						{task.start} &ndash; {task.end}
+					</p>
+					{task.details && <p>{task.details}</p>}
 				</>
 			)}
 		</div>

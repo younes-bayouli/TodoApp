@@ -90,10 +90,8 @@ function Schedule({
 						<StaticTimeBars />
 						<TimeBar
 							LeftMargin={(timeToMinutes(time) * 10) / 6}
-							headStyle={"shadow alert alert-danger p-0 m-0"}
-							barStyle={
-								"shadow alert alert-danger bg-danger border-0 p-0 m-0"
-							}
+							headStyle={"app-time-bar-now shadow p-0 m-0"}
+							barStyle={"shadow bg-danger border-0 p-0 m-0"}
 							time={format(time).hour24}
 						></TimeBar>
 						{Hovered && (
@@ -104,7 +102,7 @@ function Schedule({
 										scrollRef.current.scrollLeft,
 								)}
 								headStyle={
-									"alert alert-secondary border-0 text-opacity-25 p-0 m-0 position-relative z-3"
+									"border-0 text-opacity-25 p-0 m-0 position-relative z-3 app-schedule-hover-time"
 								}
 								barStyle={"border-1 border-light p-0 m-0"}
 								borderStyle={"dashed"}
@@ -129,6 +127,7 @@ function Schedule({
 							return (
 								<div
 									key={name}
+									className="app-schedule-marker app-schedule-marker-prayer"
 									style={{
 										marginLeft: (prayerMinutes * 10) / 6,
 									}}
@@ -140,6 +139,7 @@ function Schedule({
 						{sleepTimes.map(({ name, time: sleepTime }) => (
 							<div
 								key={name}
+								className="app-schedule-marker app-schedule-marker-sleep"
 								style={{
 									marginLeft:
 										(stringToMinutes(sleepTime) * 10) / 6,
@@ -148,7 +148,7 @@ function Schedule({
 								<span>{name}</span>
 							</div>
 						))}
-						<div>
+						<div className="app-schedule-tasks">
 							{Tasks.map((task) => (
 								<Task
 									task={task}
