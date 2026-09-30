@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import Arrow from "../../Components/Arrow.jsx";
-import PageHeader from "../../Components/PageHeader.jsx";
+import Arrow from "../../Components/Basic/Arrow.jsx";
+import PageHeader from "../../Components/Composite/PageHeader.jsx";
 import {
 	toMonthValue,
 	formatDay,
@@ -14,7 +14,7 @@ import { useDate } from "../../Utils/useTime.js";
 import useData from "../../Utils/useData.js";
 import useModal from "../../hooks/useModal.jsx";
 import DayEvents from "./DayEvents.jsx";
-import Button from "../../Components/Button.jsx";
+import Button from "../../Components/Composite/DuelClockInput.jsx";
 
 const nullPlan = {
 	title: "",
@@ -284,19 +284,12 @@ function Calendar() {
 			)}
 
 			{dayTooltip && (
-				<div
-					style={dayTooltip.position}
-					onMouseLeave={hideDayTooltip}
-				>
-					<div>
-						{formatDay(dayTooltip.date)}
-					</div>
+				<div style={dayTooltip.position} onMouseLeave={hideDayTooltip}>
+					<div>{formatDay(dayTooltip.date)}</div>
 					{dayTooltip.events?.length > 0 ? (
 						<ul>
 							{dayTooltip.events.map((event) => (
-								<li
-									key={`${event.title}-${event.start}`}
-								>
+								<li key={`${event.title}-${event.start}`}>
 									{event.title}
 								</li>
 							))}

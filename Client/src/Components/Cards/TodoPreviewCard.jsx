@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "../Composite/Card";
 import { getPriority } from "../../Utils/priorities";
 
 function TodoPreviewCard({ todos = [], limit = 3 }) {
@@ -24,7 +24,9 @@ function TodoPreviewCard({ todos = [], limit = 3 }) {
 								<span
 									className="app-list-dot"
 									style={{
-										backgroundColor: getPriority(todo.priority).color,
+										backgroundColor: getPriority(
+											todo.priority,
+										).color,
 									}}
 								/>
 								<span>{todo.title}</span>

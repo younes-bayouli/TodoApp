@@ -1,5 +1,5 @@
 import PrayerTimesCard from "../../Components/Cards/PrayerTimesCard";
-import PageHeader from "../../Components/PageHeader";
+import PageHeader from "../../Components/Composite/PageHeader";
 import IslamicDateCard from "../../Components/Cards/IslamicDateCard";
 import NextPrayerCard from "../../Components/Cards/NextPrayerCard";
 import TimeCard from "../../Components/Cards/TimeCard";
@@ -22,10 +22,7 @@ function PrayerTimes() {
 	const date = useDate();
 	const dateString = dateToString(date);
 	const [position, error] = usePosition();
-	const {
-		data: location,
-		error: locationError,
-	} = useQuery({
+	const { data: location, error: locationError } = useQuery({
 		queryKey: ["location", position, error],
 		queryFn: () => api.location.get(position, error),
 		enabled: !!position?.latitude && !!position?.longitude,
@@ -67,16 +64,17 @@ function PrayerTimes() {
 			<PageHeader title="Prayer Times">
 				{location && (
 					<div className="d-flex align-items-center gap-1 text-muted fs-6">
-						<MapPin className="d-block flex-shrink-0" size={16} aria-hidden="true" />
+						<MapPin
+							className="d-block flex-shrink-0"
+							size={16}
+							aria-hidden="true"
+						/>
 						{formatLocation(location)}
 					</div>
 				)}
 			</PageHeader>
 
-			<section
-				className="prayer-grid"
-				aria-label="Prayer information"
-			>
+			<section className="prayer-grid" aria-label="Prayer information">
 				<PrayerTimesCard prayers={timings} nextPrayer={nextPrayer} />
 				<IslamicDateCard date={date} />
 				<NextPrayerCard prayers={timings} date={date} large />

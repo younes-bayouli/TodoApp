@@ -1,5 +1,5 @@
-import Arrow from "../../Components/Arrow";
-import PageHeader from "../../Components/PageHeader";
+import Arrow from "../../Components/Basic/Arrow";
+import PageHeader from "../../Components/Composite/PageHeader";
 import { useEffect, useRef, useState } from "react";
 import Schedule from "./Schedule.jsx";
 import TimeCard from "../../Components/Cards/TimeCard.jsx";
@@ -20,7 +20,7 @@ import { usePosition } from "../../hooks/usePosition";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api";
 import { useAppContext } from "../../Context";
-import Button from "../../Components/Button.jsx";
+import Button from "../../Components/Composite/DuelClockInput.jsx";
 
 const validateForm = (Task) => {
 	const newErrors = {};

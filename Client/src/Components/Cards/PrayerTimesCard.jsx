@@ -1,5 +1,5 @@
 import { Sunrise, Sunset, Sun, Moon, SunMoon } from "lucide-react";
-import Card from "../Card";
+import Card from "../Composite/Card";
 
 // Fixed display order, independent of what the API returns. The API
 // also sends Sunset, which is not one of the six shown here.
@@ -28,7 +28,10 @@ function PrayerTimesCard({ prayers = {}, nextPrayer }) {
 								nextPrayer === label ? " is-next" : ""
 							}`}
 						>
-							<Icon className="prayer-row-icon" aria-hidden="true" />
+							<Icon
+								className="prayer-row-icon"
+								aria-hidden="true"
+							/>
 							<span className="prayer-row-name">{label}</span>
 							<time className="prayer-row-time">
 								{prayers?.[key] ?? "--:--"}

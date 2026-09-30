@@ -7,7 +7,7 @@ import Calendar from "./Pages/Calendar/Calendar.jsx";
 import Projects from "./Pages/Projects/Projects.jsx";
 import Home from "./Pages/Home/Home.jsx";
 import PrayerTimes from "./Pages/PrayerTimes/PrayerTimes.jsx";
-import ErrorMessage from "./Components/Error.jsx";
+import ErrorMessage from "./Components/Composite/Error.jsx";
 import { useAppContext } from "./Context.jsx";
 import { useEffect, useState } from "react";
 

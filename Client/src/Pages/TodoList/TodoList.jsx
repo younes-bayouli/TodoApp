@@ -1,11 +1,11 @@
 import { useState } from "react";
 import useData from "../../Utils/useData.js";
 import useModal from "../../hooks/useModal.jsx";
-import PageHeader from "../../Components/PageHeader.jsx";
-import EmptyState from "../../Components/EmptyState.jsx";
-import Todo from "../../Components/Todo.jsx";
-import QuickAddForm from "../../Components/QuickAddForm.jsx";
-import FilterTabs from "../../Components/FilterTabs.jsx";
+import PageHeader from "../../Components/Composite/PageHeader.jsx";
+import EmptyState from "../../Components/Composite/EmptyState.jsx";
+import Todo from "../../Components/Composite/Todo.jsx";
+import QuickAddForm from "../../Components/Composite/QuickAddForm.jsx";
+import FilterTabs from "../../Components/Composite/FilterTabs.jsx";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
@@ -112,18 +112,13 @@ function TodoList() {
 		// The list is the only part that scrolls, so it takes the
 		// remaining height and its own overflow.
 		<div className="page tasks-page flex-grow-1 min-h-0 d-flex flex-column">
-			<PageHeader
-				title="Tasks"
-				description={`${openCount} open`}
+			<PageHeader title="Tasks" description={`${openCount} open`} />
+
+			<QuickAddForm
+				onSubmit={({ title, priority }) => addTask({ title, priority })}
 			/>
 
-			<QuickAddForm onSubmit={({ title, priority }) => addTask({ title, priority })} />
-
-			<FilterTabs
-				options={filters}
-				value={filter}
-				onChange={setFilter}
-			/>
+			<FilterTabs options={filters} value={filter} onChange={setFilter} />
 
 			<div className="tasks-page-list d-flex flex-column gap-2 overflow-y-auto min-h-0">
 				{visibleTasks?.length ? (
@@ -133,7 +128,12 @@ function TodoList() {
 							todo={task}
 							onToggle={toggleTask}
 							onRemove={removeTask}
-							onEdit={(task)=>openModal({ object: task, mutation: updateTaskMutation })}
+							onEdit={(task) =>
+								openModal({
+									object: task,
+									mutation: updateTaskMutation,
+								})
+							}
 						/>
 					))
 				) : (

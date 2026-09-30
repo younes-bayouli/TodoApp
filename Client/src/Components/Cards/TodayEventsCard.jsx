@@ -1,5 +1,5 @@
 import { formatDate } from "../../Utils/dateUtilities";
-import Card from "../Card";
+import Card from "../Composite/Card";
 
 function TodayEventsCard({ events = [], date }) {
 	return (
@@ -19,7 +19,9 @@ function TodayEventsCard({ events = [], date }) {
 							<li key={event.id}>
 								<span
 									className="app-list-dot"
-									style={{ backgroundColor: event.backgroundColor }}
+									style={{
+										backgroundColor: event.backgroundColor,
+									}}
 								/>
 								<span>{event.title}</span>
 							</li>

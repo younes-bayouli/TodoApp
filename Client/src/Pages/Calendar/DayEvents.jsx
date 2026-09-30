@@ -1,7 +1,14 @@
-import Button from "../../Components/Button";
-import EmptyState from "../../Components/EmptyState";
+import Button from "../../Components/Composite/DuelClockInput";
+import EmptyState from "../../Components/Composite/EmptyState";
 
-export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEventMutation}) {
+export default function DayEvents({
+	day,
+	events,
+	addEvent,
+	editEvent,
+	onBack,
+	deleteEventMutation,
+}) {
 	return (
 		<div>
 			<div>
@@ -10,15 +17,8 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 					<p>Events for this day</p>
 				</div>
 				<div>
-					<Button
-						onClick={addEvent}
-					>
-						Add event
-					</Button>
-					<Button
-						onClick={onBack}
-						variant="secondary"
-					>
+					<Button onClick={addEvent}>Add event</Button>
+					<Button onClick={onBack} variant="secondary">
 						Back to calendar
 					</Button>
 				</div>
@@ -26,9 +26,7 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 			<div>
 				{events?.length > 0 ? (
 					events.map((calendarEvent) => (
-						<div
-							key={calendarEvent.id}
-						>
+						<div key={calendarEvent.id}>
 							<div>
 								<span
 									className="app-list-dot"
@@ -42,7 +40,7 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 							<div>
 								<Button
 									type="button"
-									onClick={()=>editEvent(calendarEvent)}
+									onClick={() => editEvent(calendarEvent)}
 									variant="secondary"
 								>
 									Edit
@@ -50,7 +48,9 @@ export default function DayEvents({day,events,addEvent,editEvent,onBack,deleteEv
 								<Button
 									type="button"
 									onClick={() =>
-										deleteEventMutation.mutate(calendarEvent.id)
+										deleteEventMutation.mutate(
+											calendarEvent.id,
+										)
 									}
 									variant="secondary"
 									disabled={deleteEventMutation.isPending}

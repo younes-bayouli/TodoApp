@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Arrow from "./Arrow";
-import { compareTime } from "../Utils/timeUtilities";
+import Arrow from "../Basic/Arrow";
+import { compareTime } from "../../Utils/timeUtilities";
 
 export default function TimeInputClock({
 	initialTime = "00:00",
@@ -42,12 +42,12 @@ export default function TimeInputClock({
 		setHM(temp);
 
 		const newTime = `${String(temp[0]).padStart(2, "0")}:${String(temp[1]).padStart(2, "0")}`;
-		setActiveButtons(()=>checkActiveButtons(temp));
+		setActiveButtons(() => checkActiveButtons(temp));
 		onChange(newTime);
 	};
 
 	useEffect(() => {
-		setActiveButtons(()=>checkActiveButtons([hours,minutes]));
+		setActiveButtons(() => checkActiveButtons([hours, minutes]));
 	}, [maxTime, minTime]);
 
 	return (
@@ -64,9 +64,7 @@ export default function TimeInputClock({
 					onClick={() => updateTime([1 * activeButtons[0], 0])}
 					cliCkable={activeButtons[0]}
 				></Arrow>
-				<span
-					className="app-clock-value h-50 d-flex align-items-center justify-content-center"
-				>
+				<span className="app-clock-value h-50 d-flex align-items-center justify-content-center">
 					{String(hours).padStart(2, "0")}
 				</span>
 				<Arrow
@@ -86,9 +84,7 @@ export default function TimeInputClock({
 					cliCkable={activeButtons[2]}
 				></Arrow>
 
-				<span
-					className="app-clock-value h-50 d-flex align-items-center justify-content-center"
-				>
+				<span className="app-clock-value h-50 d-flex align-items-center justify-content-center">
 					{String(minutes).padStart(2, "0")}
 				</span>
 

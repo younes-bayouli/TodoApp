@@ -3,7 +3,7 @@ import TodoPreviewCard from "../../Components/Cards/TodoPreviewCard";
 import TodayEventsCard from "../../Components/Cards/TodayEventsCard";
 import IslamicDateCard from "../../Components/Cards/IslamicDateCard";
 import NextPrayerCard from "../../Components/Cards/NextPrayerCard";
-import PhotoGallery from "../../Components/PhotoGallery.jsx";
+import PhotoGallery from "../../Components/Composite/PhotoGallery.jsx";
 import TimeCard from "../../Components/Cards/TimeCard";
 import { useEffect } from "react";
 import { usePosition } from "../../hooks/usePosition.js";
@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
 import useData from "../../Utils/useData.js";
 import { useAppContext } from "../../Context.jsx";
-import PageHeader from "../../Components/PageHeader.jsx";
+import PageHeader from "../../Components/Composite/PageHeader.jsx";
 import { MapPin } from "lucide-react";
 
 function Home() {

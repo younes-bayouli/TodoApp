@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "../Composite/Card";
 
 function TaskStatusCard({ currentTask, nextTask }) {
 	const renderTask = (label, task) => (

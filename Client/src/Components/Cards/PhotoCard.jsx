@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "../Composite/Card";
 
 function PhotoCard({ photo, alt = "Personal profile", onClick }) {
 	return (
@@ -19,9 +19,7 @@ function PhotoCard({ photo, alt = "Personal profile", onClick }) {
 						className="w-100 h-100 object-fit-cover d-block"
 					/>
 				) : (
-					<div
-						aria-label={alt}
-					>
+					<div aria-label={alt}>
 						<span>Your photo</span>
 					</div>
 				)}

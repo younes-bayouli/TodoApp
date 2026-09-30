@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Button from "./Button";
-import Input from "./Input";
+import Button from "../Basic/Button";
+import Input from "../Basic/Input";
 
 /**
  * Title + priority + submit, for adding a todo inline on a page.

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { formatDate } from "../../Utils/dateUtilities";
-import Button from "../../Components/Button";
-import EmptyState from "../../Components/EmptyState";
-import QuickAddForm from "../../Components/QuickAddForm";
+import Button from "../../Components/Composite/DuelClockInput";
+import EmptyState from "../../Components/Composite/EmptyState";
+import QuickAddForm from "../../Components/Composite/QuickAddForm";
 import { getPriority, priorityOrder } from "../../Utils/priorities";
 import { X } from "lucide-react";
 
@@ -92,9 +92,13 @@ function ProjectDetail({
 					</div>
 					<div>
 						<small>Due: {formatDate(project.deadline)}</small>
-						<Button variant="secondary" onClick={onModifyProject}>Modify Project</Button>
+						<Button variant="secondary" onClick={onModifyProject}>
+							Modify Project
+						</Button>
 
-						<Button variant="secondary" onClick={onBack}>Back to Projects</Button>
+						<Button variant="secondary" onClick={onBack}>
+							Back to Projects
+						</Button>
 					</div>
 				</div>
 
@@ -122,7 +126,9 @@ function ProjectDetail({
 											setShowDeleteDialog(false)
 										}
 										aria-label="Close"
-									><X></X></Button>
+									>
+										<X></X>
+									</Button>
 								</div>
 								<div>
 									<p>
@@ -196,7 +202,9 @@ function ProjectDetail({
 									<span className="d-flex align-items-center gap-2">
 										<span
 											className="app-list-dot"
-											style={{ backgroundColor: priority.color }}
+											style={{
+												backgroundColor: priority.color,
+											}}
 										/>
 										{priority.label}
 									</span>
@@ -204,8 +212,8 @@ function ProjectDetail({
 							);
 						})
 					) : (
-						<EmptyState 
-							title="No tasks yet" 
+						<EmptyState
+							title="No tasks yet"
 							description="Click 'Add Todo' to create one."
 						/>
 					)}

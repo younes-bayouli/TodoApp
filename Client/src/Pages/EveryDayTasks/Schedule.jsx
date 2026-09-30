@@ -1,4 +1,4 @@
-import Arrow from "../../Components/Arrow";
+import Arrow from "../../Components/Basic/Arrow";
 import { useRef, useCallback, useState, useEffect } from "react";
 import {
 	format,
@@ -10,8 +10,8 @@ import {
 } from "../../Utils/timeUtilities";
 import { useMouseDistance } from "../../Utils/useMouseDistance";
 import Task from "./Task";
-import StaticTimeBars from "../../Components/StaticTimeBars.jsx";
-import TimeBar from "../../Components/TimeBar.jsx";
+import StaticTimeBars from "../../Components/Composite/StaticTimeBars.jsx";
+import TimeBar from "../../Components/Composite/TimeBar.jsx";
 
 function Schedule({
 	time,
@@ -61,10 +61,7 @@ function Schedule({
 		<>
 			<div>
 				<div>
-					<Arrow
-						deg={90}
-						onClick={scrollLeft}
-					></Arrow>
+					<Arrow deg={90} onClick={scrollLeft}></Arrow>
 					<div
 						className="app-schedule-scroll"
 						ref={scrollRef}
@@ -159,10 +156,7 @@ function Schedule({
 							))}
 						</div>
 					</div>
-					<Arrow
-						deg={-90}
-						onClick={scrollRight}
-					></Arrow>
+					<Arrow deg={-90} onClick={scrollRight}></Arrow>
 				</div>
 			</div>
 		</>

@@ -1,4 +1,4 @@
-import TimeBar from "../Components/TimeBar.jsx";
+import TimeBar from "./TimeBar";
 import { memo } from "react";
 
 const TimeList = Array.from(

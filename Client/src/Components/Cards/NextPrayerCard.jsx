@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "../Composite/Card";
 
 function getPrayerDate(time, date, addDay = false) {
 	if (!time) {
@@ -11,7 +11,13 @@ function getPrayerDate(time, date, addDay = false) {
 	return prayerDate;
 }
 
-function NextPrayerCard({ prayers, date, small = false, className = "", large = false }) {
+function NextPrayerCard({
+	prayers,
+	date,
+	small = false,
+	className = "",
+	large = false,
+}) {
 	const prayerNames = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 	let nextPrayer = prayerNames
 		.map((name) => ({

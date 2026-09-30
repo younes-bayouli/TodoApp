@@ -1,5 +1,5 @@
 import { format } from "../../Utils/timeUtilities";
-import Card from "../Card";
+import Card from "../Composite/Card";
 
 export default function TimeDisplay({ date }) {
 	const { hour12 } = format(date);
@@ -7,9 +7,7 @@ export default function TimeDisplay({ date }) {
 	return (
 		<Card name="card-clock">
 			<div>
-				<div className="app-time-display">
-					{hour12}
-				</div>
+				<div className="app-time-display">{hour12}</div>
 				<div>
 					{date.toLocaleDateString("en-US", {
 						weekday: "long",

@@ -3,8 +3,8 @@ import ProjectList from "./ProjectList";
 import ProjectDetail from "./ProjectDetail";
 import useData from "../../Utils/useData";
 import useModal from "../../hooks/useModal.jsx";
-import PageHeader from "../../Components/PageHeader.jsx";
-import FilterTabs from "../../Components/FilterTabs.jsx";
+import PageHeader from "../../Components/Composite/PageHeader.jsx";
+import FilterTabs from "../../Components/Composite/FilterTabs.jsx";
 
 const normalise = (project) => {
 	return {

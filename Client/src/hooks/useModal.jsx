@@ -1,10 +1,10 @@
 import { getSizeClass } from "../Utils/Utils";
 import { DAYS } from "../Utils/dateUtilities";
-import DuelClockInput from "../Components/DuelClockInput";
+import DuelClockInput from "../Components/Composite/DuelClockInput";
 import { useEffect, useState } from "react";
-import Button from "../Components/Button";
-import AppModal from "../Components/Modal";
-import FormField from "../Components/FormField";
+import Button from "../Components/Basic/Button";
+import AppModal from "../Components/Composite/Modal";
+import FormField from "../Components/Composite/FormField";
 
 export default function useModal({
 	name,

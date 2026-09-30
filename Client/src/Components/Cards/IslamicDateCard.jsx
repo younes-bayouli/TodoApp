@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "../Composite/Card";
 
 export const islamicDateToParts = (date) => {
 	return new Intl.DateTimeFormat("en", {

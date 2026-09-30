@@ -4,9 +4,9 @@ import {
 	timeDifferenceInMinutes,
 } from "../../Utils/timeUtilities";
 import trash from "../../assets/icons/trash.png";
-import Button from "../../Components/Button";
+import Button from "../../Components/Composite/DuelClockInput";
 
-export default function Task({ task, onClick, onDelete,style }) {
+export default function Task({ task, onClick, onDelete, style }) {
 	const [tooltip, setTooltip] = useState(false);
 	const openTooltip = () => {
 		setTooltip(true);
