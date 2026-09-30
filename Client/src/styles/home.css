@@ -1,0 +1,86 @@
+/* =========================
+   Home
+
+   The dashboard grid and the photo card's caption. Both are Home-only;
+   the cards themselves are styled by their own page file where they
+   are shared, or by components.css.
+   ========================= */
+
+/* 5 columns x 2 rows. The fr weights are chosen so the tracks land
+   near 464/223/125/230/355px on a 1915px viewport, which is what
+   gives Clock its width and Focus its narrow one. */
+.home-grid {
+	flex: 1;
+	min-height: 0;
+	display: grid;
+	gap: var(--grid-gap);
+	grid-template-columns: 4.64fr 2.23fr 1.25fr 2.3fr 3.55fr;
+	grid-template-rows: 45fr 55fr;
+	grid-template-areas:
+		"clock hijri next next photo"
+		"tasks sched sched focus photo";
+}
+
+/* Without this a card's intrinsic width can blow the track out. */
+.home-grid > * {
+	min-width: 0;
+	min-height: 0;
+}
+
+.card-clock {
+	grid-area: clock;
+}
+
+.card-hijri {
+	grid-area: hijri;
+}
+
+.card-next {
+	grid-area: next;
+}
+
+.card-photo {
+	grid-area: photo;
+}
+
+.card-tasks {
+	grid-area: tasks;
+}
+
+.card-schedule {
+	grid-area: sched;
+}
+
+.card-focus {
+	grid-area: focus;
+}
+
+/* =========================
+   Photo card
+
+   Caption floats over the image at the bottom-left. PhotoCard passes
+   .photo-card-caption on the caption element itself.
+   ========================= */
+
+.photo-card-caption {
+	position: absolute;
+	inset: auto 18px 18px 18px;
+	padding: var(--space-3);
+	border-radius: var(--radius-md);
+	background: var(--color-white);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.photo-card-caption p {
+	margin: 0 0 var(--space-1);
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.photo-card-caption h2 {
+	font-size: var(--font-size-lg);
+	font-weight: var(--font-weight-semibold);
+}

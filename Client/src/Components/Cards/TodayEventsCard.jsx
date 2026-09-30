@@ -3,7 +3,7 @@ import Card from "../Card";
 
 function TodayEventsCard({ events = [], date }) {
 	return (
-		<Card>
+		<Card name="card-schedule">
 			<article>
 				<div>
 					<div>

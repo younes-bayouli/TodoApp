@@ -11,7 +11,7 @@ function getPrayerDate(time, date, addDay = false) {
 	return prayerDate;
 }
 
-function NextPrayerCard({ prayers, date, small = false, className = "" }) {
+function NextPrayerCard({ prayers, date, small = false, className = "", large = false }) {
 	const prayerNames = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 	let nextPrayer = prayerNames
 		.map((name) => ({
@@ -40,13 +40,20 @@ function NextPrayerCard({ prayers, date, small = false, className = "" }) {
 		: "--:--:--";
 	const label = nextPrayer.name[0].toUpperCase() + nextPrayer.name.slice(1);
 
+	// `large` is the Prayer Times page's own presentation and is scoped
+	// to this usage; Home keeps its existing sizes.
+	const sizeClass = large
+		? "next-prayer next-prayer-large"
+		: small
+			? "next-prayer"
+			: "next-prayer next-prayer-full";
+
 	return (
-		<Card padding={small ? "small" : "medium"} className={className}>
+		<Card name="card-next" className={`${sizeClass} ${className}`.trim()}>
 			<div>
 				<p>Up next</p>
 				<h2>{label}</h2>
-				{small && <h4 aria-label="Time remaining">{countdown}</h4>}
-				{!small && <h1 aria-label="Time remaining">{countdown}</h1>}
+				<h4 aria-label="Time remaining">{countdown}</h4>
 			</div>
 		</Card>
 	);

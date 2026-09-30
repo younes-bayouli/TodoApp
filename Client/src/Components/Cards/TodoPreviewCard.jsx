@@ -8,7 +8,7 @@ function TodoPreviewCard({ todos = [], limit = 3 }) {
 		.slice(0, limit);
 
 	return (
-		<Card>
+		<Card name="card-focus">
 			<article>
 				<div>
 					<div>

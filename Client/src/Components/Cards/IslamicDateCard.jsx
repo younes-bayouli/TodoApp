@@ -16,7 +16,7 @@ function IslamicDateCard({ date }) {
 	const year = parts.find((part) => part.type === "year")?.value;
 
 	return (
-		<Card>
+		<Card name="card-hijri">
 			<div>
 				<div>{day}</div>
 				<h2>{month}</h2>

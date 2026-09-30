@@ -2,7 +2,7 @@ import Card from "../Card";
 
 function PhotoCard({ photo, alt = "Personal profile", onClick }) {
 	return (
-		<Card padding="none">
+		<Card name="card-photo" padding="none">
 			<article
 				onClick={onClick}
 				onKeyDown={(event) => {
@@ -10,11 +10,13 @@ function PhotoCard({ photo, alt = "Personal profile", onClick }) {
 				}}
 				role={onClick ? "button" : undefined}
 				tabIndex={onClick ? 0 : undefined}
+				className="w-100 h-100 position-relative"
 			>
 				{photo ? (
 					<img
 						src={photo}
 						alt={alt}
+						className="w-100 h-100 object-fit-cover d-block"
 					/>
 				) : (
 					<div
@@ -23,7 +25,7 @@ function PhotoCard({ photo, alt = "Personal profile", onClick }) {
 						<span>Your photo</span>
 					</div>
 				)}
-				<div>
+				<div className="photo-card-caption">
 					<p>Your space</p>
 					<h2>Make today yours.</h2>
 				</div>

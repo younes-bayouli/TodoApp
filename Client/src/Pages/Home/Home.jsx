@@ -1,5 +1,4 @@
 import TaskStatusCard from "../../Components/Cards/TaskStatusCard";
-import PageHeader from "../../Components/PageHeader";
 import TodoPreviewCard from "../../Components/Cards/TodoPreviewCard";
 import TodayEventsCard from "../../Components/Cards/TodayEventsCard";
 import IslamicDateCard from "../../Components/Cards/IslamicDateCard";
@@ -14,9 +13,10 @@ import { format } from "../../Utils/timeUtilities";
 import { useDate } from "../../Utils/useTime";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api.js";
-import pinLocation from "../../assets/icons/location-pin.png";
 import useData from "../../Utils/useData.js";
 import { useAppContext } from "../../Context.jsx";
+import PageHeader from "../../Components/PageHeader.jsx";
+import { MapPin } from "lucide-react";
 
 function Home() {
 	const { addError } = useAppContext();
@@ -59,46 +59,32 @@ function Home() {
 	}, [locationError, prayersError, error]);
 
 	return (
-		<main>
-			<PageHeader
-				title="Good morning, Younes."
-				description={
-					location ? (
-						<span className="d-flex align-items-center gap-1">
-							<img src={pinLocation} alt="" className="app-icon-inline" />
-							{formatLocation(location)}
-						</span>
-					) : null
-				}
-			/>
-			<section className="row g-3">
-				<div className="col-12 col-lg-4">
-					<TimeCard date={date} />
-				</div>
-				<div className="col-12 col-md-6 col-lg-4">
-					<IslamicDateCard date={date} />
-				</div>
-				<div className="col-12 col-md-6 col-lg-4">
-					<NextPrayerCard
-						prayers={prayers?.data.timings}
-						date={date}
-						small={true}
-					/>
-				</div>
-				<div className="col-12 col-lg-4">
-					<TaskStatusCard currentTask={current} nextTask={next} />
-				</div>
-				<div className="col-12 col-lg-4">
-					<TodayEventsCard events={todaysEvents} date={date} />
-				</div>
-				<div className="col-12 col-lg-4">
-					<TodoPreviewCard todos={Todos} />
-				</div>
-				<div className="col-12">
-					<PhotoGallery />
-				</div>
-			</section>
-		</main>
+		<div className="page">
+			<PageHeader title={"Good morning, Younes."}>
+				{location && (
+					<div className="d-flex align-items-center gap-1 text-muted fs-6">
+						{/* MapPin inherits the row's font-size; pin it to a
+						    fixed square so it does not scale with it. */}
+						<MapPin className="d-block flex-shrink-0" size={16} />
+						{formatLocation(location)}
+					</div>
+				)}
+			</PageHeader>
+
+			<div className="home-grid">
+				<TimeCard date={date} />
+				<IslamicDateCard date={date} />
+				<NextPrayerCard
+					prayers={prayers?.data.timings}
+					date={date}
+					large
+				/>
+				<PhotoGallery />
+				<TaskStatusCard currentTask={current} nextTask={next} />
+				<TodayEventsCard events={todaysEvents} date={date} />
+				<TodoPreviewCard todos={Todos} />
+			</div>
+		</div>
 	);
 }
 

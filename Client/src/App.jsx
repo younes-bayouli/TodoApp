@@ -39,7 +39,7 @@ function App() {
 	return (
 		<>
 			<BrowserRouter>
-				<div className="app-shell">
+				<div className="app-shell d-flex" style={{ minHeight: "100vh" }}>
 					<Navlist />
 					{errors?.length > 0 && (
 						<div className="app-error-stack">
@@ -56,7 +56,9 @@ function App() {
 							})}
 						</div>
 					)}
-					<div className="app-content">
+					{/* min-width:0 lets wide pages scroll rather than forcing
+					    the shell wider than the viewport. */}
+					<div className="app-content flex-grow-1 h-100 overflow-y-auto d-flex flex-column">
 						<Routes>
 							<Route path="/" element={<First />} />
 							<Route path="/home" element={<Home />} />
@@ -66,10 +68,7 @@ function App() {
 							/>
 							<Route path="/todolist" element={<TodoList />} />
 							<Route path="/projects" element={<Projects />} />
-							<Route
-								path="/myeveryday"
-								element={<EveryDayTasks />}
-							/>
+							<Route path="/myeveryday" element={<EveryDayTasks />} />
 							<Route path="/calender" element={<Calendar />} />
 						</Routes>
 					</div>

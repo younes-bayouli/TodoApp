@@ -1,0 +1,613 @@
+/* =========================
+   App shell
+
+   The shell itself is Bootstrap utilities on the elements in App.jsx
+   (flex, viewport height, overflow). Only the page gutter stays here,
+   because it reads the spacing tokens.
+   ========================= */
+
+.app-content {
+	/* Bootstrap's row utilities set min-width on flex children, so a
+	   wide page (calendar, schedule) would force the whole shell
+	   wider than the viewport instead of scrolling. */
+	min-width: 0;
+	padding: var(--page-padding-block) var(--page-padding-inline-end)
+		var(--page-padding-block) var(--page-padding-inline-start);
+}
+
+/* The page wrapper is a class because every page needs it as a hook,
+   not a one-off style: it establishes the flex column that the page
+   grids grow inside. */
+.page {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+}
+
+/* =========================
+   Button
+   ========================= */
+
+.app-button {
+	border: var(--border-width) solid transparent;
+	border-radius: var(--radius-md);
+	font-family: inherit;
+	font-weight: var(--font-weight-normal);
+	cursor: pointer;
+	transition:
+		background-color var(--transition-fast),
+		border-color var(--transition-fast),
+		color var(--transition-fast),
+		box-shadow var(--transition-fast);
+}
+
+/* Sizes */
+
+.app-button-small {
+	padding: 0.375rem 0.75rem;
+	font-size: var(--font-size-sm);
+}
+
+.app-button-medium {
+	padding: 0.5rem 1rem;
+	font-size: var(--font-size-md);
+}
+
+.app-button-large {
+	padding: 0.75rem 1.25rem;
+	font-size: var(--font-size-md);
+}
+
+/* Variants */
+
+.app-button-primary {
+	background-color: var(--color-primary);
+	border-color: var(--color-primary);
+	color: var(--color-white);
+}
+
+.app-button-primary:hover {
+	filter: brightness(0.92);
+}
+
+.app-button-secondary {
+	background-color: var(--color-surface);
+	border-color: var(--color-border);
+	color: var(--color-text);
+}
+
+.app-button-secondary:hover {
+	background-color: var(--color-surface-subtle);
+}
+
+.app-button-danger {
+	background-color: var(--color-danger);
+	border-color: var(--color-danger);
+	color: var(--color-white);
+}
+
+.app-button-danger:hover {
+	filter: brightness(0.92);
+}
+
+.app-button-danger-secondary {
+	background-color: var(--color-surface);
+	border-color: var(--color-danger);
+	color: var(--color-danger);
+}
+
+.app-button-danger-secondary:hover {
+	background-color: var(--color-danger-subtle);
+}
+
+.app-button-danger-ghost {
+	background-color: transparent;
+	border-color: transparent;
+	color: var(--color-danger);
+}
+
+.app-button-danger-ghost:hover {
+	background-color: var(--color-danger-subtle);
+	color: var(--color-danger-hover);
+}
+
+.app-button-ghost {
+	background-color: transparent;
+	border-color: transparent;
+	color: var(--color-text-secondary);
+}
+
+.app-button-ghost:hover {
+	background-color: var(--color-surface-subtle);
+	color: var(--color-text);
+}
+
+.app-button-ghost input {
+	color: var(--color-text-secondary);
+}
+
+/* Disabled */
+
+.app-button:disabled {
+	opacity: 0.65;
+	cursor: not-allowed;
+}
+
+.app-button-full {
+	width: 100%;
+}
+
+.app-button-icon {
+	display: inline-flex;
+	align-items: center;
+	margin-right: var(--space-2);
+}
+
+/* =========================
+   Card
+   ========================= */
+
+.app-card {
+	border: var(--border-width) solid transparent;
+	border-radius: var(--card-radius);
+	background-color: var(--color-surface);
+	transition:
+		background-color var(--transition-fast),
+		border-color var(--transition-fast),
+		box-shadow var(--transition-fast);
+}
+
+/* Sizes (padding) */
+
+.app-card-small {
+	padding: var(--space-2);
+}
+
+.app-card-medium {
+	padding: var(--space-4);
+}
+
+.app-card-large {
+	padding: var(--space-6);
+}
+
+/* PhotoCard-style cards: the image should reach the card edge, so the
+   card contributes surface only and the child owns the padding. */
+.app-card-none {
+	padding: 0;
+}
+
+/* Variants */
+
+.app-card-default {
+	border-color: var(--color-border);
+	box-shadow: var(--shadow-sm);
+}
+
+.app-card-elevated {
+	border-color: transparent;
+	box-shadow: var(--shadow-md);
+}
+
+.app-card-outline {
+	background-color: transparent;
+	border-color: var(--color-border);
+}
+
+.app-card-subtle {
+	background-color: var(--color-surface-subtle);
+	border-color: var(--color-border-subtle);
+}
+
+/* =========================
+   TimeCard
+   ========================= */
+
+/* The one place a display size above --font-size-xl is needed. A token
+   for it would be a value with a single consumer, so it stays literal
+   until something else needs the same size. */
+.app-time-display {
+	font-size: 3rem;
+	line-height: 1.1;
+	font-weight: var(--font-weight-semibold);
+}
+
+/* =========================
+   IconButton
+   ========================= */
+
+.app-icon-button {
+	border: var(--border-width) solid transparent;
+	border-radius: var(--radius-md);
+	background-color: transparent;
+	color: var(--color-text);
+	cursor: pointer;
+	transition:
+		background-color var(--transition-fast),
+		border-color var(--transition-fast),
+		color var(--transition-fast);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Sizes */
+
+.app-icon-button-small {
+	width: 2rem;
+	height: 2rem;
+	font-size: 1rem;
+}
+
+.app-icon-button-medium {
+	width: 2.5rem;
+	height: 2.5rem;
+	font-size: 1.25rem;
+}
+
+.app-icon-button-large {
+	width: 3rem;
+	height: 3rem;
+	font-size: 1.5rem;
+}
+
+/* Variants */
+
+.app-icon-button-default {
+	background-color: transparent;
+	border-color: transparent;
+	color: var(--color-text);
+}
+
+.app-icon-button-default:hover {
+	background-color: var(--color-surface-subtle);
+}
+
+.app-icon-button-primary {
+	background-color: var(--color-primary);
+	border-color: var(--color-primary);
+	color: var(--color-white);
+}
+
+.app-icon-button-primary:hover {
+	filter: brightness(0.92);
+}
+
+.app-icon-button-secondary {
+	background-color: var(--color-surface);
+	border-color: var(--color-border);
+	color: var(--color-text);
+}
+
+.app-icon-button-secondary:hover {
+	background-color: var(--color-surface-subtle);
+}
+
+.app-icon-button-disabled {
+	opacity: 0.65;
+	cursor: not-allowed;
+}
+
+/* =========================
+   Badge
+   ========================= */
+
+.app-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: var(--space-1) var(--space-2);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	border-radius: var(--radius-sm);
+	border: var(--border-width) solid transparent;
+}
+
+.app-badge-default {
+	background-color: var(--color-surface-subtle);
+	color: var(--color-text-secondary);
+	border-color: var(--color-border);
+}
+
+.app-badge-primary {
+	background-color: var(--color-primary-light);
+	color: var(--color-primary);
+	border-color: var(--color-primary-border);
+}
+
+.app-badge-warning {
+	background-color: var(--color-warning);
+	color: var(--color-text);
+	border-color: var(--color-warning);
+	filter: brightness(0.9);
+}
+
+.app-badge-danger {
+	background-color: var(--color-danger-subtle);
+	color: var(--color-danger);
+	border-color: var(--color-danger);
+}
+
+/* =========================
+   Navigation
+   ========================= */
+
+.app-nav {
+	width: var(--sidebar-width);
+	flex-shrink: 0;
+	background-color: var(--color-surface);
+	border-right: var(--border-width) solid var(--color-border);
+}
+
+.app-nav-inner {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: var(--space-3);
+	height: 100%;
+	padding-block: var(--space-4);
+}
+
+.app-nav-brand {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+	padding: 0 var(--space-3);
+	font-weight: var(--font-weight-semibold);
+	color: var(--color-text);
+	text-decoration: none;
+}
+
+.app-nav-brand-logo {
+	width: 28px;
+	height: 28px;
+}
+
+.app-nav-links {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-1);
+}
+
+.app-nav-link {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+	padding: var(--space-2) var(--space-3);
+	border-radius: var(--radius-md);
+	color: var(--color-text-secondary);
+	text-decoration: none;
+	transition:
+		background-color var(--transition-fast),
+		color var(--transition-fast);
+}
+
+.app-nav-link:hover {
+	background-color: var(--color-surface-subtle);
+	color: var(--color-text);
+}
+
+.app-nav-link.active {
+	background-color: var(--color-primary-light);
+	color: var(--color-primary);
+	font-weight: var(--font-weight-medium);
+}
+
+.app-nav-link-icon {
+	width: 18px;
+	height: 18px;
+}
+
+.app-nav-actions {
+	margin-top: auto;
+	padding: 0 var(--space-3);
+}
+
+/* =========================
+   Shared utilities
+   ========================= */
+
+/* Icon sized to the line box of the text beside it, whatever font
+   size that text is set to.
+
+   height: 100% cannot do this — a percentage height needs the parent
+   to have a resolved height, and the inline wrapper around the text
+   does not, so it falls back to the image's intrinsic size.
+
+   Instead the image is a flex item stretched to its container's
+   cross-size (the line box, once the wrapper is display:flex), and
+   width: auto keeps its aspect ratio. */
+.app-icon-inline {
+	align-self: stretch;
+	height: auto;
+	width: auto;
+	/* Without this a stretched flex item can grow wider than the
+	   intrinsic width on some engines. */
+	max-width: 100%;
+	object-fit: contain;
+}
+
+/* Clickable non-button element. Bootstrap ships no cursor utility. */
+.app-clickable {
+	cursor: pointer;
+}
+
+/* A list of events or todos. The dot's color comes from data at
+   runtime, so only the dot's shape is expressed here. */
+.app-list-dot {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background-color: var(--color-primary);
+	flex-shrink: 0;
+}
+
+/* Hover-revealed row actions. Kept out of the flow until hovered so
+   the row does not reflow as the pointer crosses it. */
+.app-row-actions {
+	display: flex;
+	gap: var(--space-1);
+	margin-inline-start: var(--space-2);
+	opacity: 0;
+	transition: opacity var(--transition-fast);
+}
+
+.app-row:hover .app-row-actions,
+.app-row:focus-within .app-row-actions {
+	opacity: 1;
+}
+
+/* =========================
+   FilterTabs
+   ========================= */
+
+.app-filter-tabs {
+	display: flex;
+	gap: var(--space-1);
+	flex-wrap: wrap;
+}
+
+.app-filter-tabs button {
+	display: inline-flex;
+	align-items: center;
+	height: var(--filter-button-height);
+	padding-inline: var(--control-padding-inline);
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--card-radius);
+	background-color: var(--color-surface);
+	color: var(--color-text-secondary);
+	font-family: inherit;
+	font-size: var(--font-size-body-lg);
+	cursor: pointer;
+	text-transform: capitalize;
+	transition:
+		background-color var(--transition-fast),
+		border-color var(--transition-fast),
+		color var(--transition-fast);
+}
+
+.app-filter-tabs button:hover {
+	background-color: var(--color-surface-subtle);
+	color: var(--color-text);
+}
+
+.app-filter-tabs button.active {
+	background-color: var(--color-primary);
+	border-color: var(--color-primary);
+	color: var(--color-white);
+	font-weight: var(--font-weight-medium);
+}
+
+/* =========================
+   QuickAddForm
+   ========================= */
+
+/* A single bordered container holding the input, select and submit as
+   segments, rather than three separately-bordered controls. */
+.app-quick-add {
+	display: flex;
+	height: var(--control-height);
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--card-radius);
+	overflow: hidden;
+}
+
+.app-quick-add .app-input,
+.app-quick-add select {
+	flex: 1 1 auto;
+	min-width: 0;
+	height: 100%;
+	padding-inline: var(--control-padding-inline);
+	font-size: var(--font-size-body-lg);
+	/* The container owns the border; the segments must not draw their
+	   own or the outer edge ends up doubled. */
+	border: none;
+	border-radius: 0;
+	background-color: var(--color-surface);
+}
+
+.app-quick-add select {
+	/* Keeps the select from eating the row: its longest option is much
+	   wider than the reference 24px text needs. */
+	flex: 0 1 var(--control-height);
+	max-width: 200px;
+}
+
+.app-quick-add select:not(:last-of-type),
+.app-quick-add .app-input:not(:last-of-type) {
+	border-right: var(--border-width) solid var(--color-border);
+}
+
+.app-quick-add .app-button {
+	flex: 0 0 auto;
+	height: 100%;
+	padding-inline: var(--control-padding-inline);
+	border-radius: 0;
+	font-size: var(--font-size-body-lg);
+}
+
+.app-quick-add:focus-within {
+	border-color: var(--color-primary-border);
+}
+
+/* max-width caps it next to the title input; min-width: 0 lets it
+   shrink inside the wrapping flex row on a narrow screen. */
+.app-priority-select {
+	max-width: 140px;
+	min-width: 0;
+}
+
+/* =========================
+   TimeInputClock
+   ========================= */
+
+.app-clock {
+	font-size: 1.8rem;
+	font-weight: var(--font-weight-semibold);
+	/* px-5 is 3rem a side, which overflows a narrow modal. */
+	max-width: 100%;
+}
+
+.app-clock-value {
+	line-height: 1.8rem;
+}
+
+/* =========================
+   Month input (Calendar)
+
+   The input is a native control styled to sit inside our Button.
+   Appearance is reset so the browser's own month picker is not
+   drawn on top of the button surface.
+   ========================= */
+
+.app-month-input {
+	border: none;
+	background: transparent;
+	color: inherit;
+	padding: 0.375rem 0.75rem;
+	appearance: none;
+	-webkit-appearance: none;
+}
+
+/* =========================
+   Project accent
+   ========================= */
+
+.app-accent-left {
+	border-left-width: 4px;
+	border-left-style: solid;
+}
+
+/* =========================
+   Error stack
+   ========================= */
+
+/* Toast-style stack pinned above the sidebar. The .slide-left /
+   .hidden classes that animate it out live in App.css. */
+.app-error-stack {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	z-index: 1000;
+}

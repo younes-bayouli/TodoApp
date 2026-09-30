@@ -18,7 +18,7 @@ function TaskStatusCard({ currentTask, nextTask }) {
 	);
 
 	return (
-		<Card>
+		<Card name="card-tasks">
 			<div>
 				<h5>Tasks</h5>
 				{renderTask("Current task", currentTask)}

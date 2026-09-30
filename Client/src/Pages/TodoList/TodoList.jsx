@@ -109,7 +109,9 @@ function TodoList() {
 	};
 
 	return (
-		<div>
+		// The list is the only part that scrolls, so it takes the
+		// remaining height and its own overflow.
+		<div className="page tasks-page flex-grow-1 min-h-0 d-flex flex-column">
 			<PageHeader
 				title="Tasks"
 				description={`${openCount} open`}
@@ -123,7 +125,7 @@ function TodoList() {
 				onChange={setFilter}
 			/>
 
-			<div>
+			<div className="tasks-page-list d-flex flex-column gap-2 overflow-y-auto min-h-0">
 				{visibleTasks?.length ? (
 					visibleTasks.map((task) => (
 						<Todo
@@ -135,8 +137,8 @@ function TodoList() {
 						/>
 					))
 				) : (
-					<EmptyState 
-						title="No tasks yet" 
+					<EmptyState
+						title="No tasks yet"
 						description="Nothing here — add a task above."
 					/>
 				)}

@@ -5,7 +5,7 @@ export default function TimeDisplay({ date }) {
 	const { hour12 } = format(date);
 
 	return (
-		<Card>
+		<Card name="card-clock">
 			<div>
 				<div className="app-time-display">
 					{hour12}

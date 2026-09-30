@@ -1,53 +1,41 @@
-import fajrIcon from "../../assets/icons/prayerIcons/fajr.png";
-import sunriseIcon from "../../assets/icons/prayerIcons/sunrise.png";
-import dhuhrIcon from "../../assets/icons/prayerIcons/dhuhr.png";
-import asrIcon from "../../assets/icons/prayerIcons/asr.png";
-import maghribIcon from "../../assets/icons/prayerIcons/ma8rib.png";
-import ishaIcon from "../../assets/icons/prayerIcons/isha.png";
+import { Sunrise, Sunset, Sun, Moon, SunMoon } from "lucide-react";
 import Card from "../Card";
 
-const prayerLabels = {
-	fajr: "Fajr",
-	sunrise: "Sunrise",
-	dhuhr: "Dhuhr",
-	asr: "Asr",
-	maghrib: "Maghrib",
-	isha: "Isha",
-};
+// Fixed display order, independent of what the API returns. The API
+// also sends Sunset, which is not one of the six shown here.
+const PRAYERS = [
+	{ key: "Fajr", label: "Fajr", Icon: Sunrise },
+	{ key: "Sunrise", label: "Sunrise", Icon: Sunrise },
+	{ key: "Dhuhr", label: "Dhuhr", Icon: Sun },
+	{ key: "Asr", label: "Asr", Icon: SunMoon },
+	{ key: "Maghrib", label: "Maghrib", Icon: Sunset },
+	{ key: "Isha", label: "Isha", Icon: Moon },
+];
 
-const prayerIcons = {
-	Fajr: fajrIcon,
-	Sunrise: sunriseIcon,
-	Dhuhr: dhuhrIcon,
-	Asr: asrIcon,
-	Maghrib: maghribIcon,
-	Isha: ishaIcon,
-};
-
-function PrayerTimesCard({ prayers = [] }) {
+function PrayerTimesCard({ prayers = {}, nextPrayer }) {
 	return (
-		<Card>
-			<article>
-				<div>
-					<div>
-						<p>Today</p>
-						<h2>Prayer times</h2>
-					</div>
-				</div>
-				<div>
-					{Object.entries(prayers)
-						.slice(0, 7)
-						.filter((prayer) => prayer[0] !== "Sunset")
-						.map(([key, time]) => (
-							<div key={key}>
-								<div>
-									<img src={prayerIcons[key]} alt="" />
-									{prayerLabels[key] ?? key}
-								</div>
-								<time>{time}</time>
-							</div>
-						))}
-				</div>
+		<Card name="card-prayers" className="prayer-times-card" padding="large">
+			<article className="prayer-times">
+				<header className="prayer-times-header">
+					<h3>Prayer times</h3>
+				</header>
+
+				<ul className="prayer-times-list">
+					{PRAYERS.map(({ key, label, Icon }) => (
+						<li
+							key={key}
+							className={`prayer-row${
+								nextPrayer === label ? " is-next" : ""
+							}`}
+						>
+							<Icon className="prayer-row-icon" aria-hidden="true" />
+							<span className="prayer-row-name">{label}</span>
+							<time className="prayer-row-time">
+								{prayers?.[key] ?? "--:--"}
+							</time>
+						</li>
+					))}
+				</ul>
 			</article>
 		</Card>
 	);

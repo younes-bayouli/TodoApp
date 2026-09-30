@@ -20,7 +20,7 @@ const Navlist = () => {
 	const nextTheme = theme === "light" ? "dark" : "light";
 
 	return (
-		<nav className="app-nav" aria-label="Main">
+		<nav className="app-nav flex-shrink-0" aria-label="Main">
 			<div className="app-nav-inner">
 				<NavLink to="/" end className="app-nav-brand">
 					<img src="/logo.png" alt="" className="app-nav-brand-logo" />
