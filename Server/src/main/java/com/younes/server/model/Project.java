@@ -25,6 +25,7 @@ public class Project {
     private String description;
     private LocalDate deadline;
     private String owner;
+    private String status = "Active";
     private String color="#bd4b4b";
 
     @ElementCollection

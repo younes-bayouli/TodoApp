@@ -19,9 +19,7 @@ function PhotoCard({ photo, alt = "Personal profile", onClick }) {
 						className="w-100 h-100 object-fit-cover d-block"
 					/>
 				) : (
-					<div aria-label={alt}>
-						<span>Your photo</span>
-					</div>
+					<></>
 				)}
 				<div className="photo-card-caption">
 					<p>Your space</p>

@@ -1,39 +1,48 @@
 import { formatDate } from "../../Utils/dateUtilities";
 
 function ProjectCard({ project, onClick }) {
+	const todoCount =
+		project.todos?.filter((todo) => !todo.completed).length ?? 0;
+	const status = project.status ?? "Active";
+
 	return (
-		<div
-			className="app-clickable"
-			onClick={()=>onClick(project)}
+		<button
+			type="button"
+			className="project-card"
+			style={{ "--project-accent": project.color }}
+			onClick={() => onClick(project)}
 		>
-			{/* The accent color is per-project data; the border geometry
-			    is the same for every card, so only that lives in CSS. */}
-			<div
-				className="app-accent-left"
-				style={{ borderLeftColor: project.color }}
-			>
-				<h5>{project.name}</h5>
-			</div>
-			<div>
-				<div>
-					<small>
-						Due: {formatDate(project.deadline)}
-					</small>
-					{project.todos.length > 0 && (
+			<span className="project-card-heading">
+				<span className="project-card-title">{project.name}</span>
+				<span className="project-card-indicators">
+					<span
+						className={`project-card-status project-card-status-${status.toLowerCase()}`}
+					>
+						{status}
+					</span>
+					{todoCount > 0 && (
 						<span
-							title="Has todos"
+							className="project-card-todo-count"
+							title={`${todoCount} unfinished project tasks`}
 						>
-							!
+							{todoCount} {todoCount === 1 ? "task" : "tasks"}
 						</span>
 					)}
-				</div>
-
-				<div>
-					<small>Owner</small>
-					<span>{project.owner}</span>
-				</div>
-			</div>
-		</div>
+				</span>
+			</span>
+			<span className="project-card-details">
+				<span className="project-card-detail project-card-due">
+					<span className="project-card-label">Due:</span>
+					<span className="project-card-value">
+						{formatDate(project.deadline)}
+					</span>
+				</span>
+				<span className="project-card-detail">
+					<span className="project-card-label">Owner</span>
+					<span className="project-card-value">{project.owner}</span>
+				</span>
+			</span>
+		</button>
 	);
 }
 

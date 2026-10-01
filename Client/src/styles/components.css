@@ -86,6 +86,10 @@
 	color: var(--color-danger-hover);
 }
 
+.app-button-danger-ghost.text:hover{
+	background-color: var(--color-surface);
+}
+
 .app-button-ghost {
 	background-color: transparent;
 	border-color: transparent;

@@ -5,6 +5,7 @@ import EmptyState from "../../Components/Composite/EmptyState";
 import QuickAddForm from "../../Components/Composite/QuickAddForm";
 import { getPriority, priorityOrder } from "../../Utils/priorities";
 import { X } from "lucide-react";
+import PageHeader from "../../Components/Composite/PageHeader";
 
 function ProjectDetail({
 	onBack,
@@ -14,6 +15,12 @@ function ProjectDetail({
 	onModifyProject,
 }) {
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+	const changeStatus = (event) => {
+		updateProjectMutation.mutate({
+			Id: project.id,
+			Data: { ...project, status: event.target.value },
+		});
+	};
 
 	const toggleTodo = (todoId) => {
 		const updatedTodos = project.todos.map((todo) =>
@@ -77,11 +84,22 @@ function ProjectDetail({
 	return (
 		<>
 			<div>
-				<div>
-					<div>
-						<div>
-							<h3>project: {project.name}</h3>
-						</div>
+				<PageHeader title={`project: ${project.name}`}>
+					<div className="d-flex gap-2 align-items-center flex-wrap">
+						<small>Due: {formatDate(project.deadline)}</small>
+						<label className="d-flex align-items-center gap-2">
+							<span>Status</span>
+							<select
+								className="form-select form-select-sm w-auto"
+								value={project.status ?? "Active"}
+								disabled={updateProjectMutation.isPending}
+								onChange={changeStatus}
+							>
+								<option value="Active">Active</option>
+								<option value="Completed">Completed</option>
+								<option value="Suspended">Suspended</option>
+							</select>
+						</label>
 						<Button
 							type="button"
 							onClick={() => setShowDeleteDialog(true)}
@@ -89,9 +107,6 @@ function ProjectDetail({
 						>
 							Delete Project
 						</Button>
-					</div>
-					<div>
-						<small>Due: {formatDate(project.deadline)}</small>
 						<Button variant="secondary" onClick={onModifyProject}>
 							Modify Project
 						</Button>
@@ -100,7 +115,7 @@ function ProjectDetail({
 							Back to Projects
 						</Button>
 					</div>
-				</div>
+				</PageHeader>
 
 				<div>
 					<div>
@@ -170,44 +185,60 @@ function ProjectDetail({
 						sortedTodos.map((todo) => {
 							const priority = getPriority(todo.priority);
 							return (
-								<div key={todo.id}>
-									<div
-										onClick={() => toggleTodo(todo.id)}
-										className="app-clickable"
-									>
-										<input
-											type="checkbox"
-											checked={todo.completed}
-											onChange={() => toggleTodo(todo.id)}
-										/>
-									</div>
-									<div>
-										<span
-											className={
-												todo.completed
-													? "text-decoration-line-through"
-													: ""
-											}
+								<div
+									key={todo.id}
+									className="d-flex align-items-center p-2 justify-content-between"
+								>
+									<div className="d-flex align-items-center">
+										<div
+											onClick={() => toggleTodo(todo.id)}
+											className="app-clickable m-2"
 										>
-											{todo.title}
-										</span>
+											<input
+												type="checkbox"
+												checked={todo.completed}
+												onChange={() =>
+													toggleTodo(todo.id)
+												}
+											/>
+										</div>
+										<div>
+											<span
+												className={
+													todo.completed
+														? "text-decoration-line-through"
+														: ""
+												}
+											>
+												{todo.title}
+											</span>
+										</div>
 									</div>
-									<Button
-										type="button"
-										variant="danger-ghost"
-										onClick={() => deleteTodo(todo.id)}
-									>
-										Delete
-									</Button>
-									<span className="d-flex align-items-center gap-2">
+									<div className="d-flex align-items-center">
 										<span
-											className="app-list-dot"
+											className="d-flex align-items-center gap-2"
 											style={{
-												backgroundColor: priority.color,
+												color: priority.color,
 											}}
-										/>
-										{priority.label}
-									</span>
+										>
+											<span
+												className="app-list-dot"
+												style={{
+													backgroundColor:
+														priority.color,
+													color: priority.color,
+												}}
+											/>
+											{priority.label}
+										</span>
+										<Button
+											type="button"
+											variant="danger-ghost text"
+											onClick={() => deleteTodo(todo.id)}
+										>
+											Delete
+										</Button>
+									</div>
 								</div>
 							);
 						})

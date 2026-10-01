@@ -5,7 +5,7 @@ import useData from "../../Utils/useData";
 import useModal from "../../hooks/useModal.jsx";
 import PageHeader from "../../Components/Composite/PageHeader.jsx";
 import FilterTabs from "../../Components/Composite/FilterTabs.jsx";
-import "../../styles/projects.css"
+import "../../styles/projects.css";
 
 const normalise = (project) => {
 	return {
@@ -39,6 +39,16 @@ const projectFields = {
 		placeholder: "",
 		size: "half",
 	},
+	status: {
+		type: "select",
+		label: "Status",
+		size: "half",
+		options: [
+			{ value: "Active", label: "Active" },
+			{ value: "Completed", label: "Completed" },
+			{ value: "Suspended", label: "Suspended" },
+		],
+	},
 
 	color: {
 		type: "color",
@@ -57,6 +67,7 @@ const nullProject = {
 	description: "",
 	deadline: "",
 	color: "#0d6efd",
+	status: "Active",
 	owner: "",
 	todos: [],
 };
@@ -88,16 +99,11 @@ function Projects() {
 		setSelectedProject(null);
 	};
 
-	const filteredProjects = projects?.filter((project) => {
-		if (filter === "all") return true;
-		if (filter === "active") {
-			return project.todos.some((t) => !t.completed);
-		}
-		if (filter === "completed") {
-			return project.todos.every((t) => t.completed);
-		}
-		return true;
-	});
+	const filteredProjects = projects?.filter(
+		(project) =>
+			filter === "all" ||
+			(project.status ?? "Active").toLowerCase() === filter,
+	);
 
 	useEffect(() => {
 		setSelectedProject((prev) => {
@@ -116,7 +122,13 @@ function Projects() {
 					deleteProjectMutation={remove}
 					onBack={closeDetails}
 					onModifyProject={() =>
-						openModal({ mutation: update, object: selectedProject })
+						openModal({
+							mutation: update,
+							object: {
+								...selectedProject,
+								status: selectedProject.status ?? "Active",
+							},
+						})
 					}
 				/>
 				{Modal}
@@ -130,7 +142,7 @@ function Projects() {
 				{`${filteredProjects?.length || 0} projects`}
 			</PageHeader>
 			<FilterTabs
-				options={["all", "active", "completed"]}
+				options={["all", "active", "completed", "suspended"]}
 				value={filter}
 				onChange={setFilter}
 			/>
