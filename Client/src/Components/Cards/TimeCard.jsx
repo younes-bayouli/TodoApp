@@ -1,11 +1,11 @@
 import { format } from "../../Utils/timeUtilities";
 import Card from "../Composite/Card";
 
-export default function TimeDisplay({ date }) {
+export default function TimeDisplay({ date, className = "" }) {
 	const { hour12 } = format(date);
 
 	return (
-		<Card name="card-clock">
+		<Card name="card-clock" className={className}>
 			<div>
 				<div className="time-display">{hour12}</div>
 				<div className="day-display">

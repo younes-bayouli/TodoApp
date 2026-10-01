@@ -2,7 +2,7 @@ import TimeInputClock from "./TimeInputClock";
 
 export default function DuelClockInput({handleChange,left,right}) {
 	return (
-			<div>
+			<div className="d-flex gap-4">
 				<div>
 					<TimeInputClock
 						initialTime={left?.time}
@@ -10,7 +10,7 @@ export default function DuelClockInput({handleChange,left,right}) {
 						onChange={(newTime) => handleChange(left?.name, newTime)}
 					/>
 				</div>
-				<span className="span"></span>
+				<span className="line"></span>
 				<div>
 					<TimeInputClock
 						initialTime={right?.time}

@@ -307,6 +307,60 @@
 	flex: 1;
 }
 
+/* An hour gridline carries no label fill and no bar fill — the border
+   class the caller passes draws the hairline. Declared so the emitted
+   class names exist for the default variant too. */
+
+.app-time-bar {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	z-index: 2;
+	width: 0;
+	height: 100%;
+}
+
+.app-time-bar .label {
+	padding: 1px var(--space-2);
+	border-radius: var(--radius-sm);
+	font-size: var(--font-size-sm);
+	line-height: 1.5;
+	white-space: nowrap;
+}
+
+.app-time-bar .bar {
+	height: 100%;
+	border: 0.5px solid var(--color-muted);
+}
+
+/* =========================
+   TimeBar
+
+   A rule on the timeline, drawn by variant as a pair: the time label
+   on top, the bar below.
+
+   The ghost bar is dashed, so it reads as a pending or hover guide
+   rather than a committed boundary.
+   ========================= */
+
+.app-time-bar-danger .label {
+	background-color: var(--color-danger-subtle);
+	color: var(--color-danger-hover);
+}
+
+.app-time-bar-danger .bar {
+	border-color: var(--color-danger);
+}
+
+.app-time-bar-ghost .label {
+	color: var(--color-text-secondary);
+	background-color: var(--color-surface);
+}
+
+.app-time-bar-ghost .bar {
+	border: 0.5px dashed var(--color-text-muted);
+	background-color: transparent;
+}
 
 /* =========================
    IconButton
@@ -498,9 +552,6 @@
 	padding: 0 var(--space-3);
 }
 
-
-
-
 /* =========================
    Shared utilities
    ========================= */
@@ -629,7 +680,8 @@
 .app-clock {
 	font-size: 1.8rem;
 	font-weight: var(--font-weight-semibold);
-	/* px-5 is 3rem a side, which overflows a narrow modal. */
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--radius-lg);
 	max-width: 100%;
 }
 
@@ -649,7 +701,6 @@
 	border: none;
 	background: transparent;
 	color: inherit;
-	padding: 0.375rem 0.75rem;
 	appearance: none;
 	-webkit-appearance: none;
 }
@@ -674,4 +725,8 @@
 	bottom: 0;
 	left: 0;
 	z-index: 1000;
+}
+
+.under-line {
+	border-bottom: var(--border-width) solid var(--color-border);
 }

@@ -210,12 +210,14 @@ function Calendar() {
 						<Button
 							onClick={() => calendarRef.current?.getApi().prev()}
 							variant="secondary"
+							className="p-1"
 						>
 							<Arrow deg={90} />
 						</Button>
 						<Button
 							onClick={() => calendarRef.current?.getApi().next()}
 							variant="secondary"
+							className="p-1"
 						>
 							<Arrow deg={-90} />
 						</Button>
@@ -225,6 +227,7 @@ function Calendar() {
 								calendarRef.current?.getApi().today()
 							}
 							variant="secondary"
+							className="p-1"
 						>
 							Today
 						</Button>
@@ -237,11 +240,12 @@ function Calendar() {
 								})
 							}
 							variant="secondary"
+							className="p-1"
 						>
 							Make a Plan
 						</Button>
 					</div>
-					<Button variant="secondary" className="p-0 overflow-hidden">
+					<Button variant="secondary" className="p-1 overflow-hidden">
 						<input
 							type="month"
 							className="app-month-input"

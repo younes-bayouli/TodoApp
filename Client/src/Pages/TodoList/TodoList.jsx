@@ -113,7 +113,7 @@ function TodoList() {
 		// The list is the only part that scrolls, so it takes the
 		// remaining height and its own overflow.
 		<div className="page tasks-page flex-grow-1 min-h-0 d-flex flex-column">
-			<PageHeader title="Tasks">{`${openCount} open`}</PageHeader>
+			<PageHeader title="Tasks" className="under-line">{`${openCount} open`}</PageHeader>
 
 			<QuickAddForm
 				onSubmit={({ title, priority }) => addTask({ title, priority })}

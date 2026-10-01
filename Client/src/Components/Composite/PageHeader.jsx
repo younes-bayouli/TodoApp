@@ -4,10 +4,10 @@ function PageHeader({
     title,
     description,
     children,
-    className = ""
+    className = "",
 }) {
     return (
-        <div className={`d-flex justify-content-between align-items-md-center flex-column flex-md-row gap-3 mb-4 ${className}`}>
+        <div className={`d-flex justify-content-between align-items-md-center flex-column flex-md-row gap-3 pb-3 ${className}`}>
             <div>
                 <h2 className="mb-1">{title}</h2>
                 {description && (

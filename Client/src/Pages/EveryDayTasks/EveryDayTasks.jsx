@@ -137,11 +137,17 @@ function Myeveryday() {
 					role="group"
 					aria-label="Day navigation"
 				>
-					<span className="me-2 text-muted">
+					<Button
+						className="p-1"
+						variant="secondary"
+						onClick={() => {
+							setChosenDay(currentDayIndex);
+						}}
+					>
 						For {chosenDay === currentDayIndex && "Today ("}
 						{DAYS[chosenDay]}
 						{chosenDay === currentDayIndex && ")"}
-					</span>
+					</Button>
 					<Button
 						aria-label="Previous day"
 						onClick={() =>
@@ -150,6 +156,7 @@ function Myeveryday() {
 							)
 						}
 						variant="secondary"
+						className="p-1"
 					>
 						<Arrow deg={90} />
 					</Button>
@@ -159,6 +166,7 @@ function Myeveryday() {
 							setChosenDay((day) => (day + 1) % DAYS.length)
 						}
 						variant="secondary"
+						className="p-1"
 					>
 						<Arrow deg={-90} />
 					</Button>
@@ -167,30 +175,34 @@ function Myeveryday() {
 					onClick={() => {
 						addTask(current ? current.end : currentTime);
 					}}
-					variant="primary"
+					variant="secondary"
+					className="p-1"
 				>
 					Add Task
 				</Button>
 			</PageHeader>
-			<div>
-				<Schedule
-					time={Date}
-					prayers={prayers?.data?.timings}
-					settings={settings}
-					handleClickOnTask={(task) =>
-						openModal({ object: task, mutation: update })
-					}
-					Tasks={visibleTasks}
-					onDeleteTask={remove.mutate}
-					onClick={addTask}
-				></Schedule>
-				<div>
-					<div>
-						<TimeCard date={Date}></TimeCard>
-					</div>
-					<div>
-						<TaskStatusCard currentTask={current} nextTask={next} />
-					</div>
+			<div className="everyday-summary flex-grow-1 d-flex flex-column min-h-0 gap-3">
+				<div className="position-relative flex-grow-1">
+					<Schedule
+						time={Date}
+						handleClickOnTask={(task) =>
+							openModal({ object: task, mutation: update })
+						}
+						Tasks={visibleTasks}
+						onDeleteTask={remove.mutate}
+						onClick={addTask}
+						prayers={prayers?.data.timings}
+						settings={settings}
+					></Schedule>
+				</div>
+				<div className="d-flex gap-2 min-h-0">
+					<TimeCard date={Date} className="flex-fill" />
+					<TaskStatusCard
+						currentTask={current}
+						nextTask={next}
+						split
+						className="flex-grow-1"
+					/>
 				</div>
 			</div>
 			{Modal}

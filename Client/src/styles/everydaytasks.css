@@ -9,24 +9,49 @@
 
 .app-schedule-scroll {
 	position: relative;
-	padding-left: 20px;
-	/* Tasks are absolutely positioned inside the band, so the band
-	   needs an explicit height or they collapse to zero. */
-	min-height: 64px;
 	overflow-x: auto;
 	overflow-y: hidden;
+	display: flex;
+	align-items: center;
+	flex:1;
+	scrollbar-width: none;
+}
+
+.app-schedule-scroll::-webkit-scrollbar {
+	display: none;
 }
 
 /* The band the task blocks sit in, below the hour grid and the
    prayer/sleep markers. */
-.app-schedule-tasks {
-	position: relative;
-	margin-top: var(--space-5);
-	min-height: 44px;
-}
 
 .app-schedule-cursor {
 	z-index: 3;
+}
+
+/* =========================
+   Summary cards
+
+   The clock and the two task cards under the timeline. Both stretch
+   as flex items, so each needs to be a column for its content to fill
+   that height.
+   ========================= */
+
+.everyday-summary .card-clock,
+.everyday-summary .next-current-tasks {
+	display: flex;
+	flex-direction: column;
+}
+
+.everyday-summary .card-clock > div,
+.everyday-summary .next-current-tasks > .app-card {
+	flex: 1;
+}
+
+.everyday-summary .card-clock > div,
+.everyday-summary .next-current-tasks > .app-card > div {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 
 /* =========================
@@ -51,7 +76,7 @@
 	top: 0;
 	bottom: 0;
 	left: 0;
-	width: 2px;
+	width: 1px;
 	transform: translateX(-1px);
 }
 
@@ -144,14 +169,16 @@
    theme rather than hardcoding Bootstrap's light-theme blue.
    ========================= */
 
+.app-schedule-tasks {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
 .app-schedule-task {
 	position: absolute;
-	top: 0;
-	margin-top: 0;
-	max-height: 80%;
 	cursor: default;
-	z-index: 4;
-
+	z-index: 5;
 	display: flex;
 	align-items: center;
 	padding: var(--space-1) var(--space-2);
@@ -222,6 +249,54 @@
 
 .app-schedule-task-label {
 	overflow: hidden;
-	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+
+.prayer-marker {
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 0.5px;
+	background-color: var(--bs-info);
+	opacity: 1;
+}
+
+.prayer-marker span {
+	position: absolute;
+	bottom: 0.75rem;
+	left: 0;
+	z-index: 1;
+	padding: 0.2rem 0.1rem;
+	background-color: var(--bs-body-bg);
+	color: var(--bs-info-text-emphasis);
+	font-size: 0.75rem;
+	font-weight: 600;
+	white-space: nowrap;
+	transform: translateX(-50%) rotate(-90deg);
+	transform-origin: center;
+}
+
+.sleep-marker {
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 1px;
+	background-color: var(--bs-warning);
+	opacity: 1;
+}
+
+.sleep-marker span {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	z-index: 1;
+	padding: 0.2rem 0.1rem;
+	background-color: var(--bs-body-bg);
+	color: var(--bs-warning-text-emphasis);
+	font-size: 0.75rem;
+	font-weight: 600;
+	white-space: nowrap;
+	transform: translate(-50%, -50%) rotate(-90deg);
+	transform-origin: center;
 }

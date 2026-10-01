@@ -126,7 +126,7 @@ function Projects() {
 
 	return (
 		<div className="page flex-grow-1 min-h-0 d-flex flex-column">
-			<PageHeader title="Projects">
+			<PageHeader title="Projects" className="under-line">
 				{`${filteredProjects?.length || 0} projects`}
 			</PageHeader>
 			<FilterTabs

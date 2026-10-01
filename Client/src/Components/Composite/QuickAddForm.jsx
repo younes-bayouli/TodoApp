@@ -29,7 +29,7 @@ function QuickAddForm({
 	};
 
 	return (
-		<form className="app-quick-add" onSubmit={handleSubmit}>
+		<form className="app-quick-add mt-4" onSubmit={handleSubmit}>
 			<Input
 				className="form-control"
 				value={title}

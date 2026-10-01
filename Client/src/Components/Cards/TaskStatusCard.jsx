@@ -1,6 +1,6 @@
 import Card from "../Composite/Card";
 
-function TaskStatusCard({ currentTask, nextTask, split = false }) {
+function TaskStatusCard({ currentTask, nextTask, split = false, className = "" }) {
 	const renderTask = (label, task) => (
 		<div>
 			<div className="task-label">{label}</div>
@@ -18,7 +18,7 @@ function TaskStatusCard({ currentTask, nextTask, split = false }) {
 	);
 	if (split) {
 		return (
-			<div className="next-current-tasks d-flex gap-3">
+			<div className={`next-current-tasks d-flex gap-2 ${className}`}>
 				<Card className="flex-fill">
 					{renderTask("Current task", currentTask)}
 				</Card>

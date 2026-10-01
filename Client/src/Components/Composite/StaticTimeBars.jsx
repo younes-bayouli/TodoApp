@@ -11,7 +11,7 @@ const StaticTimeBars = memo(() => {
 		<>
 			{TimeList.map((item, key) => {
 				return (
-					<TimeBar key={item} LeftMargin={key * 100} time={item} />
+					<TimeBar key={item} LeftMargin={key * 100} time={item} variant="secondary" />
 				);
 			})}
 		</>

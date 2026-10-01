@@ -58,108 +58,100 @@ function Schedule({
 	});
 
 	return (
-		<>
-			<div>
-				<div>
-					<Arrow deg={90} onClick={scrollLeft}></Arrow>
-					<div
-						className="app-schedule-scroll"
-						ref={scrollRef}
-						onMouseEnter={() => setHovered(true)}
-						onMouseLeave={() => setHovered(false)}
-					>
-						<div
-							className="app-schedule-cursor"
-							style={{
-								marginLeft: scrollRef.current?.scrollLeft - 20,
-							}}
-							onClick={() => {
-								let min = Math.ceil(
-									((distanceMouseLeftedge -
-										20 +
-										scrollRef.current.scrollLeft) *
-										6) /
-										10,
-								);
-								onClick(format(minutesToTime(min)).hour24);
-							}}
-						></div>
-						<StaticTimeBars />
-						<TimeBar
-							LeftMargin={(timeToMinutes(time) * 10) / 6}
-							headStyle={"app-time-bar-now shadow p-0 m-0"}
-							barStyle={"shadow bg-danger border-0 p-0 m-0"}
-							time={format(time).hour24}
-						></TimeBar>
-						{Hovered && (
-							<TimeBar
-								LeftMargin={Math.ceil(
-									distanceMouseLeftedge -
-										20 +
-										scrollRef.current.scrollLeft,
-								)}
-								headStyle={
-									"border-0 text-opacity-25 p-0 m-0 position-relative z-3 app-schedule-hover-time"
-								}
-								barStyle={"border-1 border-light p-0 m-0"}
-								borderStyle={"dashed"}
-								time={minutesToString(
-									Math.ceil(
-										((distanceMouseLeftedge -
-											20 +
-											scrollRef.current.scrollLeft) *
-											6) /
-											10,
-									),
-								)}
-							></TimeBar>
+		<div className="d-flex align-items-center h-100">
+			<Arrow deg={90} onClick={scrollLeft}></Arrow>
+			<div
+				className="app-schedule-scroll h-100"
+				ref={scrollRef}
+				onMouseEnter={() => setHovered(true)}
+				onMouseLeave={() => setHovered(false)}
+				style={{ paddingLeft: "20px" }}
+			>
+				<div
+					className="h-100 w-100 position-absolute"
+					style={{
+						zIndex: 4,
+						marginLeft: scrollRef.current?.scrollLeft - 20,
+					}}
+					onClick={() => {
+						let min = Math.ceil(
+							((distanceMouseLeftedge -
+								20 +
+								scrollRef.current.scrollLeft) *
+								6) /
+								10,
+						);
+						onClick(format(minutesToTime(min)).hour24);
+					}}
+				></div>
+				<StaticTimeBars />
+				<TimeBar
+					LeftMargin={(timeToMinutes(time) * 10) / 6}
+					variant="danger"
+					time={format(time).hour24}
+				></TimeBar>
+				{Hovered && (
+					<TimeBar
+						variant="ghost"
+						LeftMargin={Math.ceil(
+							distanceMouseLeftedge -
+								20 +
+								scrollRef.current.scrollLeft,
 						)}
-						{prayerNames.map((name) => {
-							const prayerTime = prayers[name];
-							if (!prayerTime) return null;
+						time={minutesToString(
+							Math.ceil(
+								((distanceMouseLeftedge -
+									20 +
+									scrollRef.current.scrollLeft) *
+									6) /
+									10,
+							),
+						)}
+					></TimeBar>
+				)}
+				{prayerNames.map((name) => {
+					const prayerTime = prayers[name];
+					if (!prayerTime) return null;
 
-							const prayerMinutes = stringToMinutes(prayerTime);
-							if (Number.isNaN(prayerMinutes)) return null;
+					const prayerMinutes = stringToMinutes(prayerTime);
+					if (Number.isNaN(prayerMinutes)) return null;
 
-							return (
-								<div
-									key={name}
-									className="app-schedule-marker app-schedule-marker-prayer"
-									style={{
-										marginLeft: (prayerMinutes * 10) / 6,
-									}}
-								>
-									<span>{name}</span>
-								</div>
-							);
-						})}
-						{sleepTimes.map(({ name, time: sleepTime }) => (
-							<div
-								key={name}
-								className="app-schedule-marker app-schedule-marker-sleep"
-								style={{
-									marginLeft:
-										(stringToMinutes(sleepTime) * 10) / 6,
-								}}
-							>
-								<span>{name}</span>
-							</div>
-						))}
-						<div className="app-schedule-tasks">
-							{Tasks.map((task) => (
-								<Task
-									task={task}
-									key={task.id}
-									onClick={handleClickOnTask}
-									onDelete={onDeleteTask}
-								></Task>
-							))}
+					return (
+						<div
+							key={name}
+							className="prayer-marker"
+							style={{
+								marginLeft: (prayerMinutes * 10) / 6,
+							}}
+						>
+							<span>{name}</span>
 						</div>
+					);
+				})}
+				{sleepTimes.map(({ name, time: sleepTime }) => (
+					<div
+						key={name}
+						className="sleep-marker"
+						style={{
+							marginLeft: (stringToMinutes(sleepTime) * 10) / 6,
+						}}
+					>
+						<span>{name}</span>
 					</div>
-					<Arrow deg={-90} onClick={scrollRight}></Arrow>
+				))}
+				<div className="app-schedule-tasks">
+					{Tasks.map((task) => (
+						<Task
+							task={task}
+							key={task.id}
+							onClick={handleClickOnTask}
+							onDelete={onDeleteTask}
+						></Task>
+					))}
 				</div>
 			</div>
-		</>
+			<Arrow deg={-90} onClick={scrollRight}></Arrow>
+		</div>
 	);
 }
 
