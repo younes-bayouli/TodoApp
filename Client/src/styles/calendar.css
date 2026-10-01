@@ -1,12 +1,3 @@
-/* =========================
-   Calendar
-
-   FullCalendar injects its own stylesheet at runtime, so this file is
-   entirely overrides. Most of it is token re-anchoring on the --fc-*
-   variables; the handful of rules below exist because FullCalendar has
-   no variable for that property, not to restate its defaults.
-   ========================= */
-
 .fc {
 	--fc-border-color: var(--color-calendar-border);
 	--fc-page-bg-color: var(--color-calendar-bg);
@@ -17,32 +8,18 @@
 		var(--color-primary) 7%,
 		transparent
 	);
-	/* Events carry a user-chosen backgroundColor and no textColor, so
-	   the label colour has to come from a variable or it inherits the
-	   cell's. These fills are mid-tone in both themes. */
 	--fc-event-text-color: var(--color-calendar-event-text);
 	--fc-small-font-size: var(--font-size-sm);
 	font-size: var(--font-size-sm);
 	color: var(--color-text);
 }
 
-/* Hairlines are drawn by .fc-theme-standard td/th off --fc-border-color,
-   with the outer edge coming from .fc-scrollgrid. Both stay — the
-   reference has a framed grid. Only the wrapper's own background is
-   unwanted, since the page already provides the surface. */
 .fc .fc-scrollgrid {
 	background-color: transparent;
 }
 
-/* =========================
-   Weekday header
-   ========================= */
-
-/* .fc td, .fc th ship with padding: 0, so the header has no breathing
-   room until it is given some. */
 .fc .fc-col-header-cell {
 	background-color: var(--color-calendar-bg);
-	padding: var(--space-3) var(--space-2);
 }
 
 .fc .fc-col-header-cell-cushion {
@@ -54,14 +31,6 @@
 	text-decoration: none;
 }
 
-/* =========================
-   Grid and day cells
-   ========================= */
-
-/* FullCalendar sizes rows from their content when contentHeight="auto"
-   is set, which distributes the available vertical space equally across
-   all week rows so the grid never needs a scrollbar. The min-height
-   remains as a floor for when the viewport shrinks. */
 .fc .fc-daygrid-day-frame {
 	min-height: 5rem;
 }
@@ -75,14 +44,11 @@
 	background-color: var(--color-calendar-header-bg);
 }
 
-/* Wins over the hover above on specificity, so today stays today. */
 .fc .fc-daygrid-day.fc-day-today {
 	background-color: var(--color-calendar-today);
 }
 
 .fc .fc-daygrid-day-number {
-	/* The number is the whole click target for opening a day's events,
-	   so it gets a cursor rather than the cell picking one up. */
 	cursor: pointer;
 }
 
@@ -94,10 +60,6 @@
 	text-decoration: none;
 }
 
-/* FullCalendar dims a neighbouring month's cell to opacity .3, which
-   also fades its background — too faint to read as a date. Colouring
-   the number instead keeps the cell at full surface and mutes only the
-   number, which is what the reference shows. */
 .fc .fc-day-other .fc-daygrid-day-top {
 	opacity: 1;
 }
@@ -105,13 +67,6 @@
 .fc .fc-day-other .fc-daygrid-day-top > .fc-daygrid-day-number {
 	color: var(--color-calendar-outside-month);
 }
-
-/* =========================
-   Events
-
-   backgroundColor is set inline per event, so the fill is never
-   touched here — only the text, padding and shape on top of it.
-   ========================= */
 
 .fc .fc-daygrid-event {
 	margin: 0 var(--space-3) var(--space-1);
@@ -128,16 +83,6 @@
 	font-weight: var(--font-weight-medium);
 }
 
-/* =========================
-   Page layout
-
-   FullCalendar is given height="100%", which resolves against its
-   parent. The page is a flex column so that parent — the grid wrapper
-   — gets a definite height to resolve against; without it the view
-   harness collapses and only the weekday header shows. min-height: 0
-   lets the wrapper shrink inside that column instead of overflowing.
-   ========================= */
-
 .app-calendar {
 	display: flex;
 	flex-direction: column;
@@ -145,51 +90,19 @@
 	min-height: 0;
 }
 
-.app-calendar-grid {
-	flex: 1;
-	min-height: 0;
+
+.calendar-day-tooltip {
+	position: fixed;
+	z-index: 1060;
+	width: 250px;
+	max-height: 220px;
+	padding: 12px;
+	border: 1px solid var(--color-border);
+	border-radius: 6px;
+	background: var(--color-surface);
+	box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+	color: var(--color-text);
+	font-size: 0.85rem;
+	overflow-y: auto;
 }
 
-/* =========================
-   PageHeader controls
-
-   The header's own buttons are Bootstrap-less (app-button), so the
-   compact treatment is applied by scoping to the calendar page.
-   ========================= */
-
-.app-calendar-controls .app-button {
-	padding: 0.3rem 0.7rem;
-	font-size: var(--font-size-sm);
-	border-radius: var(--radius-md);
-	box-shadow: none;
-}
-
-.app-calendar-controls .app-button:hover {
-	box-shadow: none;
-}
-
-.app-calendar-controls .app-month-input {
-	font-family: inherit;
-	font-size: var(--font-size-sm);
-	padding: 0 var(--space-1);
-	cursor: pointer;
-}
-
-/* =========================
-   Narrow screens
-
-   The grid never needs to scroll: the seven columns compress and only
-   the day cell's height and the event padding are given up.
-   ========================= */
-
-@media (max-width: 768px) {
-	.fc .fc-daygrid-day-frame {
-		min-height: 5rem;
-	}
-
-	.fc .fc-daygrid-event {
-		margin: 0 var(--space-2) var(--space-1);
-		padding: 0 var(--space-1);
-		font-size: 0.75rem;
-	}
-}

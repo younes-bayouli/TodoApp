@@ -257,7 +257,7 @@ function Calendar() {
 			</PageHeader>
 
 			{!dayEvents && (
-				<div className="app-calendar-grid">
+				<div className="app-calendar-grid h-100">
 					<FullCalendar
 						ref={calendarRef}
 						plugins={[dayGridPlugin, interactionPlugin]}
@@ -269,7 +269,6 @@ function Calendar() {
 						}}
 						events={events}
 						height="100%"
-						contentHeight="auto"
 						navLinks={false}
 						dateClick={handleDateClick}
 						dayCellDidMount={({ date, el }) => {
@@ -289,8 +288,9 @@ function Calendar() {
 			)}
 
 			{dayTooltip && (
-				<div style={dayTooltip.position} onMouseLeave={hideDayTooltip}>
-					<div>{formatDay(dayTooltip.date)}</div>
+				<div style={dayTooltip.position} 
+					className="calendar-day-tooltip" onMouseLeave={hideDayTooltip}>
+					<div className="fw-semibold mb-2">{formatDay(dayTooltip.date)}</div>
 					{dayTooltip.events?.length > 0 ? (
 						<ul>
 							{dayTooltip.events.map((event) => (

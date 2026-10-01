@@ -1,5 +1,6 @@
 import Button from "../../Components/Basic/Button";
 import EmptyState from "../../Components/Composite/EmptyState";
+import PageHeader from "../../Components/Composite/PageHeader";
 
 export default function DayEvents({
 	day,
@@ -11,18 +12,20 @@ export default function DayEvents({
 }) {
 	return (
 		<div>
-			<div>
-				<div>
-					<h4>{day}</h4>
-					<p>Events for this day</p>
-				</div>
-				<div>
-					<Button onClick={addEvent}>Add event</Button>
-					<Button onClick={onBack} variant="secondary">
-						Back to calendar
-					</Button>
-				</div>
-			</div>
+			<PageHeader
+				title={
+					<div>
+						<p className="m-0">Events for this day: {day}</p>
+					</div>
+				}
+			>
+				<Button onClick={addEvent} variant="secondary" size="small" className="p-2">
+					Add event
+				</Button>
+				<Button onClick={onBack} variant="secondary" size="small" className="p-2">
+					Back to calendar
+				</Button>
+			</PageHeader>
 			<div>
 				{events?.length > 0 ? (
 					events.map((calendarEvent) => (
