@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { Settings } from "lucide-react";
+import { useAppContext } from "../Context.jsx";
 
 // Routes are written out, not derived from the label. The old
 // `label.toLowerCase().replace(/\s+/g, "")` coupling meant renaming a
@@ -19,6 +20,8 @@ const NAV_ITEMS = [
 ];
 
 const Navlist = () => {
+	const { theme } = useAppContext();
+
 	return (
 		<nav className="app-nav flex-shrink-0" aria-label="Main">
 			<div className="app-nav-inner">
@@ -44,7 +47,14 @@ const Navlist = () => {
 						>
 							{typeof item.icon === "string" ? (
 								<img
-									src={item.icon}
+									src={
+										theme === "dark"
+											? item.icon.replace(
+													".png",
+													"-light.png",
+												)
+											: item.icon
+									}
 									alt=""
 									className="app-nav-link-icon"
 								/>
@@ -59,6 +69,9 @@ const Navlist = () => {
 						</NavLink>
 					))}
 				</div>
+				<small className="app-nav-copyright">
+					&copy; Younes Bayouli
+				</small>
 			</div>
 		</nav>
 	);

@@ -11,15 +11,13 @@ function TodoPreviewCard({ todos = [], limit = 3 }) {
 	return (
 		<Card name="card-focus">
 			<article>
-				<div className="app-card-header">
-					<div>
-						<h3>Todos</h3>
-					</div>
-				</div>
 				<ul className="app-list">
 					{visibleTodos.length > 0 ? (
 						visibleTodos.map((todo) => (
-							<li key={todo.id}>
+							<li
+								key={todo.id}
+								className="d-flex align-items-center gap-2"
+							>
 								<span
 									className="app-list-dot"
 									style={{
@@ -32,12 +30,9 @@ function TodoPreviewCard({ todos = [], limit = 3 }) {
 							</li>
 						))
 					) : (
-						<li>All clear for now.</li>
+						<li>There is nothing in the list of todos.</li>
 					)}
 				</ul>
-				{visibleTodos.length < openCount && (
-					<p>+ more waiting in your list</p>
-				)}
 			</article>
 		</Card>
 	);

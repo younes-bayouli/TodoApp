@@ -16,6 +16,5 @@ export const priorityOrder = { high: 0, medium: 1, low: 2 };
 export const getPriority = (priority) =>
 	priorityStyles[priority] ?? {
 		label: priority,
-		variant: "default",
-		color: "var(--color-text-muted)",
+		variant: priorityStyles[priority]?.variant ?? "secondary",
 	};

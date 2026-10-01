@@ -84,7 +84,12 @@ function Home() {
 				<NextPrayerCard nextPrayer={nextPrayer} date={date} large />
 				<TodayEventsCard events={todaysEvents} date={date} />
 				<div className="d-flex flex-column gap-3">
-					<TaskStatusCard currentTask={current} nextTask={next} split/>
+					<TaskStatusCard
+						currentTask={current}
+						nextTask={next}
+						split
+						className="home-task-status"
+					/>
 					<TodoPreviewCard todos={Todos} />
 				</div>
 				<PhotoGallery />

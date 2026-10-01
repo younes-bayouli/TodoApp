@@ -33,8 +33,6 @@ function Todo({ todo, onToggle, onRemove, onEdit }) {
 				</span>
 			</div>
 
-			<Badge variant={priority.variant}>{priority.label}</Badge>
-
 			{/* Opacity is driven by .app-row:hover / :focus-within, so the
                 actions stay reachable by keyboard without a state flag. */}
 			<div className="app-row-actions">
@@ -54,6 +52,7 @@ function Todo({ todo, onToggle, onRemove, onEdit }) {
 					<Trash2 size={16} />
 				</IconButton>
 			</div>
+			<Badge variant={priority.variant}>{priority.label}</Badge>
 		</Card>
 	);
 }

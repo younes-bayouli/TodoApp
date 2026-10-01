@@ -13,7 +13,7 @@
 	overflow-y: hidden;
 	display: flex;
 	align-items: center;
-	flex:1;
+	flex: 1;
 	scrollbar-width: none;
 }
 
@@ -252,7 +252,6 @@
 	white-space: nowrap;
 }
 
-
 .prayer-marker {
 	position: absolute;
 	top: 0;
@@ -299,4 +298,129 @@
 	white-space: nowrap;
 	transform: translate(-50%, -50%) rotate(-90deg);
 	transform-origin: center;
+}
+
+.week-view-scroll {
+	flex: 1;
+	min-height: 0;
+	overflow: auto;
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--card-radius);
+	background-color: var(--color-surface);
+}
+
+.week-table {
+	width: 100%;
+	min-width: 1080px;
+	table-layout: fixed;
+	border-collapse: separate;
+	border-spacing: 0;
+	color: var(--color-text);
+}
+
+.week-table th,
+.week-table td {
+	border-right: var(--border-width) solid var(--color-border-subtle);
+	border-bottom: var(--border-width) solid var(--color-border-subtle);
+}
+
+.week-table thead {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+}
+
+.week-table thead th {
+	height: 52px;
+	padding: var(--space-2);
+	background-color: var(--color-surface-subtle);
+	font-weight: var(--font-weight-semibold);
+	text-align: center;
+}
+
+.week-table .week-time-heading {
+	position: sticky;
+	left: 0;
+	z-index: 3;
+	width: 76px;
+	text-align: right;
+}
+
+.week-table .week-hour {
+	position: sticky;
+	left: 0;
+	width: 76px;
+	padding: var(--space-2);
+	background-color: var(--color-surface-subtle);
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	text-align: right;
+	vertical-align: top;
+}
+
+.week-table .week-cell {
+	position: relative;
+	height: 64px;
+	padding: 0;
+	vertical-align: top;
+}
+
+.week-table .week-today {
+	background-color: var(--color-calendar-today);
+}
+
+.week-today-label {
+	display: block;
+	color: var(--color-primary);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-normal);
+}
+
+.week-cell {
+	background-color: var(--color-surface);
+}
+
+.week-task {
+	position: absolute;
+	left: var(--space-1);
+	right: var(--space-1);
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 1px;
+	min-height: 0;
+	padding: 2px var(--space-1);
+	border: var(--border-width) solid var(--color-primary-border);
+	border-radius: var(--radius-sm);
+	background-color: var(--color-primary-light);
+	color: var(--color-primary-contrast);
+	font: inherit;
+	font-size: var(--font-size-sm);
+	line-height: 1.1;
+	text-align: left;
+	cursor: pointer;
+}
+
+.week-task:hover,
+.week-task:focus-visible {
+	border-color: var(--color-primary);
+	outline: 2px solid var(--color-primary-border);
+	outline-offset: 1px;
+}
+
+.week-task-title,
+.week-task-time {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.week-task-title {
+	font-weight: var(--font-weight-semibold);
+}
+
+.week-task-time {
+	font-variant-numeric: tabular-nums;
 }

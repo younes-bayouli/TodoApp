@@ -21,6 +21,8 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api";
 import { useAppContext } from "../../Context";
 import Button from "../../Components/Basic/Button.jsx";
+import { CalendarDays } from "lucide-react";
+import WeekView from "./WeekView.jsx";
 
 const validateForm = (Task) => {
 	const newErrors = {};
@@ -100,6 +102,7 @@ function Myeveryday() {
 	});
 	const currentDayIndex = (Date.getDay() + 6) % 7;
 	const [chosenDay, setChosenDay] = useState(() => currentDayIndex);
+	const [showWeekView, setShowWeekView] = useState(false);
 	const visibleTasks = Tasks?.filter((task) => task.days[chosenDay]);
 	const currentTime = format(Date).hour24;
 	const { current, next } = getCurrentAndNextTask(currentTime, visibleTasks);
@@ -132,45 +135,55 @@ function Myeveryday() {
 	return (
 		<>
 			<PageHeader title="My Every Day">
-				<div
-					className="d-flex align-items-center gap-2"
-					role="group"
-					aria-label="Day navigation"
+				{!showWeekView && (
+					<div
+						className="d-flex align-items-center gap-2"
+						role="group"
+						aria-label="Day navigation"
+					>
+						<Button
+							className="p-1"
+							variant="secondary"
+							onClick={() => setChosenDay(currentDayIndex)}
+						>
+							For {chosenDay === currentDayIndex && "Today ("}
+							{DAYS[chosenDay]}
+							{chosenDay === currentDayIndex && ")"}
+						</Button>
+						<Button
+							aria-label="Previous day"
+							onClick={() =>
+								setChosenDay(
+									(day) =>
+										(day - 1 + DAYS.length) % DAYS.length,
+								)
+							}
+							variant="secondary"
+							className="p-1"
+						>
+							<Arrow deg={90} />
+						</Button>
+						<Button
+							aria-label="Next day"
+							onClick={() =>
+								setChosenDay((day) => (day + 1) % DAYS.length)
+							}
+							variant="secondary"
+							className="p-1"
+						>
+							<Arrow deg={-90} />
+						</Button>
+					</div>
+				)}
+				<Button
+					variant="secondary"
+					className="p-1"
+					icon={<CalendarDays size={16} />}
+					aria-pressed={showWeekView}
+					onClick={() => setShowWeekView((isShowing) => !isShowing)}
 				>
-					<Button
-						className="p-1"
-						variant="secondary"
-						onClick={() => {
-							setChosenDay(currentDayIndex);
-						}}
-					>
-						For {chosenDay === currentDayIndex && "Today ("}
-						{DAYS[chosenDay]}
-						{chosenDay === currentDayIndex && ")"}
-					</Button>
-					<Button
-						aria-label="Previous day"
-						onClick={() =>
-							setChosenDay(
-								(day) => (day - 1 + DAYS.length) % DAYS.length,
-							)
-						}
-						variant="secondary"
-						className="p-1"
-					>
-						<Arrow deg={90} />
-					</Button>
-					<Button
-						aria-label="Next day"
-						onClick={() =>
-							setChosenDay((day) => (day + 1) % DAYS.length)
-						}
-						variant="secondary"
-						className="p-1"
-					>
-						<Arrow deg={-90} />
-					</Button>
-				</div>
+					{showWeekView ? "Day view" : "Week view"}
+				</Button>
 				<Button
 					onClick={() => {
 						addTask(current ? current.end : currentTime);
@@ -181,30 +194,40 @@ function Myeveryday() {
 					Add Task
 				</Button>
 			</PageHeader>
-			<div className="everyday-summary flex-grow-1 d-flex flex-column min-h-0 gap-3">
-				<div className="position-relative flex-grow-1">
-					<Schedule
-						time={Date}
-						handleClickOnTask={(task) =>
-							openModal({ object: task, mutation: update })
-						}
-						Tasks={visibleTasks}
-						onDeleteTask={remove.mutate}
-						onClick={addTask}
-						prayers={prayers?.data.timings}
-						settings={settings}
-					></Schedule>
+			{showWeekView ? (
+				<WeekView
+					tasks={Tasks ?? []}
+					todayIndex={currentDayIndex}
+					onTaskClick={(task) =>
+						openModal({ object: task, mutation: update })
+					}
+				/>
+			) : (
+				<div className="everyday-summary flex-grow-1 d-flex flex-column min-h-0 gap-3">
+					<div className="position-relative flex-grow-1">
+						<Schedule
+							time={Date}
+							handleClickOnTask={(task) =>
+								openModal({ object: task, mutation: update })
+							}
+							Tasks={visibleTasks}
+							onDeleteTask={remove.mutate}
+							onClick={addTask}
+							prayers={prayers?.data.timings}
+							settings={settings}
+						></Schedule>
+					</div>
+					<div className="d-flex gap-2 min-h-0">
+						<TimeCard date={Date} className="flex-fill" />
+						<TaskStatusCard
+							currentTask={current}
+							nextTask={next}
+							split
+							className="flex-grow-1"
+						/>
+					</div>
 				</div>
-				<div className="d-flex gap-2 min-h-0">
-					<TimeCard date={Date} className="flex-fill" />
-					<TaskStatusCard
-						currentTask={current}
-						nextTask={next}
-						split
-						className="flex-grow-1"
-					/>
-				</div>
-			</div>
+			)}
 			{Modal}
 		</>
 	);
