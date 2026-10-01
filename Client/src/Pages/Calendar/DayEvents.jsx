@@ -1,4 +1,4 @@
-import Button from "../../Components/Composite/DuelClockInput";
+import Button from "../../Components/Basic/Button";
 import EmptyState from "../../Components/Composite/EmptyState";
 
 export default function DayEvents({

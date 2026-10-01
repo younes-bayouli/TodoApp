@@ -6,53 +6,25 @@
    are shared, or by components.css.
    ========================= */
 
-/* 5 columns x 2 rows. The fr weights are chosen so the tracks land
-   near 464/223/125/230/355px on a 1915px viewport, which is what
-   gives Clock its width and Focus its narrow one. */
+/* 5 columns x 2 rows. Column 2 is `auto` so the Hijri card takes only
+   the width its 110px day number needs, and the remaining four share
+   the leftover in the listed fr weights. */
 .home-grid {
 	flex: 1;
 	min-height: 0;
 	display: grid;
 	gap: var(--grid-gap);
-	grid-template-columns: 4.64fr 2.23fr 1.25fr 2.3fr 3.55fr;
-	grid-template-rows: 45fr 55fr;
+	grid-template-columns: 4.64fr auto  1.25fr 2.3fr 3.55fr;
+	grid-template-rows: auto 55fr;
 	grid-template-areas:
 		"clock hijri next next photo"
-		"tasks sched sched focus photo";
+		"tasks sched sched sched photo";
 }
 
 /* Without this a card's intrinsic width can blow the track out. */
 .home-grid > * {
 	min-width: 0;
 	min-height: 0;
-}
-
-.card-clock {
-	grid-area: clock;
-}
-
-.card-hijri {
-	grid-area: hijri;
-}
-
-.card-next {
-	grid-area: next;
-}
-
-.card-photo {
-	grid-area: photo;
-}
-
-.card-tasks {
-	grid-area: tasks;
-}
-
-.card-schedule {
-	grid-area: sched;
-}
-
-.card-focus {
-	grid-area: focus;
 }
 
 /* =========================

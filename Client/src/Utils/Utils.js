@@ -63,6 +63,48 @@ export function getCurrentAndNextTask(time, tasks = []) {
 	return { current: currentTask, next: nextTask };
 }
 
+// The API's timings object also carries Sunrise and Sunset, which are
+// not prayers. The PRAYERS list in PrayerTimesCard is the display order
+// and the icon set; this is the same list reduced to keys.
+const PRAYER_KEYS = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+
+export function getNextPrayer(timings, date) {
+	if (!timings || !date) return null;
+
+	const todaysPrayers = PRAYER_KEYS.map((name) => ({
+		name,
+		time: timings[name],
+		date: atMinutes(timings[name], date),
+	})).filter((prayer) => prayer.date);
+
+	const upcoming = todaysPrayers.find(
+		(prayer) => prayer.date.getTime() > date.getTime(),
+	);
+
+	// Past Isha: the next prayer is tomorrow's Fajr, so it keeps today's
+	// time string and only the date moves.
+	if (upcoming) return upcoming;
+
+	const fajr = todaysPrayers[0];
+	if (!fajr) return null;
+
+	const tomorrow = new Date(date);
+	tomorrow.setDate(tomorrow.getDate() + 1);
+	return {
+		name: fajr.name,
+		time: fajr.time,
+		date: atMinutes(fajr.time, tomorrow),
+	};
+}
+
+function atMinutes(time, date) {
+	if (!time) return null;
+	const prayerDate = new Date(date);
+	const [hours, minutes] = time.split(":").map(Number);
+	prayerDate.setHours(hours, minutes, 0, 0);
+	return prayerDate;
+}
+
 export function getSizeClass(size) {
 	switch (size) {
 		case "full":

@@ -6,6 +6,7 @@ import EmptyState from "../../Components/Composite/EmptyState.jsx";
 import Todo from "../../Components/Composite/Todo.jsx";
 import QuickAddForm from "../../Components/Composite/QuickAddForm.jsx";
 import FilterTabs from "../../Components/Composite/FilterTabs.jsx";
+import "../../styles/todolist.css";
 
 const filters = ["All", "Open", "Completed"];
 const priorityOrder = { high: 0, medium: 1, low: 2 };
@@ -112,12 +113,11 @@ function TodoList() {
 		// The list is the only part that scrolls, so it takes the
 		// remaining height and its own overflow.
 		<div className="page tasks-page flex-grow-1 min-h-0 d-flex flex-column">
-			<PageHeader title="Tasks" description={`${openCount} open`} />
+			<PageHeader title="Tasks">{`${openCount} open`}</PageHeader>
 
 			<QuickAddForm
 				onSubmit={({ title, priority }) => addTask({ title, priority })}
 			/>
-
 			<FilterTabs options={filters} value={filter} onChange={setFilter} />
 
 			<div className="tasks-page-list d-flex flex-column gap-2 overflow-y-auto min-h-0">
@@ -138,7 +138,6 @@ function TodoList() {
 					))
 				) : (
 					<EmptyState
-						title="No tasks yet"
 						description="Nothing here — add a task above."
 					/>
 				)}

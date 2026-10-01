@@ -10,12 +10,10 @@ import { api } from "../../api/api";
 import { usePosition } from "../../hooks/usePosition";
 import { useAppContext } from "../../Context";
 import { useEffect } from "react";
-import { formatLocation } from "../../Utils/Utils";
+import { formatLocation, getNextPrayer } from "../../Utils/Utils";
 import { MapPin } from "lucide-react";
-
-// Matches NextPrayerCard's own prayer order, so the highlight in the
-// list and the card above it always name the same prayer.
-const PRAYER_NAMES = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+import "../../styles/prayertimes.css";
+import { data } from "react-router-dom";
 
 function PrayerTimes() {
 	const { addError } = useAppContext();
@@ -39,13 +37,7 @@ function PrayerTimes() {
 	});
 
 	const timings = prayers?.data.timings;
-	const nextPrayer = PRAYER_NAMES.find((name) => {
-		if (!timings?.[name]) return false;
-		const [hours, minutes] = timings[name].split(":").map(Number);
-		const prayerDate = new Date(date);
-		prayerDate.setHours(hours, minutes, 0, 0);
-		return prayerDate > date;
-	});
+	const nextPrayer = getNextPrayer(timings, date);
 
 	useEffect(() => {
 		addError(error);
@@ -77,7 +69,7 @@ function PrayerTimes() {
 			<section className="prayer-grid" aria-label="Prayer information">
 				<PrayerTimesCard prayers={timings} nextPrayer={nextPrayer} />
 				<IslamicDateCard date={date} />
-				<NextPrayerCard prayers={timings} date={date} large />
+				<NextPrayerCard date={date} nextPrayer={nextPrayer} large />
 				<TimeCard date={date} />
 			</section>
 		</div>

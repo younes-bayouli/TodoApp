@@ -18,9 +18,6 @@ export default function useData(target) {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: [target] });
 		},
-		onError:(err)=>{
-			console.log(err)
-		}
 	});
 	const update = useMutation({
 		mutationFn: ({ Id, Data }) => api[target].update(Id, Data),

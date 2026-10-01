@@ -1,31 +1,4 @@
 /* =========================
-   App shell
-
-   The shell itself is Bootstrap utilities on the elements in App.jsx
-   (flex, viewport height, overflow). Only the page gutter stays here,
-   because it reads the spacing tokens.
-   ========================= */
-
-.app-content {
-	/* Bootstrap's row utilities set min-width on flex children, so a
-	   wide page (calendar, schedule) would force the whole shell
-	   wider than the viewport instead of scrolling. */
-	min-width: 0;
-	padding: var(--page-padding-block) var(--page-padding-inline-end)
-		var(--page-padding-block) var(--page-padding-inline-start);
-}
-
-/* The page wrapper is a class because every page needs it as a hook,
-   not a one-off style: it establishes the flex column that the page
-   grids grow inside. */
-.page {
-	display: flex;
-	flex-direction: column;
-	flex: 1;
-	min-height: 0;
-}
-
-/* =========================
    Button
    ========================= */
 
@@ -40,6 +13,7 @@
 		border-color var(--transition-fast),
 		color var(--transition-fast),
 		box-shadow var(--transition-fast);
+	text-transform: capitalize;
 }
 
 /* Sizes */
@@ -127,6 +101,10 @@
 	color: var(--color-text-secondary);
 }
 
+.app-button-active {
+	background-color: var(--color-primary-light);
+}
+
 /* Disabled */
 
 .app-button:disabled {
@@ -204,14 +182,131 @@
    TimeCard
    ========================= */
 
-/* The one place a display size above --font-size-xl is needed. A token
-   for it would be a value with a single consumer, so it stays literal
-   until something else needs the same size. */
-.app-time-display {
+.card-clock {
+	color: var(--color-text);
+	font-weight: var(--font-weight-normal);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.card-clock .time-display {
 	font-size: 3rem;
 	line-height: 1.1;
 	font-weight: var(--font-weight-semibold);
+	text-align: center;
 }
+
+.card-clock .day-display {
+	font-size: 1rem;
+	line-height: 1.1;
+	font-weight: var(--font-weight-semibold);
+}
+
+/* =========================
+   Islamic Date Card
+   ========================= */
+
+.card-hijri .day {
+	color: var(--color-primary);
+	font-size: 110px;
+	font-weight: var(--font-weight-normal);
+	line-height: 1;
+}
+
+.card-hijri .month {
+	margin: 0;
+	color: var(--color-text);
+	font-size: 48px;
+	font-weight: var(--font-weight-semibold);
+}
+
+.card-hijri p {
+	margin: 0;
+	color: var(--color-text-muted);
+	font-size: var(--font-size-body-lg);
+}
+
+/* =========================
+   Prayer Times
+   ========================= */
+
+.card-prayers .prayer-row.is-next .prayer-row-name,
+.card-prayers .prayer-row.is-next .prayer-row-time {
+	color: var(--color-primary);
+	font-weight: var(--font-weight-semibold);
+}
+
+.card-prayers .prayer-row-name {
+	color: var(--color-text);
+	font-size: var(--font-size-body-lg);
+	font-weight: var(--font-weight-normal);
+}
+
+.card-prayers .prayer-row-time {
+	margin-left: auto;
+	color: var(--color-text);
+	font-size: var(--font-size-body-lg);
+	font-weight: var(--font-weight-semibold);
+	font-variant-numeric: tabular-nums;
+}
+
+.card-prayers .prayer-row-icon {
+	width: 40px;
+	height: 40px;
+	margin-right: var(--control-padding-inline);
+	color: var(--color-icon-muted);
+	stroke-width: 1.5;
+	flex-shrink: 0;
+}
+
+.card-prayers .prayer-row {
+	display: flex;
+	align-items: center;
+	height: var(--prayer-row-height);
+	border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.card-prayers .prayer-row:last-child {
+	border-bottom: none;
+}
+
+.prayer-times-list {
+	padding: 0;
+	list-style: none;
+}
+
+.prayer-times {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.card-prayers .prayer-times-header h3 {
+	margin: 0 0 var(--space-2);
+	color: var(--color-text-muted);
+	font-size: var(--font-size-label);
+	font-weight: var(--font-weight-medium);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.card-prayers .prayer-times-header h2 {
+	margin: 0;
+	color: var(--color-text);
+	font-size: var(--font-size-card-title);
+	font-weight: var(--font-weight-semibold);
+	line-height: 1.1;
+}
+
+/* =========================
+   TodoListCard
+   ========================= */
+
+.card-focus {
+	flex: 1;
+}
+
 
 /* =========================
    IconButton
@@ -403,6 +498,9 @@
 	padding: 0 var(--space-3);
 }
 
+
+
+
 /* =========================
    Shared utilities
    ========================= */
@@ -432,8 +530,24 @@
 	cursor: pointer;
 }
 
-/* A list of events or todos. The dot's color comes from data at
-   runtime, so only the dot's shape is expressed here. */
+/* A card's title row: the label block on the left, a count or action
+   on the right. */
+.app-card-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: var(--space-3);
+}
+
+/* A list of events or todos. Bulleted by default, but every row leads
+   with a colored .app-list-dot instead. */
+.app-list {
+	padding: 0;
+	list-style: none;
+}
+
+/* The dot's color comes from data at runtime, so only its shape is
+   expressed here. */
 .app-list-dot {
 	display: inline-block;
 	width: 8px;
@@ -465,40 +579,9 @@
 .app-filter-tabs {
 	display: flex;
 	gap: var(--space-1);
+	align-self: flex-end;
 	flex-wrap: wrap;
 }
-
-.app-filter-tabs button {
-	display: inline-flex;
-	align-items: center;
-	height: var(--filter-button-height);
-	padding-inline: var(--control-padding-inline);
-	border: var(--border-width) solid var(--color-border);
-	border-radius: var(--card-radius);
-	background-color: var(--color-surface);
-	color: var(--color-text-secondary);
-	font-family: inherit;
-	font-size: var(--font-size-body-lg);
-	cursor: pointer;
-	text-transform: capitalize;
-	transition:
-		background-color var(--transition-fast),
-		border-color var(--transition-fast),
-		color var(--transition-fast);
-}
-
-.app-filter-tabs button:hover {
-	background-color: var(--color-surface-subtle);
-	color: var(--color-text);
-}
-
-.app-filter-tabs button.active {
-	background-color: var(--color-primary);
-	border-color: var(--color-primary);
-	color: var(--color-white);
-	font-weight: var(--font-weight-medium);
-}
-
 /* =========================
    QuickAddForm
    ========================= */
@@ -507,7 +590,6 @@
    segments, rather than three separately-bordered controls. */
 .app-quick-add {
 	display: flex;
-	height: var(--control-height);
 	border: var(--border-width) solid var(--color-border);
 	border-radius: var(--card-radius);
 	overflow: hidden;
@@ -515,40 +597,22 @@
 
 .app-quick-add .app-input,
 .app-quick-add select {
-	flex: 1 1 auto;
-	min-width: 0;
-	height: 100%;
-	padding-inline: var(--control-padding-inline);
-	font-size: var(--font-size-body-lg);
-	/* The container owns the border; the segments must not draw their
-	   own or the outer edge ends up doubled. */
 	border: none;
 	border-radius: 0;
 	background-color: var(--color-surface);
 }
 
 .app-quick-add select {
-	/* Keeps the select from eating the row: its longest option is much
-	   wider than the reference 24px text needs. */
-	flex: 0 1 var(--control-height);
-	max-width: 200px;
-}
-
-.app-quick-add select:not(:last-of-type),
-.app-quick-add .app-input:not(:last-of-type) {
-	border-right: var(--border-width) solid var(--color-border);
-}
-
-.app-quick-add .app-button {
-	flex: 0 0 auto;
-	height: 100%;
-	padding-inline: var(--control-padding-inline);
-	border-radius: 0;
-	font-size: var(--font-size-body-lg);
+	border-left: var(--border-width) solid var(--color-border);
 }
 
 .app-quick-add:focus-within {
 	border-color: var(--color-primary-border);
+}
+
+.app-quick-add .app-button {
+	border: none;
+	border-radius: 0;
 }
 
 /* max-width caps it next to the title input; min-width: 0 lets it

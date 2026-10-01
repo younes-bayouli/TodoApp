@@ -20,7 +20,7 @@ import { usePosition } from "../../hooks/usePosition";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/api";
 import { useAppContext } from "../../Context";
-import Button from "../../Components/Composite/DuelClockInput.jsx";
+import Button from "../../Components/Basic/Button.jsx";
 
 const validateForm = (Task) => {
 	const newErrors = {};

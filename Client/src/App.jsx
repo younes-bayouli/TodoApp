@@ -58,7 +58,7 @@ function App() {
 					)}
 					{/* min-width:0 lets wide pages scroll rather than forcing
 					    the shell wider than the viewport. */}
-					<div className="app-content flex-grow-1 h-100 overflow-y-auto d-flex flex-column">
+					<div className="app-content flex-grow-1 overflow-y-auto d-flex flex-column">
 						<Routes>
 							<Route path="/" element={<First />} />
 							<Route path="/home" element={<Home />} />

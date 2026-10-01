@@ -6,11 +6,13 @@ function Button({
     icon,
     fullWidth = false,
     className = "",
+    active=false,
     ...props
 }) {
     const classes = [
         "app-button",
         `app-button-${variant}`,
+        `app-button-${active?"active":"normal"}`,
         `app-button-${size}`,
         fullWidth && "app-button-full",
         className,

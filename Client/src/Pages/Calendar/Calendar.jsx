@@ -14,7 +14,7 @@ import { useDate } from "../../Utils/useTime.js";
 import useData from "../../Utils/useData.js";
 import useModal from "../../hooks/useModal.jsx";
 import DayEvents from "./DayEvents.jsx";
-import Button from "../../Components/Composite/DuelClockInput.jsx";
+import Button from "../../Components/Basic/Button.jsx";
 
 const nullPlan = {
 	title: "",

@@ -5,16 +5,15 @@ function TodayEventsCard({ events = [], date }) {
 	return (
 		<Card name="card-schedule">
 			<article>
-				<div>
+				<div className="app-card-header">
 					<div>
 						<p>Schedule</p>
 						<h2>Today&apos;s events</h2>
 					</div>
-					<span>{events.length}</span>
 				</div>
 				<p>{formatDate(date.toISOString())}</p>
 				{events.length > 0 ? (
-					<ul>
+					<ul className="app-list">
 						{events.map((event) => (
 							<li key={event.id}>
 								<span

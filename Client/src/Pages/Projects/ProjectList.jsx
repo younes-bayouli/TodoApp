@@ -4,22 +4,33 @@ function ProjectList({ projects, onClick, onOpenAddProject }) {
 	return (
 		<div>
 			<div>
-				<>
-					{projects?.map((project) => (
-						<div key={project.id}>
-							<ProjectCard
-								project={project}
-								onClick={onClick}
-								isSelected={false}
-							/>
+				<div>
+					<div className="row g-4">
+						{projects?.map((project) => (
+							<div
+								className="col-12 col-md-6 col-lg-4"
+								key={project.id}
+							>
+								<ProjectCard
+									project={project}
+									onClick={onClick}
+									isSelected={false}
+								/>
+							</div>
+						))}
+						<div className="col-12 col-md-6 col-lg-4">
+							<button
+								type="button"
+								className="card h-100 w-100 project-card add-project-card"
+								onClick={onOpenAddProject}
+							>
+								<span className="display-4" aria-hidden="true">
+									+
+								</span>
+							</button>
 						</div>
-					))}
-					<div>
-						<button type="button" onClick={onOpenAddProject}>
-							<span aria-hidden="true">+</span>
-						</button>
 					</div>
-				</>
+				</div>
 			</div>
 		</div>
 	);

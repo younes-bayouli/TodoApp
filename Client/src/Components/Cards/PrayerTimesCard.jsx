@@ -1,4 +1,4 @@
-import { Sunrise, Sunset, Sun, Moon, SunMoon } from "lucide-react";
+import { Sunrise, Sunset, Sun, Moon, SunMoon, Cpu } from "lucide-react";
 import Card from "../Composite/Card";
 
 // Fixed display order, independent of what the API returns. The API
@@ -12,7 +12,7 @@ const PRAYERS = [
 	{ key: "Isha", label: "Isha", Icon: Moon },
 ];
 
-function PrayerTimesCard({ prayers = {}, nextPrayer }) {
+function PrayerTimesCard({ prayers = {}, nextPrayer={} }) {
 	return (
 		<Card name="card-prayers" className="prayer-times-card" padding="large">
 			<article className="prayer-times">
@@ -21,12 +21,13 @@ function PrayerTimesCard({ prayers = {}, nextPrayer }) {
 				</header>
 
 				<ul className="prayer-times-list">
-					{PRAYERS.map(({ key, label, Icon }) => (
+					{PRAYERS.map(({ key, label, Icon }) => {
+					return (
 						<li
 							key={key}
 							className={`prayer-row${
-								nextPrayer === label ? " is-next" : ""
-							}`}
+								nextPrayer?.name === label ? " is-next" : ""
+							} py-2`}
 						>
 							<Icon
 								className="prayer-row-icon"
@@ -37,7 +38,7 @@ function PrayerTimesCard({ prayers = {}, nextPrayer }) {
 								{prayers?.[key] ?? "--:--"}
 							</time>
 						</li>
-					))}
+					)})}
 				</ul>
 			</article>
 		</Card>

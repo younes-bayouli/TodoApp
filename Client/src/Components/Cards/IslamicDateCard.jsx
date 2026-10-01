@@ -18,9 +18,9 @@ function IslamicDateCard({ date }) {
 	return (
 		<Card name="card-hijri">
 			<div>
-				<div>{day}</div>
-				<h2>{month}</h2>
-				<p>{year} AH</p>
+				<div className="day">{day}</div>
+				<h2 className="month">{month}</h2>
+				<p className="year">{year} AH</p>
 			</div>
 		</Card>
 	);

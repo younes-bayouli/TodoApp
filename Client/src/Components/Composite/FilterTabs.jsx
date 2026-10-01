@@ -1,13 +1,8 @@
-/**
- * Row of mutually-exclusive filter tabs.
- *
- * Exists because TodoList and Projects each had the same
- * <ul><li><button> row with a different active class. The active
- * styling lives here so both pages cannot drift apart.
- */
+import Button from "../Basic/Button";
+
 function FilterTabs({ options, value, onChange, className = "" }) {
 	return (
-		<div className={`app-filter-tabs ${className}`}>
+		<div className={`app-filter-tabs ${className} m-3`}>
 			{options.map((option) => {
 				const key = typeof option === "string" ? option : option.value;
 				const label =
@@ -15,15 +10,16 @@ function FilterTabs({ options, value, onChange, className = "" }) {
 				const isActive = key === value;
 
 				return (
-					<button
+					<Button
 						key={key}
 						type="button"
-						className={isActive ? "active" : ""}
 						aria-pressed={isActive}
 						onClick={() => onChange(key)}
+						variant="secondary"
+						active={isActive}
 					>
 						{label}
-					</button>
+					</Button>
 				);
 			})}
 		</div>

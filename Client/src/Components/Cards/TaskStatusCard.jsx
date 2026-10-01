@@ -1,9 +1,9 @@
 import Card from "../Composite/Card";
 
-function TaskStatusCard({ currentTask, nextTask }) {
+function TaskStatusCard({ currentTask, nextTask, split = false }) {
 	const renderTask = (label, task) => (
 		<div>
-			<div>{label}</div>
+			<div className="task-label">{label}</div>
 			{task ? (
 				<>
 					<div>{task.title}</div>
@@ -16,11 +16,22 @@ function TaskStatusCard({ currentTask, nextTask }) {
 			)}
 		</div>
 	);
+	if (split) {
+		return (
+			<div className="next-current-tasks d-flex gap-3">
+				<Card className="flex-fill">
+					{renderTask("Current task", currentTask)}
+				</Card>
+				<Card className="flex-fill">
+					{renderTask("Next task", nextTask)}
+				</Card>
+			</div>
+		);
+	}
 
 	return (
 		<Card name="card-tasks">
 			<div>
-				<h5>Tasks</h5>
 				{renderTask("Current task", currentTask)}
 				{renderTask("Next task", nextTask)}
 			</div>

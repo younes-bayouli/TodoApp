@@ -5,6 +5,7 @@ import useData from "../../Utils/useData";
 import useModal from "../../hooks/useModal.jsx";
 import PageHeader from "../../Components/Composite/PageHeader.jsx";
 import FilterTabs from "../../Components/Composite/FilterTabs.jsx";
+import "../../styles/projects.css"
 
 const normalise = (project) => {
 	return {
@@ -124,12 +125,10 @@ function Projects() {
 	}
 
 	return (
-		<div>
-			<PageHeader
-				title="Projects"
-				description={`${filteredProjects?.length || 0} projects`}
-			/>
-
+		<div className="page flex-grow-1 min-h-0 d-flex flex-column">
+			<PageHeader title="Projects">
+				{`${filteredProjects?.length || 0} projects`}
+			</PageHeader>
 			<FilterTabs
 				options={["all", "active", "completed"]}
 				value={filter}

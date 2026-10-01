@@ -1,4 +1,5 @@
 import Card from "../Composite/Card";
+import Badge from "../Basic/Badge";
 import { getPriority } from "../../Utils/priorities";
 
 function TodoPreviewCard({ todos = [], limit = 3 }) {
@@ -10,14 +11,12 @@ function TodoPreviewCard({ todos = [], limit = 3 }) {
 	return (
 		<Card name="card-focus">
 			<article>
-				<div>
+				<div className="app-card-header">
 					<div>
-						<p>Focus list</p>
-						<h2>Open todos</h2>
+						<h3>Todos</h3>
 					</div>
-					<span>{openCount}</span>
 				</div>
-				<ul>
+				<ul className="app-list">
 					{visibleTodos.length > 0 ? (
 						visibleTodos.map((todo) => (
 							<li key={todo.id}>

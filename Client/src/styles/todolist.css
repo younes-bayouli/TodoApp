@@ -1,18 +1,10 @@
 /* =========================
    Tasks page
 
-   Vertical rhythm between the quick-add form, the filter row and the
-   list. The page shell (flex column, gap) is Bootstrap utilities on
-   the elements in TodoList.jsx.
+   Vertical rhythm between the quick-add form and the list. The page
+   shell (flex column, gap) is Bootstrap utilities on the elements in
+   TodoList.jsx. The filter tabs sit inside PageHeader, not here.
    ========================= */
-
-.tasks-page .app-quick-add {
-	margin-bottom: 36px;
-}
-
-.tasks-page .app-filter-tabs {
-	margin-bottom: var(--space-4);
-}
 
 .tasks-page-list .app-empty-state {
 	min-height: var(--empty-state-min-height);

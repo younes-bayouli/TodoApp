@@ -4,7 +4,7 @@ import {
 	timeDifferenceInMinutes,
 } from "../../Utils/timeUtilities";
 import trash from "../../assets/icons/trash.png";
-import Button from "../../Components/Composite/DuelClockInput";
+import Button from "../../Components/Basic/Button";
 
 export default function Task({ task, onClick, onDelete, style }) {
 	const [tooltip, setTooltip] = useState(false);

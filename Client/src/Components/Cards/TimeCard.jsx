@@ -7,8 +7,8 @@ export default function TimeDisplay({ date }) {
 	return (
 		<Card name="card-clock">
 			<div>
-				<div className="app-time-display">{hour12}</div>
-				<div>
+				<div className="time-display">{hour12}</div>
+				<div className="day-display">
 					{date.toLocaleDateString("en-US", {
 						weekday: "long",
 						year: "numeric",

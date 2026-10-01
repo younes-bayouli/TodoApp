@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatDate } from "../../Utils/dateUtilities";
-import Button from "../../Components/Composite/DuelClockInput";
+import Button from "../../Components/Basic/Button";
 import EmptyState from "../../Components/Composite/EmptyState";
 import QuickAddForm from "../../Components/Composite/QuickAddForm";
 import { getPriority, priorityOrder } from "../../Utils/priorities";

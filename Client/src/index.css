@@ -1,8 +1,5 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "./styles/components.css";
-@import "./styles/home.css";
-@import "./styles/prayertimes.css";
-@import "./styles/todolist.css";
 @import "./styles/everydaytasks.css";
 @import "./styles/calendar.css";
 
@@ -128,7 +125,7 @@
        ========================= */
 
 	--sidebar-width: 250px;
-	--page-padding-block: 48px;
+	--page-padding-block: 2rem;
 	--page-padding-inline-start: 36px;
 	--page-padding-inline-end: 40px;
 	--grid-gap: 25px;
@@ -273,3 +270,58 @@ body {
 		transition: none !important;
 	}
 }
+
+.app-content {
+	min-width: 0;
+	padding: var(--page-padding-block);
+	height: 100vh;
+}
+
+.page {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+}
+
+.card-clock {
+	grid-area: clock;
+}
+
+.card-hijri {
+	grid-area: hijri;
+}
+
+.card-next {
+	grid-area: next;
+}
+
+.card-photo {
+	grid-area: photo;
+}
+
+.card-tasks {
+	grid-area: tasks;
+}
+
+.card-schedule {
+	grid-area: sched;
+}
+
+.card-focus {
+	grid-area: focus;
+}
+
+.card-prayers {
+	grid-area: prayers;
+}
+
+/* Vertical rule between two side-by-side blocks. align-self: stretch
+   is what fills the flex row's cross axis — height: 100% would need a
+   parent of definite height, which the flex row does not have. */
+.line {
+	align-self: stretch;
+	width: 1px;
+	background-color: var(--color-border);
+}
+

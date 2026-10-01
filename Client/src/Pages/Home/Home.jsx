@@ -8,7 +8,11 @@ import TimeCard from "../../Components/Cards/TimeCard";
 import { useEffect } from "react";
 import { usePosition } from "../../hooks/usePosition.js";
 import { dateToString, toDateKey } from "../../Utils/dateUtilities";
-import { formatLocation, getCurrentAndNextTask } from "../../Utils/Utils";
+import {
+	formatLocation,
+	getCurrentAndNextTask,
+	getNextPrayer,
+} from "../../Utils/Utils";
 import { format } from "../../Utils/timeUtilities";
 import { useDate } from "../../Utils/useTime";
 import { useQuery } from "@tanstack/react-query";
@@ -17,6 +21,7 @@ import useData from "../../Utils/useData.js";
 import { useAppContext } from "../../Context.jsx";
 import PageHeader from "../../Components/Composite/PageHeader.jsx";
 import { MapPin } from "lucide-react";
+import "../../styles/home.css";
 
 function Home() {
 	const { addError } = useAppContext();
@@ -58,6 +63,8 @@ function Home() {
 		if (error) addError(error);
 	}, [locationError, prayersError, error]);
 
+	const nextPrayer = getNextPrayer(prayers?.data.timings, date);
+
 	return (
 		<div className="page">
 			<PageHeader title={"Good morning, Younes."}>
@@ -74,15 +81,13 @@ function Home() {
 			<div className="home-grid">
 				<TimeCard date={date} />
 				<IslamicDateCard date={date} />
-				<NextPrayerCard
-					prayers={prayers?.data.timings}
-					date={date}
-					large
-				/>
-				<PhotoGallery />
-				<TaskStatusCard currentTask={current} nextTask={next} />
+				<NextPrayerCard nextPrayer={nextPrayer} date={date} large />
 				<TodayEventsCard events={todaysEvents} date={date} />
-				<TodoPreviewCard todos={Todos} />
+				<div className="d-flex flex-column gap-3">
+					<TaskStatusCard currentTask={current} nextTask={next} split/>
+					<TodoPreviewCard todos={Todos} />
+				</div>
+				<PhotoGallery />
 			</div>
 		</div>
 	);
