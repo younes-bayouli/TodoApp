@@ -52,6 +52,23 @@
 	   uses pure black; a dark navy keeps the blue cast and clears AA. */
 	--color-primary-contrast: #08427e;
 
+	/* Calendar. color-mix keeps the calendar tokens derived from the
+	   palette above, so the grid tracks the theme instead of freezing
+	   its own tint. */
+	--color-calendar-bg: var(--color-surface);
+	--color-calendar-header-bg: var(--color-surface-subtle);
+	--color-calendar-border: var(--color-border-subtle);
+	--color-calendar-today: color-mix(
+		in srgb,
+		var(--color-primary) 7%,
+		var(--color-surface)
+	);
+	--color-calendar-outside-month: var(--color-text-muted);
+	--color-calendar-event: var(--color-primary);
+	/* Event fills come from user data (the color field on an event), so
+	   they are mid-tone in both themes and the label stays light. */
+	--color-calendar-event-text: #ffffff;
+
 	/* Line-art icons. Separate from --color-text-muted: these are
 	   graphics, and at 2px stroke they need more presence than muted
 	   text has to stay legible without competing with the content. */
@@ -213,6 +230,17 @@ body {
 	--color-priority-high: #e0685f;
 	--color-priority-medium: #d6a54a;
 	--color-priority-low: #6aa583;
+
+	/* The dark grid is not an inversion: a darker, lower-contrast
+	   surface, a visible hairline border, and a tint mixed at a higher
+	   ratio because the same ratio reads fainter on a dark surface. */
+	--color-calendar-header-bg: #1a1e23;
+	--color-calendar-border: #2e343b;
+	--color-calendar-today: color-mix(
+		in srgb,
+		var(--color-primary) 18%,
+		var(--color-surface)
+	);
 
 	--color-primary-contrast: #cfe2ff;
 	--color-icon-muted: #8b949e;

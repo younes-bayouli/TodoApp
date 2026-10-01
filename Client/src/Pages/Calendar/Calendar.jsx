@@ -203,9 +203,9 @@ function Calendar() {
 	}
 
 	return (
-		<section>
+		<section className="app-calendar">
 			<PageHeader title="Calendar">
-				<div className="d-flex flex-wrap gap-2 align-items-center">
+				<div className="app-calendar-controls d-flex flex-wrap gap-2 align-items-center">
 					<div className="d-flex gap-1" role="group">
 						<Button
 							onClick={() => calendarRef.current?.getApi().prev()}
@@ -257,7 +257,7 @@ function Calendar() {
 			</PageHeader>
 
 			{!dayEvents && (
-				<div>
+				<div className="app-calendar-grid">
 					<FullCalendar
 						ref={calendarRef}
 						plugins={[dayGridPlugin, interactionPlugin]}
@@ -269,6 +269,7 @@ function Calendar() {
 						}}
 						events={events}
 						height="100%"
+						contentHeight="auto"
 						navLinks={false}
 						dateClick={handleDateClick}
 						dayCellDidMount={({ date, el }) => {
