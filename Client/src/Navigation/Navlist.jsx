@@ -1,7 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Moon, Sun } from "lucide-react";
-import { useAppContext } from "../Context.jsx";
-import IconButton from "../Components/Composite/IconButton.jsx";
+import { Settings } from "lucide-react";
 
 // Routes are written out, not derived from the label. The old
 // `label.toLowerCase().replace(/\s+/g, "")` coupling meant renaming a
@@ -17,12 +15,10 @@ const NAV_ITEMS = [
 	{ to: "/projects", label: "Projects", icon: "/Pages/projects.png" },
 	{ to: "/myeveryday", label: "MyEveryday", icon: "/Pages/myeveryday.png" },
 	{ to: "/calender", label: "Calender", icon: "/Pages/calender.png" },
+	{ to: "/settings", label: "Settings", icon: Settings },
 ];
 
 const Navlist = () => {
-	const { toggleTheme, theme } = useAppContext();
-	const nextTheme = theme === "light" ? "dark" : "light";
-
 	return (
 		<nav className="app-nav flex-shrink-0" aria-label="Main">
 			<div className="app-nav-inner">
@@ -46,29 +42,22 @@ const Navlist = () => {
 									: "app-nav-link"
 							}
 						>
-							<img
-								src={item.icon}
-								alt=""
-								className="app-nav-link-icon"
-							/>
+							{typeof item.icon === "string" ? (
+								<img
+									src={item.icon}
+									alt=""
+									className="app-nav-link-icon"
+								/>
+							) : (
+								<item.icon
+									size={18}
+									className="app-nav-link-icon"
+									aria-hidden="true"
+								/>
+							)}
 							{item.label}
 						</NavLink>
 					))}
-				</div>
-
-				<div className="app-nav-actions">
-					<IconButton
-						variant="secondary"
-						ariaLabel={`Switch to ${nextTheme} theme`}
-						title={`Switch to ${nextTheme} theme`}
-						onClick={toggleTheme}
-					>
-						{theme === "light" ? (
-							<Moon size={18} />
-						) : (
-							<Sun size={18} />
-						)}
-					</IconButton>
 				</div>
 			</div>
 		</nav>

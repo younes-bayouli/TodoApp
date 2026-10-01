@@ -1,0 +1,130 @@
+.settings-page {
+	gap: var(--space-4);
+}
+
+.settings-form,
+.settings-panel {
+	width: min(100%, 680px);
+	padding: var(--space-5);
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--card-radius);
+	background-color: var(--color-surface);
+}
+
+.settings-appearance {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-4);
+}
+
+.settings-section-title {
+	margin: 0 0 var(--space-4);
+	font-size: var(--font-size-lg);
+	font-weight: var(--font-weight-semibold);
+	color: var(--color-text);
+}
+
+.settings-appearance-description {
+	margin: 0;
+	color: var(--color-text-secondary);
+}
+
+.settings-reset {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-4);
+	border-color: var(--color-danger);
+}
+
+.settings-reset-description {
+	margin: 0;
+	color: var(--color-text-secondary);
+}
+
+.settings-reset-button {
+	min-height: 40px;
+	flex-shrink: 0;
+	padding: var(--space-2) var(--space-4);
+	border: var(--border-width) solid var(--color-danger);
+	border-radius: var(--radius-sm);
+	background-color: var(--color-danger-subtle);
+	color: var(--color-danger);
+	font: inherit;
+	font-weight: var(--font-weight-medium);
+	cursor: pointer;
+}
+
+.settings-reset-button:hover {
+	background-color: var(--color-danger);
+	color: var(--color-white);
+}
+
+.settings-fields {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--space-4);
+}
+
+.settings-field {
+	display: grid;
+	gap: var(--space-2);
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+}
+
+.settings-field input {
+	min-width: 0;
+	min-height: 44px;
+	padding: var(--space-2) var(--space-3);
+	border: var(--border-width) solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background-color: var(--color-bg);
+	color: var(--color-text);
+	font: inherit;
+}
+
+.settings-field input:focus-visible {
+	border-color: var(--color-primary-border);
+	outline: 2px solid var(--color-primary-border);
+	outline-offset: 1px;
+}
+
+.settings-form-actions {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: var(--space-5);
+}
+
+.settings-save {
+	min-height: 40px;
+	padding: var(--space-2) var(--space-4);
+	border: var(--border-width) solid var(--color-primary-border);
+	border-radius: var(--radius-sm);
+	background-color: var(--color-primary-light);
+	color: var(--color-primary-contrast);
+	font: inherit;
+	font-weight: var(--font-weight-medium);
+	cursor: pointer;
+}
+
+.settings-save:hover {
+	filter: brightness(0.92);
+}
+
+.settings-loading {
+	color: var(--color-text-secondary);
+}
+
+@media (max-width: 575.98px) {
+	.settings-form,
+	.settings-panel {
+		padding: var(--space-4);
+	}
+
+	.settings-fields {
+		grid-template-columns: 1fr;
+	}
+}

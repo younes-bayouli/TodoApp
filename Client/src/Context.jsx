@@ -70,6 +70,14 @@ export function AppProvider({ children }) {
 			queryClient.invalidateQueries({ queryKey: ["settings"] });
 		},
 	});
+	const resetDataMutation = useMutation({
+		mutationFn: api.reset,
+		onSuccess: () => {
+			localStorage.removeItem("theme");
+			setTheme("light");
+			return queryClient.invalidateQueries();
+		},
+	});
 
 	useEffect(() => {
 		localStorage.setItem("theme", theme);
@@ -95,7 +103,8 @@ export function AppProvider({ children }) {
 		if (settingsError) addError(settingsError);
 		if (updateSettingsMutation.error)
 			addError(updateSettingsMutation.error);
-	}, [settingsError, updateSettingsMutation.error]);
+		if (resetDataMutation.error) addError(resetDataMutation.error);
+	}, [settingsError, updateSettingsMutation.error, resetDataMutation.error]);
 
 	return (
 		<AppContext.Provider
@@ -109,6 +118,7 @@ export function AppProvider({ children }) {
 				toggleTheme,
 				settings,
 				updateSettings: updateSettingsMutation.mutate,
+				resetData: resetDataMutation.mutate,
 			}}
 		>
 			{children}

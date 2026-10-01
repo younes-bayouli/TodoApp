@@ -46,6 +46,13 @@ async function getLocation(latitude, longitude, error) {
 }
 
 export const api = {
+	reset: () =>
+		request("/reset", {
+			options: {
+				method: "DELETE",
+			},
+		}),
+
 	todos: {
 		getAll: () => request("/todos"),
 		getById: (id) => request(`/todos/${id}`),
