@@ -46,6 +46,9 @@ public class SettingsController {
 
         existing.setSleepStart(settings.getSleepStart());
         existing.setSleepEnd(settings.getSleepEnd());
+        existing.setSecondSleepEnabled(settings.isSecondSleepEnabled());
+        existing.setSecondSleepStart(settings.getSecondSleepStart());
+        existing.setSecondSleepEnd(settings.getSecondSleepEnd());
 
         return ResponseEntity.ok(settingsRepository.save(existing));
     }

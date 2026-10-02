@@ -47,6 +47,12 @@ function Schedule({
 	const sleepTimes = [
 		{ name: "Sleep", time: settings.sleepStart },
 		{ name: "Wake up", time: settings.sleepEnd },
+		...(settings.secondSleepEnabled
+			? [
+					{ name: "Sleep", time: settings.secondSleepStart },
+					{ name: "Wake up", time: settings.secondSleepEnd },
+				]
+			: []),
 	].filter(({ time: sleepTime }) => {
 		if (!sleepTime) return false;
 		const sleepMinutes = stringToMinutes(sleepTime);

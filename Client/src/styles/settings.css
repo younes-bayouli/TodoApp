@@ -67,6 +67,27 @@
 	gap: var(--space-4);
 }
 
+.settings-second-sleep-fields {
+	margin-top: var(--space-4);
+}
+
+.settings-toggle {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	margin-top: var(--space-4);
+	color: var(--color-text);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+}
+
+.settings-toggle input {
+	width: 18px;
+	height: 18px;
+	margin: 0;
+	accent-color: var(--color-primary-border);
+}
+
 .settings-field {
 	display: grid;
 	gap: var(--space-2);

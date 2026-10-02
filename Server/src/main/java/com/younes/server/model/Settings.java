@@ -25,4 +25,12 @@ public class Settings {
 
     @JsonFormat(pattern = "HH:mm")
     private LocalTime sleepEnd;
+
+    private boolean secondSleepEnabled;
+
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime secondSleepStart;
+
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime secondSleepEnd;
 }

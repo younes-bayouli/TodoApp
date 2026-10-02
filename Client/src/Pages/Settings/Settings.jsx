@@ -1,20 +1,32 @@
 import PageHeader from "../../Components/Composite/PageHeader.jsx";
 import IconButton from "../../Components/Composite/IconButton.jsx";
 import { useAppContext } from "../../Context.jsx";
+import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 export default function Settings() {
 	const { settings, updateSettings, theme, toggleTheme, resetData } =
 		useAppContext();
+	const [secondSleepChoice, setSecondSleepChoice] = useState(null);
+	const secondSleepEnabled =
+		secondSleepChoice ?? settings?.secondSleepEnabled ?? false;
 	const nextTheme = theme === "light" ? "dark" : "light";
 
 	const saveSettings = (event) => {
 		event.preventDefault();
 		const formData = new FormData(event.currentTarget);
+		const hasSecondSleep = formData.get("secondSleepEnabled") === "on";
 		updateSettings({
 			...settings,
 			sleepStart: formData.get("sleepStart"),
 			sleepEnd: formData.get("sleepEnd"),
+			secondSleepEnabled: hasSecondSleep,
+			secondSleepStart: hasSecondSleep
+				? formData.get("secondSleepStart")
+				: null,
+			secondSleepEnd: hasSecondSleep
+				? formData.get("secondSleepEnd")
+				: null,
 		});
 	};
 
@@ -22,7 +34,10 @@ export default function Settings() {
 		const confirmed = window.confirm(
 			"This permanently deletes all todos, everyday tasks, projects, calendar events, photos, and sleep settings, and restores the light theme. This cannot be undone. Continue?",
 		);
-		if (confirmed) resetData();
+		if (confirmed) {
+			setSecondSleepChoice(null);
+			resetData();
+		}
 	};
 
 	return (
@@ -51,6 +66,41 @@ export default function Settings() {
 							/>
 						</label>
 					</div>
+					<label className="settings-toggle">
+						<input
+							type="checkbox"
+							name="secondSleepEnabled"
+							checked={secondSleepEnabled}
+							onChange={(event) =>
+								setSecondSleepChoice(event.target.checked)
+							}
+						/>
+						<span>Enable a second sleep segment</span>
+					</label>
+					{secondSleepEnabled && (
+						<div className="settings-fields settings-second-sleep-fields">
+							<label className="settings-field">
+								<span>Second sleep time</span>
+								<input
+									type="time"
+									name="secondSleepStart"
+									defaultValue={
+										settings.secondSleepStart ?? ""
+									}
+									required
+								/>
+							</label>
+							<label className="settings-field">
+								<span>Final wake-up time</span>
+								<input
+									type="time"
+									name="secondSleepEnd"
+									defaultValue={settings.secondSleepEnd ?? ""}
+									required
+								/>
+							</label>
+						</div>
+					)}
 					<div className="settings-form-actions">
 						<button className="settings-save" type="submit">
 							Save changes
