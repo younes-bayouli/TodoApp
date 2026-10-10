@@ -67,7 +67,7 @@ function Home() {
 
 	return (
 		<div className="page">
-			<PageHeader title={"Good morning, Younes."}>
+			<PageHeader title={"what's on today?"}>
 				{location && (
 					<div className="d-flex align-items-center gap-1 text-muted fs-6">
 						{/* MapPin inherits the row's font-size; pin it to a

@@ -1,0 +1,71 @@
+.startup-welcome {
+	position: fixed;
+	inset: 0;
+	z-index: 10000;
+	display: grid;
+	place-items: center;
+	background-color: #fff;
+	color: #212529;
+	font-size: 1.25rem;
+	font-weight: 500;
+}
+
+.startup-welcome-enter {
+	animation: startup-welcome-enter 600ms ease-out both;
+}
+
+.startup-welcome-exit {
+	animation: startup-welcome-exit 400ms ease-out forwards;
+}
+
+.startup-app-enter {
+	animation: startup-app-enter 550ms ease-out both;
+}
+
+html.startup-transition-active,
+html.startup-transition-active body {
+	overflow: hidden;
+}
+
+html.startup-transition-active .app-content {
+	overflow-y: hidden !important;
+}
+
+@keyframes startup-welcome-enter {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes startup-welcome-exit {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes startup-app-enter {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.startup-welcome-enter,
+	.startup-welcome-exit,
+	.startup-app-enter {
+		animation-duration: 1ms;
+	}
+}
