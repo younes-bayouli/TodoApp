@@ -43,16 +43,16 @@ const eventFields = {
 		size: "small",
 	},
 
-	setReminder: {
-		type: "checkbox",
-		label: "Set reminder",
-		size: "full",
-	},
-
-	reminderOptions: {
-		type: "days",
-		label: "Reminder time",
-		size: "full",
+	reminderOption: {
+		type: "select",
+		size: "half",
+		label: "Reminder",
+		options: [
+			{ value: "none", label: "No reminder" },
+			{ value: "1day", label: "one day early" },
+			{ value: "3days", label: "Three days early" },
+			{ value: "1week", label: "One week early" },
+		],
 	},
 };
 
@@ -82,17 +82,18 @@ const planFields = {
 		size: "small",
 	},
 
-	setReminder: {
-		type: "checkbox",
-		label: "Set reminder",
-		size: "full",
+	reminderOption: {
+		type: "select",
+		size: "half",
+		label: "Reminder",
+		options: [
+			{ value: "none", label: "No reminder" },
+			{ value: "1day", label: "one day early" },
+			{ value: "3days", label: "Three days early" },
+			{ value: "1week", label: "One week early" },
+		],
 	},
 
-	reminderOptions: {
-		type: "days",
-		label: "Reminder time",
-		size: "full",
-	},
 };
 
 const validatePlanForm = (plan) => {

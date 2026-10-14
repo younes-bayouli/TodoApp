@@ -1,9 +1,8 @@
 package com.younes.server.service;
 
 import com.younes.server.model.Event;
-import com.younes.server.model.Reminder;
 import com.younes.server.repository.EventRepository;
-import com.younes.server.repository.ReminderRepository;
+import com.younes.server.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,47 +15,41 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReminderService {
     private final EventRepository eventRepository;
-    private final ReminderRepository reminderRepository;
+    private final TaskRepository taskRepository;
 
+    //@Scheduled(cron = "0 0 8 * * *", zone = "Africa/Tunis")
     @Scheduled(fixedRate = 60000)
     public void checkEventsReminders() {
         LocalDate today = LocalDate.now();
+        LocalDate oneWeekLater = today.plusWeeks(1);
 
-        List<Event> events = eventRepository.findAll();
+        List<Event> events = eventRepository.findByStartBetween(today, oneWeekLater);
 
         for (Event event : events) {
-            for (String option : event.getReminderOptions()) {
-
-                LocalDate reminderDate = switch (option) {
-                    case "1week" -> event.getStart().minusWeeks(1);
-                    case "3days" -> event.getStart().minusDays(3);
-                    case "1day" -> event.getStart().minusDays(1);
-                    default -> null;
+            String option = event.getReminderOption();
+            String msg="";
+            LocalDate reminderDate ;
+             switch (option) {
+                    case "1week" -> {
+                        msg = "Reminder: Your event '" + event.getTitle() + "' is scheduled for Tomorrow.";
+                        reminderDate = event.getStart().minusWeeks(1);
+                    }
+                    case "3days" -> {
+                        reminderDate = event.getStart().minusDays(3);
+                        msg = "Reminder: Your event '" + event.getTitle() + "' is scheduled for 3 days from now.";
+                    }
+                    case "1day" -> {
+                        reminderDate = event.getStart().minusDays(1);
+                        msg = "Reminder: Your event '" + event.getTitle() + "' is scheduled for tomorrow.";
+                    }
+                    default -> reminderDate = null;
                 };
 
                 if (reminderDate == null || !reminderDate.equals(today)) {
                     continue;
                 }
 
-                boolean alreadyDelivered =
-                        reminderRepository.existsByEventIdAndReminderTimeAndDeliveredTrue(
-                                event.getId(), option
-                        );
-
-                if (alreadyDelivered) {
-                    continue;
-                }
-
-                Reminder reminder = new Reminder();
-                reminder.setEventId(event.getId());
-                reminder.setReminderTime(option);
-                reminder.setDeliveredAt(LocalDateTime.now());
-                reminder.setDelivered(true);
-
-                reminderRepository.save(reminder);
-
-
-            }
+            System.out.println(msg);
         }
     }
 }

@@ -39,8 +39,7 @@ public class Event implements HasStartEnd<LocalDate> {
     private String borderColor="#bd4b4b";
     private Boolean allDay=false;
 
-    @ElementCollection
-    private List<String> reminderOptions = new ArrayList<>();
+    private String reminderOption = "none";
 
     @Override
     public LocalDate getStart() {
