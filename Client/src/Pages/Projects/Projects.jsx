@@ -14,6 +14,7 @@ const normalise = (project) => {
 		deadline: project.deadline,
 		owner: project.owner.trim(),
 		color: project.color,
+		isMain: !!project.isMain,
 		todos: [],
 	};
 };
@@ -45,6 +46,7 @@ const projectFields = {
 		size: "half",
 		options: [
 			{ value: "Active", label: "Active" },
+			{ value: "Testing", label: "Testing" },
 			{ value: "Completed", label: "Completed" },
 			{ value: "Suspended", label: "Suspended" },
 		],
@@ -68,6 +70,7 @@ const nullProject = {
 	deadline: "",
 	color: "#0d6efd",
 	status: "Active",
+	main: false,
 	owner: "",
 	todos: [],
 };
@@ -142,7 +145,7 @@ function Projects() {
 				{`${filteredProjects?.length || 0} projects`}
 			</PageHeader>
 			<FilterTabs
-				options={["all", "active", "completed", "suspended"]}
+				options={["all", "active", "testing", "completed", "suspended"]}
 				value={filter}
 				onChange={setFilter}
 			/>

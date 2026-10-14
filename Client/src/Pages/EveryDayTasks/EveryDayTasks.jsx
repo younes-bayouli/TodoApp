@@ -110,7 +110,7 @@ function Myeveryday() {
 		name: "Task",
 		modalFields: taskFields,
 		validate: validateForm,
-		onChange: (Task) => checkForOverLapping(Task, visibleTasks),
+		onChange: (Task) => checkForOverLapping(Task, Tasks),
 	});
 
 	useEffect(() => {
@@ -120,13 +120,16 @@ function Myeveryday() {
 
 	const addTask = (time) => {
 		const plusOneHour = minutesToString(stringToMinutes(time) + 60);
+		console.log("hi");
+		const { current, next } = getCurrentAndNextTask(time, visibleTasks);
 		const timeToNext = next
-			? timeDifferenceInMinutes(next.start, time)
+			? timeDifferenceInMinutes(time, next?.start)
 			: Infinity;
+		console.log(timeToNext);
 		const newTask = {
 			...nullTask,
-			days: nullTask.days.map((_, index) => index === currentDayIndex),
-			start: time,
+			days: nullTask.days.map((_, index) => index === chosenDay),
+			start: current ? current.end : time,
 			end: 0 <= timeToNext && timeToNext <= 60 ? next.start : plusOneHour,
 		};
 		openModal({ object: newTask, mutation: create });
@@ -186,7 +189,7 @@ function Myeveryday() {
 				</Button>
 				<Button
 					onClick={() => {
-						addTask(current ? current.end : currentTime);
+						addTask(currentTime);
 					}}
 					variant="secondary"
 					className="p-1"

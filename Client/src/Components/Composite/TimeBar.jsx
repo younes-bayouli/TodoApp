@@ -16,14 +16,8 @@ function TimeBar({
 			style={{ marginLeft: LeftMargin }}
 			className={`app-time-bar app-time-bar-${variant}`}
 		>
-			<div
-				className={`label`}
-			>
-				{time}
-			</div>
-			<div
-				className={`bar`}
-			></div>
+			<div className={`label`}>{time}</div>
+			<div className={`bar`}></div>
 		</div>
 	);
 }

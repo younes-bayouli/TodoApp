@@ -134,9 +134,9 @@ function Schedule({
 						</div>
 					);
 				})}
-				{sleepTimes.map(({ name, time: sleepTime }) => (
+				{sleepTimes.map(({ name, time: sleepTime }, i) => (
 					<div
-						key={name}
+						key={`${i}-${name}`}
 						className="sleep-marker"
 						style={{
 							marginLeft: (stringToMinutes(sleepTime) * 10) / 6,

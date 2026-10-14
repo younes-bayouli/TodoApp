@@ -84,7 +84,7 @@ function ProjectDetail({
 	return (
 		<>
 			<div>
-				<PageHeader title={`project: ${project.name}`}>
+				<PageHeader title={`${project.name}`}>
 					<div className="d-flex gap-2 align-items-center flex-wrap">
 						<small>Due: {formatDate(project.deadline)}</small>
 						<label className="d-flex align-items-center gap-2">
@@ -98,7 +98,26 @@ function ProjectDetail({
 								<option value="Active">Active</option>
 								<option value="Completed">Completed</option>
 								<option value="Suspended">Suspended</option>
+								<option value="Testing">Testing</option>
 							</select>
+						</label>
+						<label className="d-flex align-items-center gap-2">
+							<span>Main</span>
+							<input
+								type="checkbox"
+								className="form-check-input"
+								checked={project.main}
+								disabled={updateProjectMutation.isPending}
+								onChange={(e) => {
+									updateProjectMutation.mutate({
+										Id: project.id,
+										Data: {
+											...project,
+											main: e.target.checked,
+										},
+									});
+								}}
+							/>
 						</label>
 						<Button
 							type="button"

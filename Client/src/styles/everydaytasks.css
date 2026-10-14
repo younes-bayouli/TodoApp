@@ -28,6 +28,8 @@
 	z-index: 3;
 }
 
+
+
 /* =========================
    Summary cards
 
@@ -201,7 +203,6 @@
 
 .app-schedule-task:hover {
 	box-shadow: var(--shadow-md);
-	z-index: 5;
 }
 
 /* The expanded popover. Fixed width so it is readable regardless of

@@ -74,6 +74,15 @@
 	);
 }
 
+.project-card-status-testing {
+	border-color: var(--color-primary);
+	background-color: color-mix(
+		in srgb,
+		var(--color-primary) 14%,
+		var(--color-surface)
+	);
+}
+
 .project-card-status-completed {
 	border-color: var(--color-priority-low);
 	background-color: color-mix(

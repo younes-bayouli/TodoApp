@@ -7,7 +7,7 @@ export const checkOverlap = (activeTask, tasks) => {
 	for (const task of tasks) {
 		if (activeTask && task.id === activeTask.id) continue;
 
-		const dayOverlap = task.days.some((day) => day);
+		const dayOverlap = task.days.some((day,i) => day && activeTask.days[i]);
 		if (!dayOverlap) continue;
 
 		const overlap = checkOverLapTime(
@@ -31,8 +31,8 @@ export function getCurrentAndNextTask(time, tasks = []) {
 	const [givenHours, givenMinutes] = time.split(":").map(Number);
 	const givenMinutesTotal = givenHours * 60 + givenMinutes;
 
-	let currentTask = null;
-	let nextTask = null;
+	let current = null;
+	let next = null;
 	let nextTaskStartTotal = Infinity;
 
 	tasks.forEach((task) => {
@@ -49,18 +49,18 @@ export function getCurrentAndNextTask(time, tasks = []) {
 		isAfter = givenMinutesTotal < startTotal;
 
 		if (isCurrent) {
-			currentTask = task;
+			current = task;
 		}
 
 		if (isAfter) {
 			if (startTotal < nextTaskStartTotal) {
-				nextTask = task;
+				next = task;
 				nextTaskStartTotal = startTotal;
 			}
 		}
 	});
 
-	return { current: currentTask, next: nextTask };
+	return { current, next };
 }
 
 // The API's timings object also carries Sunrise and Sunset, which are

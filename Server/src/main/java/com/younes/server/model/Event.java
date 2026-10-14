@@ -1,10 +1,13 @@
 package com.younes.server.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.younes.server.interfaces.HasStartEnd;
 import com.younes.server.validation.StartBeforeEnd;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,6 +38,9 @@ public class Event implements HasStartEnd<LocalDate> {
     private String backgroundColor="#bd4b4b";
     private String borderColor="#bd4b4b";
     private Boolean allDay=false;
+
+    @ElementCollection
+    private List<String> reminderOptions = new ArrayList<>();
 
     @Override
     public LocalDate getStart() {

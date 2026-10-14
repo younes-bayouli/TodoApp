@@ -27,6 +27,7 @@ public class Project {
     private String owner;
     private String status = "Active";
     private String color="#bd4b4b";
+    private boolean isMain = false;
 
     @ElementCollection
     private List<String> teamMembers;

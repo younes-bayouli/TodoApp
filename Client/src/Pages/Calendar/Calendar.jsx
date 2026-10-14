@@ -26,6 +26,7 @@ const nullPlan = {
 const nullEvent = {
 	title: "",
 	backgroundColor: "#bd4b4b",
+	reminderOptions: [],
 };
 
 const eventFields = {
@@ -40,6 +41,18 @@ const eventFields = {
 		type: "color",
 		label: "color",
 		size: "small",
+	},
+
+	setReminder: {
+		type: "checkbox",
+		label: "Set reminder",
+		size: "full",
+	},
+
+	reminderOptions: {
+		type: "days",
+		label: "Reminder time",
+		size: "full",
 	},
 };
 
@@ -68,10 +81,25 @@ const planFields = {
 		label: "color",
 		size: "small",
 	},
+
+	setReminder: {
+		type: "checkbox",
+		label: "Set reminder",
+		size: "full",
+	},
+
+	reminderOptions: {
+		type: "days",
+		label: "Reminder time",
+		size: "full",
+	},
 };
 
 const validatePlanForm = (plan) => {
 	const newErrors = {};
+	if (plan.setReminder && (!plan.reminderOptions || plan.reminderOptions.length === 0)) {
+		newErrors.reminderOptions = "Select at least one reminder time";
+	}
 	return newErrors;
 };
 
@@ -79,6 +107,9 @@ const validateEventForm = (event) => {
 	const newErrors = {};
 	if (!event.title.trim()) {
 		newErrors.title = "Event title is required";
+	}
+	if (event.setReminder && (!event.reminderOptions || event.reminderOptions.length === 0)) {
+		newErrors.reminderOptions = "Select at least one reminder time";
 	}
 	return newErrors;
 };
@@ -310,3 +341,6 @@ function Calendar() {
 }
 
 export default Calendar;
+
+// Conditional reminder display: reminderOptions only visible when setReminder checked
+// Handled in useModal via object.setReminder; if false, reminderOptions group hidden by CSS display:none or omitted in render.
