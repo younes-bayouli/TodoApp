@@ -5,6 +5,9 @@ import { AppProvider } from "./Context";
 import BackendStartupGate from "./Components/Composite/BackendStartupGate.jsx";
 import "./index.css";
 import App from "./App.jsx";
+import { registerSW } from 'virtual:pwa-register'
+
+registerSW({ immediate: true })
 
 const queryClient = new QueryClient({
 	defaultOptions: {

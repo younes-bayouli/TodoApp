@@ -15,9 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReminderService {
     private final EventRepository eventRepository;
-    private final TaskRepository taskRepository;
 
-    //@Scheduled(cron = "0 0 8 * * *", zone = "Africa/Tunis")
+    //@Scheduled(cron = "0 0 9 * * *", zone = "Africa/Tunis")
     @Scheduled(fixedRate = 60000)
     public void checkEventsReminders() {
         LocalDate today = LocalDate.now();

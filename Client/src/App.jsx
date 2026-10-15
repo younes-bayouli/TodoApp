@@ -11,6 +11,8 @@ import Settings from "./Pages/Settings/Settings.jsx";
 import ErrorMessage from "./Components/Composite/Error.jsx";
 import { useAppContext } from "./Context.jsx";
 import { useEffect, useState } from "react";
+import Button from "./Components/Basic/Button.jsx";
+import EnableNotifications from "./Notifications/notifications.js";
 
 function First() {
 	return (
@@ -45,6 +47,7 @@ function App() {
 					style={{ minHeight: "100vh" }}
 				>
 					<Navlist />
+					<Button onClick={EnableNotifications}>Enable Notifications</Button>
 					{errors?.length > 0 && (
 						<div className="app-error-stack">
 							{errors.map((error, index) => {

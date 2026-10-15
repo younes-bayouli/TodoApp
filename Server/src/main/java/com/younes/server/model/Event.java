@@ -1,13 +1,10 @@
 package com.younes.server.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.younes.server.interfaces.HasStartEnd;
 import com.younes.server.validation.StartBeforeEnd;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
