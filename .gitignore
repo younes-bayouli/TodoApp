@@ -2,7 +2,6 @@ Client/node_modules/
 Client/dist/
 Client/.env
 Client/.env.local
-uploads/
 graphify-out/
 .claude/
 .Agents/
