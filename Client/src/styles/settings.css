@@ -18,6 +18,40 @@
 	gap: var(--space-4);
 }
 
+.settings-reminders {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-4);
+}
+
+.settings-reminders .settings-section-title {
+	margin-bottom: var(--space-2);
+}
+
+.settings-reminders-toggle {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	color: var(--color-text);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+}
+
+.settings-reminders-toggle input {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+	margin: 0;
+	accent-color: var(--color-primary-border);
+}
+
+.settings-reminders-status {
+	margin: 0;
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-sm);
+}
+
 .settings-section-title {
 	margin: 0 0 var(--space-4);
 	font-size: var(--font-size-lg);
@@ -143,6 +177,11 @@
 	.settings-form,
 	.settings-panel {
 		padding: var(--space-4);
+	}
+
+	.settings-reminders {
+		align-items: flex-start;
+		flex-direction: column;
 	}
 
 	.settings-fields {

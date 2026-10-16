@@ -22,6 +22,7 @@ public class MobilePushController {
 
     @PostMapping("/push/register-mobile")
     public ResponseEntity<Void> register(@RequestBody TokenDto dto) {
+        System.out.println("Registering mobile device with token: " + dto.token());
         mobilePush.register(dto.token());
         return ResponseEntity.ok().build();
     }

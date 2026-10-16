@@ -11,8 +11,8 @@ self.addEventListener("push", (event) => {
 
     const title = data.title || "Notification Test";
     const options = {
-        body: data.message || "You received a push notification!",
-        icon: "/vite.svg",
+        body: data.body || "You received a push notification!",
+        icon: "/logo.png",
         data: {
             url: data.url || "/"
         }

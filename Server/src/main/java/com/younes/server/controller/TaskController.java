@@ -16,9 +16,12 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/tasks")
 @CrossOrigin("*")
-@RequiredArgsConstructor
 public class TaskController {
     private final TaskService service;
+
+    public TaskController(TaskService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<List<Task>> getAll() {

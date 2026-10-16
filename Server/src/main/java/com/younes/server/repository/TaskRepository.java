@@ -21,4 +21,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findTasksOverlapping(
             @Param("start") LocalTime start,
             @Param("end") LocalTime end);
+
+        List<Task> findByStart(LocalTime start);
 }

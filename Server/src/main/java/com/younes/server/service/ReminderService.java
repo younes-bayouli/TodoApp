@@ -6,6 +6,7 @@ import com.younes.server.model.Task;
 import com.younes.server.repository.EventRepository;
 import com.younes.server.repository.TaskRepository;
 
+import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -29,8 +32,7 @@ public class ReminderService {
         this.notificationService = notificationService;
     }
 
-    //@Scheduled(cron = "0 48 9 * * *")
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(cron = "0 15 8 * * *")
     public void checkReminders() {
         LocalDate today = LocalDate.now();
         LocalDate oneWeekLater = today.plusWeeks(1);
@@ -65,9 +67,35 @@ public class ReminderService {
         }
     }
 
-    @Scheduled(fixedRate = 60000)
-    public void checkTasks() {
-        LocalDateTime now= LocalDateTime.now();
-        System.out.println(now);
+    @Scheduled(cron = "0 * * * * *")   // second 0 of every minute
+@Transactional (readOnly = true)    // needed: `days` is a lazy @ElementCollection
+public void checkTasks() {
+    LocalTime nowMinute = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+    int dayIndex = LocalDate.now().getDayOfWeek().getValue() - 1; // Monday=0 ... Sunday=6
+
+    List<Task> tasks = taskRepository.findByStart(nowMinute);
+
+    for (Task task : tasks) {
+        List<Boolean> days = task.getDays();
+        if (days == null || days.size() <= dayIndex || !Boolean.TRUE.equals(days.get(dayIndex))) {
+            continue;
+        }
+        notificationService.broadCast(buildTitle(task), buildBody(task));
     }
+}
+
+private String buildTitle(Task task) {
+    return "⏰ " + task.getTitle();
+}
+
+private String buildBody(Task task) {
+    StringBuilder body = new StringBuilder("Starts now");
+    if (task.getEnd() != null) {
+        body.append(" · until ").append(task.getEnd().format(DateTimeFormatter.ofPattern("HH:mm")));
+    }
+    if (task.getDetails() != null && !task.getDetails().isBlank()) {
+        body.append("\n").append(task.getDetails());
+    }
+    return body.toString();
+}
 }

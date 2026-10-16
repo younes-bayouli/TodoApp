@@ -1,15 +1,9 @@
-import { subscribeToPush } from './push'
+import { subscribeToPush, isPushSupported } from './push'
 
-export default async function EnableNotifications() {
-    try {
-        const permission = await Notification.requestPermission()
-        if (permission !== 'granted') {
-            throw new Error('Notification permission denied')
-        }
-        console.log('Permission granted! Subscribing to push notifications...')
-        await subscribeToPush()
-        console.log('Subscribed!')
-    } catch (err) {
-        console.error(err)
-    }
+export async function enableNotifications() {
+  if (!isPushSupported()) return 'unsupported'
+  const permission = await Notification.requestPermission()
+  if (permission !== 'granted') return permission // 'denied' or 'default'
+  await subscribeToPush()
+  return 'granted'
 }

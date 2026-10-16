@@ -3,14 +3,88 @@ import IconButton from "../../Components/Composite/IconButton.jsx";
 import { useAppContext } from "../../Context.jsx";
 import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
+import { enableNotifications } from "../../Notifications/notifications.js";
+import { unsubscribeFromPush } from "../../Notifications/push.js";
+
+const REMINDERS_ENABLED_KEY = "reminders:enabled";
+const PERMISSION_ATTEMPTED_KEY = "reminders:permissionAttempted";
 
 export default function Settings() {
 	const { settings, updateSettings, theme, toggleTheme, resetData } =
 		useAppContext();
 	const [secondSleepChoice, setSecondSleepChoice] = useState(null);
+	const [remindersEnabled, setRemindersEnabled] = useState(
+		() =>
+			localStorage.getItem(REMINDERS_ENABLED_KEY) === "true" &&
+			"Notification" in window &&
+			Notification.permission === "granted",
+	);
+	const [isEnablingReminders, setIsEnablingReminders] = useState(false);
+	const [reminderStatus, setReminderStatus] = useState("");
 	const secondSleepEnabled =
 		secondSleepChoice ?? settings?.secondSleepEnabled ?? false;
 	const nextTheme = theme === "light" ? "dark" : "light";
+
+	const handleRemindersChange = async (event) => {
+		if (!event.target.checked) {
+			setIsEnablingReminders(true);
+			try {
+				await unsubscribeFromPush();
+				setRemindersEnabled(false);
+				localStorage.setItem(REMINDERS_ENABLED_KEY, "false");
+				setReminderStatus("");
+			} catch {
+				setReminderStatus("Reminders could not be disabled. Please try again.");
+			} finally {
+				setIsEnablingReminders(false);
+			}
+			return;
+		}
+
+		if (!("Notification" in window)) {
+			setReminderStatus("Notifications are not supported in this browser.");
+			return;
+		}
+
+		if (
+			Notification.permission !== "granted" &&
+			(Notification.permission === "denied" ||
+				localStorage.getItem(PERMISSION_ATTEMPTED_KEY) === "true")
+		) {
+			setReminderStatus(
+				"Permission was not granted. Enable notifications in your browser settings to try again.",
+			);
+			return;
+		}
+
+		setIsEnablingReminders(true);
+		setReminderStatus("");
+		try {
+			const permission = await enableNotifications();
+			if (permission === "granted") {
+				setRemindersEnabled(true);
+				localStorage.setItem(REMINDERS_ENABLED_KEY, "true");
+				return;
+			}
+
+			setRemindersEnabled(false);
+			localStorage.setItem(REMINDERS_ENABLED_KEY, "false");
+			if (permission === "default" || permission === "denied") {
+				localStorage.setItem(PERMISSION_ATTEMPTED_KEY, "true");
+			}
+			setReminderStatus(
+				permission === "unsupported"
+					? "Notifications are not supported in this browser."
+					: "Permission was not granted. Enable notifications in your browser settings to try again.",
+			);
+		} catch {
+			setRemindersEnabled(false);
+			localStorage.setItem(REMINDERS_ENABLED_KEY, "false");
+			setReminderStatus("Reminders could not be enabled. Please try again.");
+		} finally {
+			setIsEnablingReminders(false);
+		}
+	};
 
 	const saveSettings = (event) => {
 		event.preventDefault();
@@ -112,6 +186,33 @@ export default function Settings() {
 					Loading settings...
 				</p>
 			)}
+			<section
+				className="settings-panel settings-reminders"
+				aria-labelledby="settings-reminders-title"
+			>
+				<div>
+					<h3
+						className="settings-section-title"
+						id="settings-reminders-title"
+					>
+						Notifications
+					</h3>
+					{reminderStatus && (
+						<p className="settings-reminders-status" role="status">
+							{reminderStatus}
+						</p>
+					)}
+				</div>
+				<label className="settings-reminders-toggle">
+					<input
+						type="checkbox"
+						checked={remindersEnabled}
+						disabled={isEnablingReminders}
+						onChange={handleRemindersChange}
+					/>
+					<span>Get reminders for your tasks and events</span>
+				</label>
+			</section>
 			<section
 				className="settings-panel settings-appearance"
 				aria-labelledby="settings-appearance-title"
