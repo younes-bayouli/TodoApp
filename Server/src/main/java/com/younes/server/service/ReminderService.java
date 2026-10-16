@@ -70,6 +70,7 @@ public class ReminderService {
     @Scheduled(cron = "0 * * * * *")   // second 0 of every minute
 @Transactional (readOnly = true)    // needed: `days` is a lazy @ElementCollection
 public void checkTasks() {
+    System.out.println("Checking tasks at " + LocalDateTime.now());
     LocalTime nowMinute = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
     int dayIndex = LocalDate.now().getDayOfWeek().getValue() - 1; // Monday=0 ... Sunday=6
 
