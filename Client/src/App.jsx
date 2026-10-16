@@ -47,7 +47,6 @@ function App() {
 					style={{ minHeight: "100vh" }}
 				>
 					<Navlist />
-					<Button onClick={EnableNotifications}>Enable Notifications</Button>
 					{errors?.length > 0 && (
 						<div className="app-error-stack">
 							{errors.map((error, index) => {
