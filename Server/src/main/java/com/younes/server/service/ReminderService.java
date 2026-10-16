@@ -81,6 +81,7 @@ public void checkTasks() {
         if (days == null || days.size() <= dayIndex || !Boolean.TRUE.equals(days.get(dayIndex))) {
             continue;
         }
+        System.out.println("Found task: " + task.getTitle());
         notificationService.broadCast(buildTitle(task), buildBody(task));
     }
 }
