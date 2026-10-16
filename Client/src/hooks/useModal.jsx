@@ -26,7 +26,6 @@ export default function useModal({
 	const isNewObject = !modalConfig.object?.id;
 
 	const handleChange = (name, value) => {
-		console.log("handleChange called with name:", name, "and value:", value);
 		setErrors({});
 		setModalConfig((prev) => {
 			const err = onChange({ ...prev.object, [name]: value });

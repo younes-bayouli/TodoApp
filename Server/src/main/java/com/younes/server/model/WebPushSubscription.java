@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 public class WebPushSubscription {
 
     @Id
-    @Column(length = 1024)
+    @Column(length = 700)
     private String endpoint;
 
     @Column(nullable = false, length = 256)

@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OrderColumn;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,8 +31,10 @@ public class Project {
     private boolean isMain = false;
 
     @ElementCollection
+    @OrderColumn 
     private List<String> teamMembers;
 
     @ElementCollection
+    @OrderColumn
     private List<ProjectTodo> todos;
 }

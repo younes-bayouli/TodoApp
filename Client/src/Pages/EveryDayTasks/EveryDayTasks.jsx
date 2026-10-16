@@ -120,12 +120,10 @@ function Myeveryday() {
 
 	const addTask = (time) => {
 		const plusOneHour = minutesToString(stringToMinutes(time) + 60);
-		console.log("hi");
 		const { current, next } = getCurrentAndNextTask(time, visibleTasks);
 		const timeToNext = next
 			? timeDifferenceInMinutes(time, next?.start)
 			: Infinity;
-		console.log(timeToNext);
 		const newTask = {
 			...nullTask,
 			days: nullTask.days.map((_, index) => index === chosenDay),
