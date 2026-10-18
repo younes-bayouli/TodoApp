@@ -1,14 +1,11 @@
 package com.younes.server.service;
 
-import com.google.api.client.util.DateTime;
 import com.younes.server.model.Event;
 import com.younes.server.model.Task;
 import com.younes.server.repository.EventRepository;
 import com.younes.server.repository.TaskRepository;
 
 import org.springframework.transaction.annotation.Transactional;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -68,36 +65,36 @@ public class ReminderService {
     }
 
     @Scheduled(cron = "0 * * * * *")   // second 0 of every minute
-@Transactional (readOnly = true)    // needed: `days` is a lazy @ElementCollection
-public void checkTasks() {
-    System.out.println("Checking tasks at " + LocalDateTime.now());
-    LocalTime nowMinute = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
-    int dayIndex = LocalDate.now().getDayOfWeek().getValue() - 1; // Monday=0 ... Sunday=6
-
-    List<Task> tasks = taskRepository.findByStart(nowMinute);
-
-    for (Task task : tasks) {
-        List<Boolean> days = task.getDays();
-        if (days == null || days.size() <= dayIndex || !Boolean.TRUE.equals(days.get(dayIndex))) {
-            continue;
+    @Transactional (readOnly = true)    // needed: `days` is a lazy @ElementCollection
+    public void checkTasks() {
+        System.out.println("Checking tasks at " + LocalDateTime.now());
+        LocalTime nowMinute = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+        int dayIndex = LocalDate.now().getDayOfWeek().getValue() - 1; // Monday=0 ... Sunday=6
+    
+        List<Task> tasks = taskRepository.findByStart(nowMinute);
+    
+        for (Task task : tasks) {
+            List<Boolean> days = task.getDays();
+            if (days == null || days.size() <= dayIndex || !Boolean.TRUE.equals(days.get(dayIndex))) {
+                continue;
+            }
+            System.out.println("Found task: " + task.getTitle());
+            notificationService.broadCast(buildTitle(task), buildBody(task));
         }
-        System.out.println("Found task: " + task.getTitle());
-        notificationService.broadCast(buildTitle(task), buildBody(task));
     }
-}
-
-private String buildTitle(Task task) {
-    return "⏰ " + task.getTitle();
-}
-
-private String buildBody(Task task) {
-    StringBuilder body = new StringBuilder("Starts now");
-    if (task.getEnd() != null) {
-        body.append(" · until ").append(task.getEnd().format(DateTimeFormatter.ofPattern("HH:mm")));
+    
+    private String buildTitle(Task task) {
+        return "⏰ " + task.getTitle();
     }
-    if (task.getDetails() != null && !task.getDetails().isBlank()) {
-        body.append("\n").append(task.getDetails());
+    
+    private String buildBody(Task task) {
+        StringBuilder body = new StringBuilder("Starts now");
+        if (task.getEnd() != null) {
+            body.append(" · until ").append(task.getEnd().format(DateTimeFormatter.ofPattern("HH:mm")));
+        }
+        if (task.getDetails() != null && !task.getDetails().isBlank()) {
+            body.append("\n").append(task.getDetails());
+        }
+        return body.toString();
     }
-    return body.toString();
-}
 }
