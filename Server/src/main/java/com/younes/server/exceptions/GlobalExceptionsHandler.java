@@ -1,5 +1,6 @@
 package com.younes.server.exceptions;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -83,6 +84,14 @@ public class GlobalExceptionsHandler {
 
     @ExceptionHandler(TaskOverlapException.class)
     public ResponseEntity<String> handleOverlap(TaskOverlapException ex){
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<String> handleIOException(IOException ex){
+        System.err.println("IOException: " + ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(ex.getMessage());
