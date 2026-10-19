@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
-
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +54,24 @@ public class PhotoController {
 
         return ResponseEntity.ok(photos);
     }
+
+    @GetMapping("/{filename}")
+public ResponseEntity<Resource> getPhoto(@PathVariable String filename) throws IOException {
+    Path filePath = uploadDir.resolve(filename).normalize();
+    if (!filePath.startsWith(uploadDir) || !Files.isRegularFile(filePath)) {
+        return ResponseEntity.notFound().build();
+    }
+
+    String contentType = Files.probeContentType(filePath);
+    if (contentType == null) {
+        contentType = "application/octet-stream";
+    }
+
+    return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(contentType))
+            .cacheControl(CacheControl.maxAge(Duration.ofDays(30)).cachePublic())
+            .body(new UrlResource(filePath.toUri()));
+}
 
     @DeleteMapping("/{filename}")
     public ResponseEntity<Void> delete(@PathVariable String filename) throws IOException {
