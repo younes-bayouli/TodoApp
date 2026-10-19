@@ -22,6 +22,7 @@ public class PushController {
 
     @PostMapping("/push/subscribe")
     public ResponseEntity<Void> subscribe(@RequestBody PushSubscriptionDto sub) {
+        System.out.println("Received subscription: " + sub);
         webPush.register(sub);
         return ResponseEntity.ok().build();
     }

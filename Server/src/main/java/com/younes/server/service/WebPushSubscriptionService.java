@@ -49,12 +49,17 @@ public class WebPushSubscriptionService {
                         .ttl(86400)
                         .build();
 
-                int status = pushService.send(notification).getStatusLine().getStatusCode();
+                var response = pushService.send(notification);
+                int status = response.getStatusLine().getStatusCode();
 
                 if (status == 404 || status == 410) {
-                    expired.add(sub.getEndpoint());      // expired or revoked
+                    expired.add(sub.getEndpoint());
                 } else if (status >= 200 && status < 300) {
                     sent++;
+                } else {
+                    body = org.apache.http.util.EntityUtils.toString(response.getEntity());
+                    System.err.println("Push failed: status=" + status
+                            + " endpoint=" + sub.getEndpoint().substring(0, 40) + "... body=" + body);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
