@@ -28,6 +28,7 @@ public class PushController {
 
     @GetMapping("/ping")
     public ResponseEntity<String> ping() {
+        System.out.println("Someone hit the /ping endpoint");
         int web = webPush.sendToAll("Someone hit your endpoint", "A request just came in.", "/");
         int mobile = mobilePush.sendToAll("Someone hit your endpoint", "A request just came in.");
         return ResponseEntity.ok("Web: " + web + ", mobile: " + mobile);
