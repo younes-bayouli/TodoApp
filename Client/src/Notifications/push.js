@@ -13,6 +13,7 @@ export function isPushSupported() {
 }
 
 export async function subscribeToPush() {
+  console.log('vapid publis key: ', import.meta.env.VITE_VAPID_PUBLIC_KEY);
   if (!isPushSupported()) throw new Error('Push is not supported in this browser')
 
   const registration = await navigator.serviceWorker.ready

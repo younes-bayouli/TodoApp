@@ -37,6 +37,8 @@ public class NotificationsService {
                           FirebaseMessaging firebaseMessaging,
                           WebPushSubscriptionRepository webSubscriptionRepository,
                           FcmTokenRepository fcmTokenRepository) throws Exception {
+        System.out.println("vapid public key: " + publicKey);
+        System.out.println("vapid private key: " + privateKey);
         Security.addProvider(new BouncyCastleProvider());
         this.pushService = new PushService(publicKey, privateKey, subject);
         this.firebaseMessaging = firebaseMessaging;
