@@ -2,6 +2,7 @@ package com.younes.server.service;
 
 import com.younes.server.model.Event;
 import com.younes.server.model.Task;
+import com.younes.server.notifications.NotificationsService;
 import com.younes.server.repository.EventRepository;
 import com.younes.server.repository.TaskRepository;
 
@@ -20,10 +21,10 @@ import java.util.List;
 public class ReminderService {
     private final EventRepository eventRepository;
     private final TaskRepository taskRepository;
-    private NotificationService notificationService;
+    private NotificationsService notificationService;
 
     public ReminderService(EventRepository eventRepository, TaskRepository taskRepository,
-            NotificationService notificationService) {
+            NotificationsService notificationService) {
         this.eventRepository = eventRepository;
         this.taskRepository = taskRepository;
         this.notificationService = notificationService;
@@ -60,7 +61,7 @@ public class ReminderService {
                     continue;
                 }
 
-            notificationService.broadCast("Reminder: ", msg);
+            notificationService.broadcast("Reminder: ", msg,"/");
         }
     }
 
@@ -79,12 +80,12 @@ public class ReminderService {
                 continue;
             }
             System.out.println("Found task: " + task.getTitle());
-            notificationService.broadCast(buildTitle(task), buildBody(task));
+            notificationService.broadcast(buildTitle(task), buildBody(task), "/");
         }
     }
     
     private String buildTitle(Task task) {
-        return "⏰ " + task.getTitle();
+        return "⏰ Task: " + task.getTitle();
     }
     
     private String buildBody(Task task) {
