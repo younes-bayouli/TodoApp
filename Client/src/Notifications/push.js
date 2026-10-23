@@ -27,11 +27,16 @@ export async function subscribeToPush() {
 
   // Only send to the server if it hasn't received this exact subscription yet
   if (localStorage.getItem(SYNCED_KEY) !== subscription.endpoint) {
-    const res = await fetch(`${API_URL}/notifications/web/subscribe`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(subscription),
-    })
+    const json = subscription.toJSON()
+const res = await fetch(`${API_URL}/notifications/web/subscribe`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    endpoint: json.endpoint,
+    p256dh: json.keys.p256dh,
+    auth: json.keys.auth,
+  }),
+})
     if (!res.ok) throw new Error(`Server rejected subscription (${res.status})`)
 
     // Remember only after the server confirmed
