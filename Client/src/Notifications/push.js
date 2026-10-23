@@ -27,7 +27,7 @@ export async function subscribeToPush() {
 
   // Only send to the server if it hasn't received this exact subscription yet
   if (localStorage.getItem(SYNCED_KEY) !== subscription.endpoint) {
-    const res = await fetch(`${API_URL}/push/subscribe`, {
+    const res = await fetch(`${API_URL}/notifications/web/subscribe`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(subscription),
