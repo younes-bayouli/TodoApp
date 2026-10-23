@@ -64,8 +64,10 @@ public class NotificationsService {
             try {
                 nl.martijndwars.webpush.Notification notification = new nl.martijndwars.webpush.Notification(
                     s.getEndpoint(), s.getP256dh(), s.getAuth(), Payload);
-                int status = pushService.send(notification).getStatusLine().getStatusCode();
-
+                var response = pushService.send(notification);
+                int status = response.getStatusLine().getStatusCode();
+                String respBody = org.apache.http.util.EntityUtils.toString(response.getEntity());
+                System.out.println("Push status: " + status + " body: " + respBody);
                 if (status == 404 || status == 410) 
                 {
                     subscriptions.remove(s);
