@@ -1,4 +1,4 @@
-package com.younes.server.model;
+package com.younes.server.notifications.subscriptions;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

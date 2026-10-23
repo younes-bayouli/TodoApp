@@ -5,8 +5,8 @@ import nl.martijndwars.webpush.PushService;
 import org.springframework.stereotype.Service;
 
 import com.younes.server.dto.PushSubscriptionDto;
-import com.younes.server.model.WebPushSubscription;
-import com.younes.server.repository.WebPushSubscriptionRepository;
+import com.younes.server.notifications.subscriptions.WebPushSubscription;
+import com.younes.server.notifications.subscriptions.Handlers.WebPushSubscriptionRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

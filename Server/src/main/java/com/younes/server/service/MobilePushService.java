@@ -1,8 +1,8 @@
 package com.younes.server.service;
 
 import com.google.firebase.messaging.*;
-import com.younes.server.model.FcmToken;
-import com.younes.server.repository.FcmTokenRepository;
+import com.younes.server.notifications.subscriptions.FcmToken;
+import com.younes.server.notifications.subscriptions.Handlers.FcmTokenRepository;
 
 import org.springframework.stereotype.Service;
 
