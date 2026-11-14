@@ -1,36 +1,44 @@
+
 import { precacheAndRoute } from 'workbox-precaching'
+import { initializeApp } from 'firebase/app'
+import { getMessaging } from 'firebase/messaging/sw'
+import { onBackgroundMessage } from 'firebase/messaging/sw'
 
 precacheAndRoute(self.__WB_MANIFEST)
 
-self.addEventListener("push", (event) => {
-    let data = {};
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: "notificationstest-1185a.firebaseapp.com",
+  projectId: "notificationstest-1185a",
+  storageBucket: "notificationstest-1185a.firebasestorage.app",
+  messagingSenderId: "807802765745",
+  appId: "1:807802765745:web:6c2add16c7796a1d5dfd90",
+  measurementId: "G-M88DYX6D82"
+}
 
-    if (event.data) {
-        try {
-            data = event.data.json();
-        } catch {
-            data = { message: event.data.text() };
-        }
-    }
+const app = initializeApp(firebaseConfig)
+const messaging = getMessaging(app)
 
-    const title = data.title || "Notification Test";
-    const options = {
-        body: data.body || "You received a push notification!",
-        icon: "/logo.png",
-        data: {
-            url: data.url || "/"
-        }
-    };
+onBackgroundMessage(messaging, async (payload) => {
+  // FCM automatically displays notification messages.
+  // We only display data-only messages ourselves.
+  if (payload.notification) return
 
-    event.waitUntil(
-        self.registration.showNotification(title, options)
-    );
-});
+  const title = payload.data?.title || 'TodoApp'
 
-self.addEventListener("notificationclick", (event) => {
-    event.notification.close();
+  await self.registration.showNotification(title, {
+    body: payload.data?.body || 'You have a new notification.',
+    icon: '/logo.png',
+    data: {
+      url: payload.data?.url || '/',
+    },
+  })
+})
 
-    event.waitUntil(
-        clients.openWindow(event.notification.data.url || "/")
-    );
-});
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+
+  event.waitUntil(
+    clients.openWindow(event.notification.data?.url || '/')
+  )
+})

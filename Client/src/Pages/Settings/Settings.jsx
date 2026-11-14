@@ -4,7 +4,6 @@ import { useAppContext } from "../../Context.jsx";
 import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { enableNotifications } from "../../Notifications/notifications.js";
-import { unsubscribeFromPush } from "../../Notifications/push.js";
 
 const REMINDERS_ENABLED_KEY = "reminders:enabled";
 const PERMISSION_ATTEMPTED_KEY = "reminders:permissionAttempted";
@@ -29,7 +28,6 @@ export default function Settings() {
 		if (!event.target.checked) {
 			setIsEnablingReminders(true);
 			try {
-				await unsubscribeFromPush();
 				setRemindersEnabled(false);
 				localStorage.setItem(REMINDERS_ENABLED_KEY, "false");
 				setReminderStatus("");

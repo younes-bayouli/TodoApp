@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "/api";
 const NOMINATIM_URL = import.meta.env.VITE_NOMINATIM_URL;
 const ALADHAN_API = import.meta.env.VITE_ALADHAN_API;
 
@@ -6,6 +6,7 @@ async function request(
 	endpoint,
 	{ options = {}, fullEndpoint = false, json = true } = {},
 ) {
+	console.log(`Requesting ${fullEndpoint ? "" : API_URL}${endpoint}`);
 	let response;
 	try {
 		response = await fetch(`${fullEndpoint ? "" : API_URL}${endpoint}`, {

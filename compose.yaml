@@ -1,13 +1,13 @@
 services:
   backend:
-    build: ./backend
+    build: ./Server
     restart: unless-stopped
     env_file: .env
     expose:
       - "8080"
 
   frontend:
-    build: ./frontend
+    build: ./Client
     restart: unless-stopped
     depends_on:
       - backend

@@ -5,7 +5,7 @@ import PhotoCard from "../Cards/PhotoCard.jsx";
 import Button from "../Basic/Button.jsx";
 import EmptyState from "./EmptyState.jsx";
 
-const PHOTO_URL = import.meta.env.VITE_API_URL;
+const PHOTO_URL = "/api";
 let nextPhotoIndex = 0;
 
 function PhotoGallery() {

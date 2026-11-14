@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.younes.server.notifications.subscriptions.FcmToken;
-import com.younes.server.notifications.subscriptions.WebPushSubscription;
 
 @RestController 
 @RequestMapping ("/api/notifications")
@@ -34,12 +33,7 @@ public class NotificationsController {
         System.out.println("sending notification: " + request.title() + " - " + request.body() + " - " + request.url());
     }
 
-    @PostMapping ("web/subscribe")
-    public void subscribe(@RequestBody WebPushSubscription subscription) {
-        notificationsService.subscribe(subscription);
-    }
-
-    @PostMapping ("mobile/register")
+    @PostMapping ("fcm/register")
     public void register(@RequestBody FcmToken Fcm) {
         notificationsService.register(Fcm);
     }

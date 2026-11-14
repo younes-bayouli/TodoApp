@@ -1,9 +1,11 @@
-import { subscribeToPush, isPushSupported } from './push'
+import { getFCMToken } from "./firebase-messaging";
 
 export async function enableNotifications() {
-  if (!isPushSupported()) return 'unsupported'
+  if (!('Notification' in window)) return 'unsupported'
+
   const permission = await Notification.requestPermission()
-  if (permission !== 'granted') return permission // 'denied' or 'default'
-  await subscribeToPush()
-  return 'granted'
+
+  const token = await getFCMToken()
+
+  return permission
 }
