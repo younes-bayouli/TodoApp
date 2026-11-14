@@ -5,4 +5,5 @@ Client/.env.local
 graphify-out/
 .claude/
 .Agents/
+.env
 

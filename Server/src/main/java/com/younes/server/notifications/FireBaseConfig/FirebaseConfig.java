@@ -1,7 +1,8 @@
 package com.younes.server.notifications.FireBaseConfig;
 
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,15 +13,20 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-@Configuration 
+@Configuration
 public class FirebaseConfig {
 
-    @Bean 
+    @Bean
     public FirebaseMessaging firebaseMessaging(
-            @Value ("${firebase.credentials-path}") String path) throws IOException {
+            @Value("${FIREBASE_SERVICE_ACCOUNT}") String credentialsJson
+    ) throws IOException {
+
+        GoogleCredentials credentials = GoogleCredentials.fromStream(
+                new ByteArrayInputStream(credentialsJson.getBytes(StandardCharsets.UTF_8))
+        );
 
         FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(new FileInputStream(path)))
+                .setCredentials(credentials)
                 .build();
 
         FirebaseApp app = FirebaseApp.getApps().isEmpty()
