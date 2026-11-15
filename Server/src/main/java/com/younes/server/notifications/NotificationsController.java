@@ -19,7 +19,7 @@ public class NotificationsController {
         this.notificationsService = notificationsService;
     }
 
-    @PostMapping ("broadcast")
+    @PostMapping ("/broadcast")
     public void broadcast(@RequestBody PushRequest request) {
         try {
             notificationsService.broadcast(request.title(), request.body(), request.url());
@@ -28,12 +28,12 @@ public class NotificationsController {
         }
     }
     
-    @PostMapping ("send")
+    @PostMapping ("/send")
     public void send(@RequestBody PushRequest request) {
         System.out.println("sending notification: " + request.title() + " - " + request.body() + " - " + request.url());
     }
 
-    @PostMapping ("fcm/register")
+    @PostMapping ("/fcm/register")
     public void register(@RequestBody FcmToken Fcm) {
         notificationsService.register(Fcm);
     }
