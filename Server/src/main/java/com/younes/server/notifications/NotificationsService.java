@@ -32,7 +32,7 @@ public class NotificationsService {
 
     public void register(FcmToken token) {
         fcmTokenRepository.save(token);
-        System.out.println("added token: "+token);
+        System.out.println("Added FCM token: " + token.getToken());
     }
 
     public void broadcast(String title, String body, String url) {
